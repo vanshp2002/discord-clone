@@ -1,0 +1,321 @@
+.style-37 {
+    outline: rgb(148, 155, 164) none 0px;
+    margin: 0px;
+    padding: 0px;
+    border: 0px none rgb(148, 155, 164);
+    font-weight: 400;
+    font-style: normal;
+    font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    vertical-align: baseline;
+    width: 30%;
+}
+
+.style-38 {
+    outline: rgb(148, 155, 164) none 0px;
+    margin: 0px;
+    padding: 0px;
+    border: 0px none rgb(148, 155, 164);
+    font-weight: 400;
+    font-style: normal;
+    font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    vertical-align: baseline;
+}
+
+.style-39 {
+    outline: rgb(148, 155, 164) none 0px;
+    margin: 0px;
+    padding: 0px;
+    border: 0px none rgb(148, 155, 164);
+    font-weight: 400;
+    font-style: normal;
+    font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    vertical-align: baseline;
+}
+
+.style-40 {
+    outline: rgb(148, 155, 164) none 0px;
+    margin: 0px;
+    padding: 0px;
+    border: 0px none rgb(148, 155, 164);
+    font-weight: 500;
+    font-style: normal;
+    font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    vertical-align: baseline;
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.style-41 {
+    outline: rgb(148, 155, 164) none 0px;
+    margin: 0px;
+    padding: 0px;
+    border: 1px solid rgb(30, 31, 34);
+    font-weight: 500;
+    font-style: normal;
+    font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    vertical-align: baseline;
+    -webkit-box-align: center;
+    align-items: center;
+    background-color: rgb(30, 31, 34);
+    border-color: rgb(30, 31, 34);
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    display: flex;
+    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    min-height: 40px;
+    position: relative;
+    transition: border 0.15s ease 0s;
+    box-sizing: border-box;
+    opacity: 1;
+}
+
+.style-42 {
+    outline: rgb(148, 155, 164) none 0px;
+    margin: 0px;
+    padding: 2px 8px;
+    border: 0px none rgb(148, 155, 164);
+    font-weight: 500;
+    font-style: normal;
+    font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    vertical-align: baseline;
+    -webkit-box-align: center;
+    align-items: center;
+    display: flex;
+    flex: 1 1 0%;
+    flex-wrap: wrap;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.style-43 {
+    outline: rgb(148, 155, 164) none 0px;
+    margin: 0px 2px;
+    padding: 0px;
+    border: 0px none rgb(148, 155, 164);
+    font-weight: 500;
+    font-style: normal;
+    font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    vertical-align: baseline;
+    color: rgb(148, 155, 164);
+    margin-left: 2px;
+    margin-right: 2px;
+    position: absolute;
+    top: 16.5px;
+    transform: matrix(1, 0, 0, 1, 0, -8);
+    box-sizing: border-box;
+}
+
+.style-44 {
+    outline: rgb(148, 155, 164) none 0px;
+    margin: 0px;
+    padding: 0px;
+    border: 0px none rgb(148, 155, 164);
+    font-weight: 500;
+    font-style: normal;
+    font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    vertical-align: baseline;
+}
+
+.style-45 {
+    outline: rgb(181, 186, 193) none 0px;
+    margin: 2px;
+    padding: 2px 0px;
+    border: 0px none rgb(181, 186, 193);
+    font-weight: 500;
+    font-style: normal;
+    font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    vertical-align: baseline;
+    padding-bottom: 2px;
+    padding-top: 2px;
+    visibility: visible;
+    color: rgb(181, 186, 193);
+    box-sizing: border-box;
+}
+
+.style-46 {
+    display: inline-block;
+    outline: rgb(181, 186, 193) none 0px;
+    margin: 0px;
+    padding: 0px;
+    border: 0px none rgb(181, 186, 193);
+    font-weight: 500;
+    font-style: normal;
+    font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    vertical-align: baseline;
+}
+
+.style-47 {
+    box-sizing: content-box;
+    width: 2px;
+    background: 0px center;
+    border: 0px;
+    font-size: inherit;
+    opacity: 1;
+    outline: 0px;
+    padding: 0px;
+    color: inherit;
+    width: 2px;
+    background: rgba(0, 0, 0, 0) none repeat scroll 0px 50% / auto padding-box border-box;
+    border: 0px none rgb(181, 186, 193);
+    font-size: 16px;
+    opacity: 1;
+    outline: rgb(181, 186, 193) none 0px;
+    padding: 0px;
+    color: rgb(181, 186, 193);
+    font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-rendering: optimizelegibility;
+    font-weight: 400;
+}
+
+.style-48 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    visibility: hidden;
+    height: 0px;
+    overflow: scroll;
+    white-space: pre;
+    font-size: 16px;
+    /* font-family: &quot;
+    gg sans&quot;
+    ,
+    &quot;
+    Noto Sans&quot;
+    ,
+    &quot;
+    Helvetica Neue&quot;
+    ,
+    Helvetica,
+    Arial,
+    sans-serif; */
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: normal;
+    text-transform: none;
+    top: 0px;
+    left: 0px;
+    visibility: hidden;
+    height: 0px;
+    overflow: scroll;
+    white-space: pre;
+    font-size: 16px;
+    font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: normal;
+    text-transform: none;
+    outline: rgb(181, 186, 193) none 0px;
+    margin: 0px;
+    padding: 0px;
+    border: 0px none rgb(181, 186, 193);
+    vertical-align: baseline;
+}
+
+.style-49 {
+    outline: rgb(148, 155, 164) none 0px;
+    margin: 0px;
+    padding: 0px;
+    border: 0px none rgb(148, 155, 164);
+    font-weight: 500;
+    font-style: normal;
+    font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    vertical-align: baseline;
+    align-items: flex-start;
+    align-self: stretch;
+    display: flex;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.style-50 {
+    outline: rgb(181, 186, 193) none 0px;
+    margin: 0px;
+    padding: 8px 8px 8px 0px;
+    border: 0px none rgb(181, 186, 193);
+    font-weight: 500;
+    font-style: normal;
+    font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    vertical-align: baseline;
+    color: rgb(181, 186, 193);
+    display: flex;
+    transition: color 0.15s ease 0s;
+    box-sizing: border-box;
+    cursor: pointer;
+    opacity: 1;
+}
+
+.style-51 {
+    display: block;
+    fill: rgb(181, 186, 193);
+    line-height: 16px;
+    stroke: rgb(181, 186, 193);
+    stroke-width: 0px;
+}
+
+
+/* Dark Mode Styles */
+
+/* Container for the entire dropdown */
+.basic-single {
+    width: 120px;
+    margin: 0px;
+  }
+  
+  /* Styling for the dropdown options */
+  .basic-single .select__control {
+    background-color: #1e1f22; /* Dark background color */
+    border: 1px solid #1e1f22;
+    color: #b5bac1; /* Text color in dark mode */
+  }
+  
+  /* Styling for the selected value */
+  .basic-single .select__single-value {
+    color: #b5bac1; /* Text color in dark mode */
+  }
+  
+  /* Styling for the dropdown indicator arrow */
+  .basic-single .select__indicator {
+    color: #b5bac1; /* Color for the dropdown indicator arrow in dark mode */
+  }
+  
+  /* Styling for the dropdown options menu */
+  .basic-single .select__menu {
+    background-color: #1e1f22; /* Dark background color */
+    color: #b5bac1; /* Text color in dark mode */
+  }
+  
+  /* Styling for individual options in the dropdown menu */
+  .basic-single .select__option {
+    background-color: #1e1f22; /* Dark background color */
+    color: #b5bac1; /* Text color in dark mode */
+  }
+  
+  /* Styling for the hover state of options in the dropdown menu */
+  .basic-single .select__option:hover {
+    background-color: #2c2d30; /* Slightly lighter background on hover in dark mode */
+  }
+  
+  /* Styling for the selected option in the dropdown menu */
+  .basic-single .select__option--is-selected {
+    background-color: #2c2d30; /* Background color for the selected option in dark mode */
+    color: #ffffff; /* Text color for the selected option in dark mode */
+  }
+  
+
