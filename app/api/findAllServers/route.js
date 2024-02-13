@@ -6,11 +6,12 @@ export async function POST(req) {
     try{
         await connectMongoDB();
         const {profileId} = await req.json();
-        const server = await Server.collection.findOne({
-            profileId: profileId
-        });
-        // console.log(server);
-        return NextResponse.json({server});
+        console.log(profileId);
+        const foundServers = await Server.collection.find({
+            "members.profileId": profileId
+        }).toArray();
+        // console.log(foundServers);
+        return NextResponse.json({foundServers});
     }
     catch(error){
         console.log(error);
