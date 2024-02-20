@@ -1,20 +1,21 @@
-const mongoose = require('mongoose');
+import { Schema , models, model } from 'mongoose';
 
 const memberRoleEnum = ['ADMIN', 'MODERATOR', 'GUEST'];
 
-const memberSchema = new mongoose.Schema({
-  _id: String,
+const memberSchema = new Schema({
   role: {
     type: String,
     enum: memberRoleEnum,
     default: 'GUEST'
   },
-  profileId: String,
-  serverId: String,
+  
+  userId: {type: Schema.Types.ObjectId, required: true, ref: 'User' },
+  serverId: {type: Schema.Types.ObjectId, required: true, ref: 'Server' },
+
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
 
-const Member = mongoose.model('Member', memberSchema);
+const Member = models.Member || model('Member', memberSchema);
 
-module.exports = Member;
+export default Member;

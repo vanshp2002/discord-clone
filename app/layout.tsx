@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "./Providers";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { cn } from "@/lib/utils";
+import { ModalProvider } from "@/components/providers/modal-provider";
 
 const font = Open_Sans({ subsets: ["latin"] });
 
@@ -21,15 +22,17 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={cn(font.className, "bg-white dark:bg-[#313338]")}>
         <AuthProvider>
-          <ThemeProvider 
-              attribute="class"
-              defaultTheme="dark"
-              enableSystem={false}
-              storageKey="discord-theme">
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem={false}
+            storageKey="discord-theme">
+            <ModalProvider />
             {children}
+
           </ThemeProvider>
-          </AuthProvider>
-        </body>
+        </AuthProvider>
+      </body>
     </html>
   );
 }

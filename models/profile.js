@@ -10,6 +10,6 @@ const profileSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
-const Profile = mongoose.model('Profile', profileSchema);
+const Profile = models.Profile || mongoose.model('Profile', profileSchema);
 
 module.exports = Profile;

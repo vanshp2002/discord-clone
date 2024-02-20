@@ -1948,7 +1948,6 @@
     width: auto;
     height: auto;
     padding: 2px 0px;
-    color: rgb(0, 168, 252);
     position: relative;
     justify-content: center;
     align-items: center;
@@ -1969,9 +1968,10 @@
     font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 14px;
     vertical-align: baseline;
+    color: rgb(0, 168, 252);
     /* white-space: nowrap; */
     text-overflow: ellipsis;
     overflow: hidden;
     --button--underline-color: transparent;
-    /* background-image: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 1px, rgba(0, 0, 0, 0) 1px, rgba(0, 0, 0, 0) calc(2px), rgba(0, 0, 0, 0) calc(2px)); */
+
 }
