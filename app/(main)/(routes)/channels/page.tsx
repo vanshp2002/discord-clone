@@ -8,10 +8,11 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
-  
+
     const { data: session } = useSession();
     const [userData, setUserData] = useState(null);
     const router = useRouter();
+    const [ser, setSer] = useState(false);
 
     useEffect(() => {
 
@@ -29,11 +30,11 @@ export default function Home() {
                 });
 
 
-                const user  = await userfind.json();
+                const user = await userfind.json();
                 setUserData(user);
 
                 const serverfound = await fetch("/api/servers/getserver", {
-                    method: "POST"  ,
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
@@ -41,11 +42,11 @@ export default function Home() {
                         profileId: user._id,
                     })
                 })
-                
-                const {server} = await serverfound.json();
+
+                const { server } = await serverfound.json();
 
                 if (server) {
-                    return router.push(`/servers/${server._id}`);
+                    return router.push(`/servers/${server._id}`);   
                 }
 
             } catch (error) {
@@ -54,11 +55,13 @@ export default function Home() {
         };
 
         fetchData();
- 
+
     }, [session, router]);
 
 
-  return (
-      <InitialModal email = {session?.user?.email}/>
-  );
+    return (
+        <div>
+            {ser && <InitialModal email={session?.user?.email} />}
+        </div>
+    );
 }

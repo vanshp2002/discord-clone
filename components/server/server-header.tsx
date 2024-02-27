@@ -3,51 +3,87 @@
 import Server from '@/models/server';
 
 import React, { useEffect } from 'react'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { ChevronDown, UserPlus, Settings, Users, PlusCircle, Trash, LogOut} from 'lucide-react';
+import { useModal } from '@/hooks/use-modal-store';
 
-const ServerHeader = ({server, role}) => {
+const ServerHeader = ({ server, role }) => {
+    
     useEffect(() => {
         console.log(server);
     }, [])
+    const isAdmin = role === 'ADMIN';
+    const isModerator = role === 'MODERATOR' || 'Admin';
+    const {onOpen} = useModal();
+
     return (
-        <div>
-        <p><strong>Role:</strong> {role}</p>
-        <p><strong>ID:</strong> {server._id.toString()}</p>
-        <p><strong>Name:</strong> {server.name}</p>
-        <p><strong>Image URL:</strong> <img src={server.imageUrl} alt="Server" /></p>
-        <p><strong>Invite Code:</strong> {server.inviteCode}</p>
-        <p><strong>User ID:</strong> {server.userId.toString()}</p>
-        <h3>Channels:</h3>
-        <ul>
-          {server.channels.map(channel => (
-            <li key={channel._id.toString()}>
-              <p><strong>ID:</strong> {channel._id.toString()}</p>
-              <p><strong>Name:</strong> {channel.name}</p>
-              <p><strong>Type:</strong> {channel.type}</p>
-              <p><strong>User ID:</strong> {channel.userId.toString()}</p>
-              <p><strong>Server ID:</strong> {channel.serverId.toString()}</p>
-              <p><strong>Created At:</strong> {new Date(channel.createdAt).toLocaleString()}</p>
-              <p><strong>Updated At:</strong> {new Date(channel.updatedAt).toLocaleString()}</p>
-            </li>
-          ))}
-        </ul>
-        <h3>Members:</h3>
-        <ul>
-          {server.members.map(member => (
-            <li key={member._id.toString()}>
-              <p><strong>ID:</strong> {member._id.toString()}</p>
-              <p><strong>Role:</strong> {member.role}</p>
-              <p><strong>User ID:</strong> {member.userId.toString()}</p>
-              <p><strong>Server ID:</strong> {member.serverId.toString()}</p>
-              <p><strong>Created At:</strong> {new Date(member.createdAt).toLocaleString()}</p>
-              <p><strong>Updated At:</strong> {new Date(member.updatedAt).toLocaleString()}</p>
-            </li>
-          ))}
-        </ul>
-        <p><strong>Created At:</strong> {new Date(server.createdAt).toLocaleString()}</p>
-        <p><strong>Updated At:</strong> {new Date(server.updatedAt).toLocaleString()}</p>
-        hello
-      </div>
+        <DropdownMenu>
+            <DropdownMenuTrigger className="focus:outline-none" asChild>
+                <button className="w-full text-md font-semibold px-3 flex items-center h-12
+                border-neutral-200  dark:border-neutral-800 border-b-2  hover:bg-zinc-700/10
+                dark:hover:bg-zinc-700/50 transition"
+                >
+                    {server.name}
+                    <ChevronDown className="h-5 w-5 ml-auto" />
+                </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56 text-xs font-medium text-black dark:text-neutral-400 space-y-[2px]">
+                {isModerator && (
+                    <DropdownMenuItem
+                    onClick={()=>onOpen("invite", {server})}
+                        className="text-indigo-600 dark:text-indigo-400 px-3 py-2 text-sm cursor-pointer"
+                    >
+                        Invite People
+                        <UserPlus className="h-4 w-4 ml-auto"/>
+                    </DropdownMenuItem>
+                )}
+                {isAdmin && (
+                    <DropdownMenuItem
+                        className="px-3 py-2 text-sm cursor-pointer"
+                    >
+                        Server Settings
+                        <Settings className="h-4 w-4 ml-auto"/>
+                    </DropdownMenuItem>
+                )}
+                {isAdmin && (
+                    <DropdownMenuItem
+                        className="px-3 py-2 text-sm cursor-pointer"
+                    >
+                        Manage Members
+                        <Users className="h-4 w-4 ml-auto"/>
+                    </DropdownMenuItem>
+                )}
+                {isModerator && (
+                    <DropdownMenuItem
+                        className="px-3 py-2 text-sm cursor-pointer"
+                    >
+                        Create Channel
+                        <PlusCircle className="h-4 w-4 ml-auto"/>
+                    </DropdownMenuItem>
+                )}
+                {isModerator && (
+                    <DropdownMenuSeparator/>
+                )}
+                {isAdmin && (
+                    <DropdownMenuItem
+                        className="text-rose-500 px-3 py-2 text-sm cursor-pointer"
+                    >
+                        Delete Server
+                        <Trash className="h-4 w-4 ml-auto"/>
+                    </DropdownMenuItem>
+                )}
+                {!isAdmin && (
+                    <DropdownMenuItem
+                        className="text-rose-500 px-3 py-2 text-sm cursor-pointer"
+                    >
+                        Leave Server
+                        <LogOut className="h-4 w-4 ml-auto"/>
+                    </DropdownMenuItem>
+                )}
+            </DropdownMenuContent>
+
+        </DropdownMenu>
     )
 }
 
-export default ServerHeader
+export default ServerHeader;

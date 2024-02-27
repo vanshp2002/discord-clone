@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { connectMongoDB } from "@/lib/mongodb";
 import Server from "@/models/server";
-
+import Channel from "@/models/channel";
+import Member from "@/models/member";
 
 export async function POST(req) {
     try{
@@ -15,7 +16,6 @@ export async function POST(req) {
         if (!server) {
             return new NextResponse("User not found", { status: 404 });
         }
-        console.log("HI");
         
         return NextResponse.json({server});
     }
