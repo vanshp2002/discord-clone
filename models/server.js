@@ -1,10 +1,14 @@
+import User from "./user";
+import Channel from "./channel";
+import Member from "./member";
+
 const mongoose = require('mongoose');
 
 const serverSchema = new mongoose.Schema({
   name: { type: String, required: true },
   imageUrl: { type: String, text: true },
   inviteCode: { type: String, required: true, unique: true},
-  profileId: { type: String, required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
   members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Member' }],
   channels: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Channel' }],
   createdAt: { type: Date, default: Date.now },

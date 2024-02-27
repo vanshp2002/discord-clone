@@ -1,11 +1,9 @@
-// "use client";
 
 import * as z from "zod";
-import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
-import { useEffect,useState } from "react";
-// import { useSession } from "next-auth/react";
+
+import { redirect } from "next/navigation";
 
 
 import {
@@ -28,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FileUpload } from "@/components/ui/file-upload";
 import { useRouter } from "next/navigation";
+import { useModal } from "@/hooks/use-modal-store";
 
 
 const formSchema = z.object({
@@ -36,14 +35,12 @@ const formSchema = z.object({
 });
 
 
-export const InitialModal = ({email}) => {
-    const [isMounted, setIsMounted] = useState(false);
+export const CreateServerModal = ({email}) => {
+    const {isOpen,onClose,type} = useModal();
     const router = useRouter();
-    // const { data: session } = useSession();
 
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
+    const isModalOpen = isOpen && type==="createServer";
+
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -70,16 +67,19 @@ export const InitialModal = ({email}) => {
             });
             form.reset();
             router.refresh();
-            window.location.reload();
+            onClose();
         }catch(error){
             console.error("Error creating server", error);
         }
+    }   
+
+    const handleClose = () => {
+        form.reset();
+        onClose();
     }
 
-    if (!isMounted) return null;
-
     return (
-        <Dialog open>
+        <Dialog open={isModalOpen} onOpenChange={handleClose}>
             <DialogContent className="bg-white text-black p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center font-bold">

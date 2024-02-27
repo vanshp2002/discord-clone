@@ -26,19 +26,18 @@ export const NavigationSidebar = ({email}) => {
                         email,
                     }),
                 });
-                const { user } = await res.json();
+                const user  = await res.json();
 
-                const servers = await fetch("/api/findAllServers", {
+                const servers = await fetch("/api/servers/getServers", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        profileId: user?._id.toString(),
+                        userId: user?._id,
                     }),
                 });
                 const { foundServers } = await servers.json();
-                // console.log("Hi", servers);
                 setServer(foundServers);
         }
 

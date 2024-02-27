@@ -1,21 +1,22 @@
-const mongoose = require('mongoose');
+import { Schema, models, model } from 'mongoose';
 
 const channelTypeEnum = ['TEXT', 'AUDIO', 'VIDEO'];
 
-const channelSchema = new mongoose.Schema({
-  _id: String,
+const channelSchema = new Schema({
   name: String,
   type: {
-    type: String,
+    type: String, 
     enum: channelTypeEnum,
     default: 'TEXT'
   },
-  profileId: String,
-  serverId: String,
+  
+  userId: {type: Schema.Types.ObjectId, required: true, ref: 'User' },
+  serverId: {type: Schema.Types.ObjectId, required: true, ref: 'Server' }, 
+
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
 
-const Channel = mongoose.model('Channel', channelSchema);
 
-module.exports = Channel;
+const Channel = models.Channel || model('Channel', channelSchema);
+export default Channel;

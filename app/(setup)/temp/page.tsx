@@ -42,9 +42,9 @@ const SetupPage = () => {
       
               const { server } = await serverfind.json();
 
-            // if (server) {
-            //     router.push(`/channels/${server._id}`);
-            // }
+            if (server) {
+                router.push(`/servers/${server._id}`);
+            }
             } catch (error) {
               console.error("Error fetching data:", error);
             }

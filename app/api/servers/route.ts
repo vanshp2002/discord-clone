@@ -35,7 +35,7 @@ export async function POST(req: Request) {
       
           const result = await Server.collection.insertOne(serverDocument);
 
-          return NextResponse.json(result);
+          return NextResponse.json({result});
 
     }catch(error){
         console.log("error during server POST:", error);
