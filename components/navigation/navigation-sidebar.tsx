@@ -41,7 +41,7 @@ export const NavigationSidebar =  () => {
                     })
                 });
                 const toJson = await allServers.json();
-                setServers(toJson.server)
+                setServers(toJson.servers)
 
             } catch (error) {
                 console.error("Error fetching data:", error);

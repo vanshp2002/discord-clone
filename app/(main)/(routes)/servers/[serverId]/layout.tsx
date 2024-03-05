@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ServerSidebar from '@/components/server/server-sidebar';
+import ServerState from '@/context/servers/serverContext';
 const ServerIdLayout = ({
     children,
     params,
@@ -59,15 +60,19 @@ const ServerIdLayout = ({
     }, [session, router]);
 
     return (
-        <div className="h-full">
-            <div className="hidden md:flex h-full w-60 z-20 flex-col fixed inset-y-0">
-                <ServerSidebar serverId = {params.serverId.toString()}/>
-            </div>
-            <main className="h-full md:pl-60">
-                {server?.name}
-                {children}
-            </main>
-        </div>
+        <>
+            <ServerState>
+                <div className="h-full">
+                    <div className="hidden md:flex h-full w-60 z-20 flex-col fixed inset-y-0">
+                        <ServerSidebar serverId={params.serverId.toString()} />
+                    </div>
+                    <main className="h-full md:pl-60">
+                        {server?.name}
+                        {children}
+                    </main>
+                </div>
+            </ServerState>
+        </>
     )
 }
 

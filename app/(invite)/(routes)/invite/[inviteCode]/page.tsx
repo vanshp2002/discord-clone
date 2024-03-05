@@ -14,6 +14,7 @@ const InviteCodePage = ({
 }: InvitecodePageProps) => {
     const { data: session } = useSession();
     const [dataFetched, setDataFetched] = useState(false);
+    useState
     const router = useRouter();
     let flag=false;
     useEffect(() => {
@@ -63,8 +64,7 @@ const InviteCodePage = ({
                     const serverUpdatedJson = await serverUpdated.json();
                     console.log(serverUpdatedJson.server)
                     flag=true
-                    // router.push("/channels");
-                    // return router.push(`/servers/${serverUpdatedJson.server._id}`);                    
+                    return router.push(`/servers/${serverUpdatedJson.server._id}`);                    
 
                 } catch (error) {
                     console.error("Error fetching data:", error);
