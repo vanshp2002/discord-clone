@@ -3,7 +3,9 @@
 import { CreateServerModal } from '@/components/modals/create-server-modal';
 import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
-import InviteModal from '@/components/modals/invite-modal';
+import { EditServerModal } from '@/components/modals/edit-server-modal';
+import {InviteModal} from '@/components/modals/invite-modal';
+import { MembersModal } from '@/components/modals/members-modal';
 
 export const ModalProvider = () => {
 
@@ -23,6 +25,8 @@ export const ModalProvider = () => {
         <>
             <CreateServerModal email={session?.user?.email}/>
             <InviteModal email={session?.user?.email}/>
+            <EditServerModal email={session?.user?.email}/>
+            <MembersModal email={session?.user?.email}/>
         </>
     )
 }
