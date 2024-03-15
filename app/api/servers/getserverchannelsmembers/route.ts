@@ -11,8 +11,14 @@ export async function POST(req) {
         await connectMongoDB();
         // console.log(serverId);
         
-        const server = await Server.findById(serverId).populate('channels').populate('members');
-        // console.log(server);
+        const server2 = await Server.findById(serverId).populate('channels').populate('members');
+        
+        // i now want to populate the populated members having userId with user profile
+        
+        const server = await Server.populate(server2, {
+            path: 'members.userId',
+            model: 'User'
+        });
         
         if (!server) {
             return new NextResponse("User not found", { status: 404 });

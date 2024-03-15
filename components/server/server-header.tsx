@@ -1,6 +1,6 @@
 "use client";
 
-import Server from '@/models/server';
+// import Server from '@/models/server';
 
 import React, { useEffect } from 'react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
@@ -9,12 +9,9 @@ import { useModal } from '@/hooks/use-modal-store';
 
 const ServerHeader = ({ server, role }) => {
     
-    useEffect(() => {
-        console.log(server);
-    }, [])
+    const {onOpen} = useModal();
     const isAdmin = role === 'ADMIN';
     const isModerator = role === 'MODERATOR' || 'Admin';
-    const {onOpen} = useModal();
 
     return (
         <DropdownMenu>
@@ -39,6 +36,7 @@ const ServerHeader = ({ server, role }) => {
                 )}
                 {isAdmin && (
                     <DropdownMenuItem
+                        onClick = {()=>onOpen("editServer", {server})}
                         className="px-3 py-2 text-sm cursor-pointer"
                     >
                         Server Settings
@@ -47,6 +45,7 @@ const ServerHeader = ({ server, role }) => {
                 )}
                 {isAdmin && (
                     <DropdownMenuItem
+                        onClick={() => onOpen("members", {server})}
                         className="px-3 py-2 text-sm cursor-pointer"
                     >
                         Manage Members

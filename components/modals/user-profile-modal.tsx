@@ -27,42 +27,50 @@ import { Input } from "@/components/ui/input";
 import { FileUpload } from "@/components/ui/file-upload";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
+import { useEffect } from "react";
 
 
 const formSchema = z.object({
-    name:z.string().min(1,{message:"Server name is required"}),
-    imageUrl:z.string().min(1,{message: "Server image is required"}),
+    displayName:z.string().min(1,{message:"Display Name is required"}),
+    imageUrl:z.string().min(0,{message: "Server image is required"}),
 });
 
 
-export const CreateServerModal = ({email}) => {
-    const {isOpen,onClose,type} = useModal();
+export const UserModal = ({}) => {
+    const {isOpen,onClose,type, data} = useModal();
     const router = useRouter();
 
-    const isModalOpen = isOpen && type==="createServer";
-
+    const isModalOpen = isOpen && type==="editUser";
+    const { user } = data;
 
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name:"",
+            displayName:"",
             imageUrl:"",
         }
         });
+
+    useEffect(() => {
+        if(user){
+            form.setValue("displayName", user.displayname);
+            form.setValue("imageUrl", user.imageUrl);
+        }
+    }, [user, form]);
 
     const isLoading = form.formState.isSubmitting;
 
     const onSubmit = async (values : z.infer<typeof formSchema>) => {
         try{
-            const res = await fetch ("/api/servers/createserver", {
+            const res = await fetch ("/api/modifyUser", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    name: values.name,
+                    userId: user._id,
                     imageUrl: values.imageUrl,
-                    email: email,
+                    displayname: values.displayName,
                 }),
             });
             form.reset();
@@ -70,12 +78,11 @@ export const CreateServerModal = ({email}) => {
             onClose();
             window.location.reload();
         }catch(error){
-            console.error("Error creating server", error);
+            console.error("Error modifying user details", error);
         }
     }   
 
     const handleClose = () => {
-        form.reset();
         onClose();
     }
 
@@ -84,11 +91,11 @@ export const CreateServerModal = ({email}) => {
             <DialogContent className="bg-white text-black p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center font-bold">
-                        Customize your server
+                        Customize your profile
                     </DialogTitle>
 
                     <DialogDescription className="text-center text-zinc-500">
-                        Give your server a name and upload a photo
+                        Change your Display Name and upload a photo
                     </DialogDescription>                    
                 </DialogHeader>
 
@@ -115,18 +122,18 @@ export const CreateServerModal = ({email}) => {
 
                             <FormField 
                                 control={form.control}
-                                name="name"
+                                name="displayName"
                                 render = {({field}) => (
                                     <FormItem className="flex flex-col">
                                         <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
-                                                Server Name
+                                                Display Name
                                             </FormLabel>
 
                                             <FormControl>
                                                 <Input 
                                                     disabled={isLoading}
                                                     className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0" 
-                                                    placeholder="Enter Server name"
+                                                    placeholder="Enter Display name"
                                                     {...field} 
                                                 />
                                             </FormControl>
@@ -142,7 +149,7 @@ export const CreateServerModal = ({email}) => {
                                     variant="primary"
                                     disabled={isLoading}
                                     >
-                                        Create
+                                        Save
                                 </Button>
                         </DialogFooter>
                     </form>

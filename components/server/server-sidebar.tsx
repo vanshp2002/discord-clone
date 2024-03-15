@@ -61,9 +61,9 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
                 const audioChannels = channels?.filter((channel: { type: any; }) => channel.type === 'AUDIO');
                 const videoChannels = channels?.filter((channel: { type: any; }) => channel.type === 'VIDEO');
                 
-                const members = allMembers?.filter((member: { userId: any; }) => member.userId !== user._id.toString());
+                const members = allMembers?.filter((member: { userId: any; }) => member.userId._id !== user._id.toString());
 
-                const role = allMembers?.find((member: { userId: any; }) => member.userId === user._id.toString())?.role;
+                const role = allMembers?.find((member: { userId: any; }) => member.userId._id === user._id.toString())?.role;
                 
                 // console.log(ser);
 

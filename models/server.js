@@ -11,6 +11,7 @@ const serverSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
   members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Member' }],
   channels: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Channel' }],
+  newmembers:[{_id:false, userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User'}, role: { type: String, default: 'GUEST' }}],
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

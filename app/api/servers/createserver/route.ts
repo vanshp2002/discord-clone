@@ -56,6 +56,12 @@ export async function POST(req: Request) {
             { new: true } 
         );
 
+        const serverUpdateResult3 = await Server.findOneAndUpdate(
+            { _id: result.insertedId },
+            { $push: { newmembers: {userId: profile._id, role: 'ADMIN'}}},
+            { new: true, projection: { _id: 0 } }
+        );
+
         return NextResponse.json({ server: result});
 
     } catch (error) {

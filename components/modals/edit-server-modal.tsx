@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input";
 import { FileUpload } from "@/components/ui/file-upload";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
+import { useEffect } from "react";
 
 
 const formSchema = z.object({
@@ -35,12 +36,12 @@ const formSchema = z.object({
 });
 
 
-export const CreateServerModal = ({email}) => {
-    const {isOpen,onClose,type} = useModal();
+export const EditServerModal = ({email}) => {
+    const {isOpen,onClose,type, data} = useModal();
     const router = useRouter();
 
-    const isModalOpen = isOpen && type==="createServer";
-
+    const isModalOpen = isOpen && type==="editServer";
+    const {server} = data;
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -50,16 +51,24 @@ export const CreateServerModal = ({email}) => {
         }
         });
 
+    useEffect(() => {
+        if(server){
+            form.setValue("name", server.name);
+            form.setValue("imageUrl", server.imageUrl);
+        }
+    }, [server, form]);
+
     const isLoading = form.formState.isSubmitting;
 
     const onSubmit = async (values : z.infer<typeof formSchema>) => {
         try{
-            const res = await fetch ("/api/servers/createserver", {
+            const res = await fetch ("/api/servers/modifyServer", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
+                    serverId: server._id,
                     name: values.name,
                     imageUrl: values.imageUrl,
                     email: email,
@@ -142,7 +151,7 @@ export const CreateServerModal = ({email}) => {
                                     variant="primary"
                                     disabled={isLoading}
                                     >
-                                        Create
+                                        Save
                                 </Button>
                         </DialogFooter>
                     </form>

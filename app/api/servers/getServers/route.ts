@@ -1,16 +1,18 @@
 import { NextResponse } from "next/server";
 import { connectMongoDB } from "@/lib/mongodb";
 import Server from "@/models/server";
-import { ObjectId } from "mongodb";
+import Member from "@/models/member";
+import { ObjectId } from 'mongodb';
 
-export async function POST(req) {
+export async function POST(req: Request) {
     try{
         await connectMongoDB();
         const {userId} = await req.json();
         const user = new ObjectId(userId);
-        const foundServers = await Server.collection.find({
-            userId: user
-        }).toArray();
+        
+        // find servers having user as userId in newmembers array
+        const foundServers = await Server.find({newmembers: {$elemMatch: {userId: user}}});
+
         return NextResponse.json({foundServers});
     }
     catch(error){
