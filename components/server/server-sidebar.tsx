@@ -64,10 +64,6 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
                 const members = allMembers?.filter((member: { type: any; }) => member.userId !== user._id)
 
                 const role = allMembers?.find((member: { type: any; }) => member.userId === user._id)?.role;
-                
-                // console.log(channels);
-                // console.log(allMembers);
-                // console.log(role);
                 console.log(ser);
 
                 setRole(role);

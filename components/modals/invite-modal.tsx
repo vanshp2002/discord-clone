@@ -14,12 +14,13 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Check, Copy, RefreshCw } from 'lucide-react';
 import { useOrigin } from '@/hooks/use-origin';
+import { useRouter } from 'next/navigation';
 
 export const InviteModal = ({ email }) => {
 
     const {onOpen, isOpen, onClose, type, data} = useModal();
     const origin = useOrigin();
-
+    const router = useRouter();
     const isModalOpen = isOpen && type === "invite";   
     const {server} = data;     
 
@@ -60,6 +61,7 @@ export const InviteModal = ({ email }) => {
             })
             const link = await response2.json();
             const updatedServer = link.server
+            await router.refresh();
             onOpen("invite", {server: updatedServer});
             
         } catch (error) {
