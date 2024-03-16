@@ -70,6 +70,30 @@ export const MembersModal = () => {
             setLoadingId("");
         }
     };
+
+    const onKick = async (userId: string, memberId: string) => {
+        try {
+            setLoadingId(userId);
+            const res: Response = await fetch("/api/servers/members/kick", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    serverId: server._id,
+                    memberId,
+                    userId,
+                })
+            });
+            const NewServer = await res.json();
+            router.refresh();
+            onOpen("members", {server: NewServer.server});
+        } catch (error) {
+            console.log(error);
+        }finally{
+            setLoadingId("");
+        }
+    }
     
     return (
         <Dialog open={isModalOpen} onOpenChange={onClose}>
@@ -138,7 +162,7 @@ export const MembersModal = () => {
                                             </DropdownMenuPortal>
                                         </DropdownMenuSub>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => onKick(member.userId._id, member._id)}>
                                             <Gavel className="h-4 w-4 mr-2"/>
                                             Kick
                                         </DropdownMenuItem>

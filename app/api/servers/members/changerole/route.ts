@@ -31,6 +31,24 @@ export async function POST(req) {
             model: 'User'
         });
 
+        server.members.sort((a, b) => {
+            if (a.role === "ADMIN") return -1;
+            if (b.role === "ADMIN") return 1;
+            if (a.role === "MODERATOR") return -1;
+            if (b.role === "MODERATOR") return 1;
+            if (a.role === "GUEST") return -1;
+            if (b.role === "GUEST") return 1;
+        });
+
+        server.newmembers.sort((a, b) => {
+            if (a.role === "ADMIN") return -1;
+            if (b.role === "ADMIN") return 1;
+            if (a.role === "MODERATOR") return -1;
+            if (b.role === "MODERATOR") return 1;
+            if (a.role === "GUEST") return -1;
+            if (b.role === "GUEST") return 1;
+        });
+
         return NextResponse.json({server});
     }
     catch(error){

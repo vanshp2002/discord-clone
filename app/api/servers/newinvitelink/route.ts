@@ -12,7 +12,7 @@ export async function POST(req) {
         const {serverId} = await req.json();
         const objectId = new ObjectId(serverId);
         const newLink = uuidv4();
-        const server = await Server.updateOne(
+        const server3 = await Server.updateOne(
             { _id: objectId },
             { $set: { inviteCode: newLink} },
             {new: true}
@@ -20,11 +20,35 @@ export async function POST(req) {
         
         const updatedServer = await Server.findOne({_id: objectId});
 
-        if (!server) {
+        if (!server3) {
             return NextResponse.json({status: 404, message: "Server not found"});
         }
         
-        return NextResponse.json(updatedServer);
+        const server2 = await Server.findById(serverId).populate('channels').populate('members');
+        const server = await Server.populate(server2, {
+            path: 'members.userId',
+            model: 'User'
+        });
+
+        server.members.sort((a, b) => {
+            if (a.role === "ADMIN") return -1;
+            if (b.role === "ADMIN") return 1;
+            if (a.role === "MODERATOR") return -1;
+            if (b.role === "MODERATOR") return 1;
+            if (a.role === "GUEST") return -1;
+            if (b.role === "GUEST") return 1;
+        });
+
+        server.newmembers.sort((a, b) => {
+            if (a.role === "ADMIN") return -1;
+            if (b.role === "ADMIN") return 1;
+            if (a.role === "MODERATOR") return -1;
+            if (b.role === "MODERATOR") return 1;
+            if (a.role === "GUEST") return -1;
+            if (b.role === "GUEST") return 1;
+        });
+        
+        return NextResponse.json(server);
 
     }
     catch(error){

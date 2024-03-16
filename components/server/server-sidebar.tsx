@@ -84,9 +84,9 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
     
     return (
         <div className="flex flex-col h-full tetx-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
-            {ser && role && <ServerHeader server={ser} role={role}/>}               
+            {ser && role && <ServerHeader server={ser} role={role}/>}           
         </div>
     )
 }
 
-export default ServerSidebar
+export default ServerSidebar;

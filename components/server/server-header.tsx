@@ -11,7 +11,7 @@ const ServerHeader = ({ server, role }) => {
     
     const {onOpen} = useModal();
     const isAdmin = role === 'ADMIN';
-    const isModerator = role === 'MODERATOR' || 'Admin';
+    const isModerator = isAdmin || role === 'MODERATOR';
 
     return (
         <DropdownMenu>
@@ -54,6 +54,7 @@ const ServerHeader = ({ server, role }) => {
                 )}
                 {isModerator && (
                     <DropdownMenuItem
+                        onClick={() => onOpen("createChannel", {server})}
                         className="px-3 py-2 text-sm cursor-pointer"
                     >
                         Create Channel
