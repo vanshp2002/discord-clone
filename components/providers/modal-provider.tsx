@@ -9,6 +9,8 @@ import { EditServerModal } from "../modals/edit-server-modal";
 import { MembersModal } from "../modals/members-modal";
 import { UserModal } from "../modals/user-profile-modal";
 import { CreateChannelModal } from "../modals/create-channel-modal";
+import { LeaveServerModal } from "../modals/leave-server-modal";
+import { DeleteServerModal } from "../modals/delete-server-modal";
 
 export const ModalProvider = () => {
     const [isMounted, setIsMounted] = useState(false);
@@ -29,6 +31,8 @@ export const ModalProvider = () => {
             <MembersModal />
             <UserModal />
             <CreateChannelModal email={session?.user?.email} />
+            <LeaveServerModal email={session?.user?.email}/>
+            <DeleteServerModal email={session?.user?.email}/>
         </>
     )
 }

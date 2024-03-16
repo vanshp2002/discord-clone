@@ -3,7 +3,6 @@ import { connectMongoDB } from "@/lib/mongodb";
 import Server from "@/models/server";
 import Member from "@/models/member";
 import { ObjectId } from "mongodb"; // Import ObjectId
-import mongoose from "mongoose";
 
 export async function POST(req) {
     try {
