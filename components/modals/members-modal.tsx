@@ -130,7 +130,7 @@ export const MembersModal = ({ email }) => {
                 <ScrollArea className="mt-8 max-h-[420px] pr-6">
                     {membersData.map((member) => (
                         <div key={member._id} className="flex items-center gap-x-2 mb-6">
-                            <UserAvatar member={member} src={server?.imageUrl} />
+                            <UserAvatar src={member?.userId?.imageUrl} />
                             <div className="flex flex-col gap-y-1">
                                 <div className="text-xs font-semibold flex items-center gap-x-1">
                                     {member?.userId?.username}

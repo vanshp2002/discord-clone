@@ -7,10 +7,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { ChevronDown, UserPlus, Settings, Users, PlusCircle, Trash, LogOut } from 'lucide-react';
 import { useModal } from '@/hooks/use-modal-store';
 
-const ServerHeader = ({ server, role }) => {
+const ServerHeader = ({ user, server, role }) => {
 
     useEffect(() => {
         console.log(server);
+        console.log(user);
     }, [])
     const isAdmin = role === 'ADMIN';
     const isModerator = isAdmin || role === 'MODERATOR';
@@ -23,7 +24,7 @@ const ServerHeader = ({ server, role }) => {
                 border-neutral-200  dark:border-neutral-800 border-b-2  hover:bg-zinc-700/10
                 dark:hover:bg-zinc-700/50 transition"
                 >
-                    {server.name}
+                    {server?.name}
                     <ChevronDown className="h-5 w-5 ml-auto" />
                 </button>
             </DropdownMenuTrigger>
@@ -57,6 +58,7 @@ const ServerHeader = ({ server, role }) => {
                 )}
                 {isModerator && (
                     <DropdownMenuItem
+                        onClick={() => onOpen("createChannel", { server, user })}
                         className="px-3 py-2 text-sm cursor-pointer"
                     >
                         Create Channel
@@ -68,6 +70,7 @@ const ServerHeader = ({ server, role }) => {
                 )}
                 {isAdmin && (
                     <DropdownMenuItem
+                        onClick={() => onOpen("deleteServer", { server})}
                         className="text-rose-500 px-3 py-2 text-sm cursor-pointer"
                     >
                         Delete Server
@@ -76,6 +79,7 @@ const ServerHeader = ({ server, role }) => {
                 )}
                 {!isAdmin && (
                     <DropdownMenuItem
+                        onClick={() => onOpen("leaveServer", { server, user})}
                         className="text-rose-500 px-3 py-2 text-sm cursor-pointer"
                     >
                         Leave Server

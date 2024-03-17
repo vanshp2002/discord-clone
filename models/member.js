@@ -15,8 +15,6 @@ const memberSchema = new Schema({
 });
 
 // Define compound index on userId and serverId to ensure uniqueness
-memberSchema.index({ userId: 1, serverId: 1 }, { unique: true });
-
 const Member = models.Member || model('Member', memberSchema);
 
 export default Member;
