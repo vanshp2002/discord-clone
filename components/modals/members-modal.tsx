@@ -12,7 +12,7 @@ import {
 import { useModal } from "@/hooks/use-modal-store";
 import { useOrigin } from '@/hooks/use-origin';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import UserAvatar from '../user-avatar';
+import {UserAvatar} from '../user-avatar';
 import { Check, Gavel, Loader2, MoreVertical, Shield, ShieldAlert, ShieldCheck, ShieldIcon, ShieldQuestion } from 'lucide-react';
 
 import {

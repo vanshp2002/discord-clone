@@ -50,14 +50,12 @@ const formSchema = z.object({
     }),
 })
 
-export const CreateChannelModal = ({ email }) => {
+export const EditChannelModal = ({ email }) => {
 
     const { isOpen, onClose, type, data} = useModal();
     const router = useRouter();
-    const {server} = data;
-    const {user} = data;
-    const {channelType} = data;
-    const isModalOpen = isOpen && type === "createChannel";
+    const {channel} = data;
+    const isModalOpen = isOpen && type === "editChannel";
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -67,35 +65,29 @@ export const CreateChannelModal = ({ email }) => {
         }
     });
 
-    useEffect(()=>{
-        if(channelType){
-            form.setValue("type", channelType);
+    useEffect(() => {
+        if(channel){
+            form.setValue("name", channel.name);
+            form.setValue("type", channel.type);
         }
-        else{
-            form.setValue("type", "TEXT");
-        }
-    }, [channelType, form])
+    }, [channel, form])
 
     const isLoading = form.formState.isSubmitting;
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             console.log(values);
-            console.log(server);
-            console.log(user);
-            const newchannel = await fetch("/api/channels/createchannel", {
+            console.log(channel);
+            const newchannel = await fetch("/api/channels/editchannels", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    serverId: server?._id,
-                    userId: user?._id,
+                    channelId: channel?._id,
                     name: values.name,
                     type: values.type
                 })
             })
-            const toJson = await newchannel.json();
-            console.log(toJson);
             form.reset();
             router.refresh();
             onClose();
@@ -114,7 +106,7 @@ export const CreateChannelModal = ({ email }) => {
             <DialogContent className="bg-white text-black  p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center font-bold">
-                        Create Channel
+                        Edit Channel
                     </DialogTitle>
 
                 </DialogHeader>
@@ -170,7 +162,7 @@ export const CreateChannelModal = ({ email }) => {
                         </div>
                         <DialogFooter className="bg-gray-100 px-6 py-4">
                             <Button variant="primary" disabled={isLoading}>
-                                Create
+                                Save
                             </Button>
                         </DialogFooter>
                     </form>
@@ -181,4 +173,4 @@ export const CreateChannelModal = ({ email }) => {
     )
 }
 
-export default CreateChannelModal;
+export default EditChannelModal

@@ -3,18 +3,20 @@ import React from 'react'
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-interface ServerIdPageProps {
+import { channel } from 'diagnostics_channel';
+
+interface ChannelIdPageProps{
   params:{
     serverId: string;
+    channelId: string;
   }
 }
 
-const serverPage = ({
-  params
-}: ServerIdPageProps) => {
+const ChannelIdPage = ({params}:ChannelIdPageProps) => {
   const { data: session } = useSession();
     const router = useRouter();
-    const [genchannel, setGenchannel] = useState(null);
+    const [gchannel, setGchannel] = useState(null);
+    const [gmember, setGmember] = useState(null);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -32,20 +34,36 @@ const serverPage = ({
                 if (!userfind) {
                     router.push("/login");
                 }
-                const generalchannel = await fetch("/api/servers/getgenchannel", {
+                const getchannel = await fetch("/api/servers/getchannelid", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        serverId: params.serverId,
+                        channelId: params.channelId
                     })
                 });
-                if (!generalchannel) {
-                    router.push("/"); 
-                }
-                const {channel} = await generalchannel.json();
-                return router.push(`/servers/${params.serverId}/channels/${channel?._id}`)
+                
+                const {channel} = await getchannel.json();
+                setGchannel(channel);
+                const getmember = await fetch("/api/servers/getchannelid", {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                      serverId: params.serverId,
+                      userID: user._id
+                  })
+              });
+              
+              const {member} = await getmember.json();
+              setGmember(member);
+
+              if(!channel||!member){
+                return router.push("/");
+              }
+              
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -53,10 +71,12 @@ const serverPage = ({
 
         fetchData();
 
-    }, []);
+    }, []); 
   return (
-    <div>ServerIdPage</div>
+    <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
+      <ChatHeader />
+    </div>
   )
 }
 
-export default serverPage
+export default ChannelIdPage
