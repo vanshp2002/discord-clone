@@ -50,28 +50,27 @@ const formSchema = z.object({
 });
 
 
-export const CreateChannelModal = ({email}) => {
+export const EditChannelModal = ({email}) => {
     const {isOpen,onClose,data,type} = useModal();
     const router = useRouter();
 
-    const isModalOpen = isOpen && type==="createChannel";
-    const {server,channelType} = data;
+    const isModalOpen = isOpen && type==="editChannel";
+    const {server,channel} = data;
 
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name:"",
-            type:channelType || ChannelType.parse("TEXT"),
+            type: channel?.type || ChannelType.parse("TEXT"),
         }
         });
 
     useEffect(() => {
-        if(channelType){ 
-            form.setValue("type", channelType);
-        }else{
-            form.setValue("type", "TEXT");
+        if(channel){
+            form.setValue("name", channel.name);
+            form.setValue("type", channel.type);
         }
-    }, [channelType, form]);
+    }, [channel, form]);
 
     const isLoading = form.formState.isSubmitting;
 
@@ -89,14 +88,13 @@ export const CreateChannelModal = ({email}) => {
 
                 const user = await response.json();
                 
-            const res = await fetch ("/api/servers/createchannel", {
+            const res = await fetch ("/api/channels/edit", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    serverId: server._id,
-                    userId: user._id,
+                    channelId: channel._id,
                     name: values.name,
                     type: values.type,
                 }),
@@ -120,7 +118,7 @@ export const CreateChannelModal = ({email}) => {
             <DialogContent className="bg-white text-black p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center font-bold">
-                        Create Channel
+                        Edit Channel
                     </DialogTitle>                   
                 </DialogHeader>
 
@@ -193,7 +191,7 @@ export const CreateChannelModal = ({email}) => {
                                     variant="primary"
                                     disabled={isLoading}
                                     >
-                                        Create
+                                        Save
                                 </Button>
                         </DialogFooter>
                     </form>

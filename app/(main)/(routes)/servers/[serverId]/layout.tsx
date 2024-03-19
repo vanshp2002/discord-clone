@@ -65,7 +65,6 @@ const ServerIdLayout = ({
                 <ServerSidebar serverId = {params.serverId.toString()}/>
             </div>
             <main className="h-full md:pl-60">
-                {server?.name}
                 {children}
             </main>
         </div>
