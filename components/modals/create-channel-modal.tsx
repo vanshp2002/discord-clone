@@ -37,7 +37,7 @@ import { channel } from "diagnostics_channel";
 import { useEffect } from "react";
 
 
-const ChannelType = z.enum(["TEXT", "AUDIO", "VIDEO"]);
+const ChannelType = ['TEXT', 'AUDIO', 'VIDEO'];
 
 const formSchema = z.object({
     name:z.string().min(1,{message:"Channel name is required"}).refine(
@@ -46,7 +46,9 @@ const formSchema = z.object({
             message: "Channel name cannot be 'general'",
         }
     ),
-    type: ChannelType,
+    type: z.string().min(4, {
+        message: "Channel type is required."
+    }),
 });
 
 
@@ -61,14 +63,14 @@ export const CreateChannelModal = ({email}) => {
         resolver: zodResolver(formSchema),
         defaultValues: {
             name:"",
-            type:channelType || ChannelType.parse("TEXT"),
+            type: "TEXT",
         }
         });
 
     useEffect(() => {
-        if(channelType){ 
+        if(channelType){
             form.setValue("type", channelType);
-        }else{
+        } else {
             form.setValue("type", "TEXT");
         }
     }, [channelType, form]);
@@ -172,12 +174,13 @@ export const CreateChannelModal = ({email}) => {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent
-                                                on hover focus ring color should be lighter than complete black
                                                 className="bg-white border border-neutral-200 rounded-lg shadow-lg text-black"
                                             >
-                                                <SelectItem value="TEXT">Text</SelectItem>
-                                                <SelectItem value="AUDIO">Audio</SelectItem>
-                                                <SelectItem value="VIDEO">Video</SelectItem>
+                                                {ChannelType.map((type) => (
+                                                    <SelectItem key={type} value={type} className="capitalize">
+                                                        {type.toLowerCase()}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
