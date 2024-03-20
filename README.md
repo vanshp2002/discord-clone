@@ -1,6 +1,6 @@
 ## Discord-Clone
 
-This is a repository for Fullstack Discord Clone: Next.js 13, React, MongoDB, Socket.io, Tailwind, MySQL
+This is a repository for Fullstack Discord Clone: Next.js 13, React, MongoDB, Socket.io, Tailwind CSS.
 
 ## Schema Visualization
 ![image](https://github.com/vanshp2002/discord-clone/assets/75676494/c360381e-45d1-4466-817e-1c48604b1596)
