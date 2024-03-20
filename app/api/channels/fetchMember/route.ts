@@ -17,7 +17,10 @@ export async function POST(req) {
         }
         
         const server = await Server.findById(new ObjectId(serverId));
-        const member = foundMembers.find((member) => server.members.includes(member._id));
+        let member = foundMembers.find((member) => server.members.includes(member._id));
+
+        //populate the member with the user
+        member = await Member.populate(member, { path: 'userId', model: 'User' });
 
         return NextResponse.json(member);
     }

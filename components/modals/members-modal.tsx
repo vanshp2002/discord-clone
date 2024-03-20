@@ -37,13 +37,17 @@ const roleIconMap = {
 };
 
 export const MembersModal = () => {
-    const {onOpen, isOpen,onClose,type, data} = useModal();
+    const {onOpen, isOpen, type, data} = useModal();
     const [loadingId, setLoadingId] = useState("");
     const router = useRouter();
 
     const isModalOpen = isOpen && type === "members";
     const {server} = data;
     console.log(server);
+
+    const onClose = () => {
+        window.location.reload();
+    }
 
     const onRoleChange = async (role: string, userId: string, memberId: string) => {
         try {
@@ -64,6 +68,7 @@ export const MembersModal = () => {
             const NewServer = await res.json();
             router.refresh();
             onOpen("members", {server: NewServer.server});
+            // window.location.reload();
         } catch (error) {
             console.log(error);
         }finally{
@@ -88,6 +93,7 @@ export const MembersModal = () => {
             const NewServer = await res.json();
             router.refresh();
             onOpen("members", {server: NewServer.server});
+            // window.location.reload();
         } catch (error) {
             console.log(error);
         }finally{
