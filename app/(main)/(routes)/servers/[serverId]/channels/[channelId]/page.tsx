@@ -6,6 +6,7 @@ import { useRouter, redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChatHeader } from '@/components/chat/chat-header';
 import { ChatInput } from '@/components/chat/chat-input';
+import { ChatMessages } from '@/components/chat/chat-messages';
 
 
 interface ChannelIdPageProps {
@@ -86,9 +87,22 @@ const ChannelIdPage = ({params}: ChannelIdPageProps) => {
         email={session?.user?.email}
       />) }
 
-      <div className='flex-1'>
-        Future Messages!!
-      </div>
+      { gchannel && gmember && (<ChatMessages 
+          name={gchannel?.name}
+          member={gmember}
+          chatId={gchannel?._id}
+          apiUrl="/api/messages"
+          socketUrl="/api/socket/messages"
+          socketQuery={{
+            channelId: gchannel?._id,
+            serverId: gchannel?.serverId,
+            userId: user?._id,
+          }}
+          paramKey="channelId"
+          paramValue={gchannel?.channelId}
+          type="channel"
+        />
+      )}
 
       {gchannel && (<ChatInput 
         apiUrl="/api/socket/messages"
