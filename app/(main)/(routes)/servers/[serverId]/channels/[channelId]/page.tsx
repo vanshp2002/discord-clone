@@ -96,6 +96,7 @@ const ChannelIdPage = ({params}: ChannelIdPageProps) => {
           socketQuery={{
             channelId: gchannel?._id,
             serverId: gchannel?.serverId,
+            memberId: gmember?._id,
             userId: user?._id,
           }}
           paramKey="channelId"

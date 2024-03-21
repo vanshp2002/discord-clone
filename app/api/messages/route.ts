@@ -6,7 +6,7 @@ import Channel from "@/models/channel";
 import Member from "@/models/member";
 import Message from "@/models/message";
 
-const MESSAGES_BATCH = 10;
+const MESSAGES_BATCH = 15;
 
 export async function POST(req: Request) {
 
@@ -60,7 +60,6 @@ export async function POST(req: Request) {
         if(messages.length === MESSAGES_BATCH){
             nextCursor = messages[MESSAGES_BATCH - 1]._id;
         }
-
 
         return NextResponse.json({ items: messages, nextCursor });
     }catch(err){
