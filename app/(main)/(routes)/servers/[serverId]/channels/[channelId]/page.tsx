@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { channel } from 'diagnostics_channel';
+import ChatHeader from '@/components/chat/chat-header';
 
 interface ChannelIdPageProps{
   params:{
@@ -31,10 +32,10 @@ const ChannelIdPage = ({params}:ChannelIdPageProps) => {
                 });
 
                 const user = await userfind.json();
-                if (!userfind) {
+                if (!user) {
                     router.push("/login");
                 }
-                const getchannel = await fetch("/api/servers/getchannelid", {
+                const getchannel = await fetch("/api/channels/getchannelid", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -46,7 +47,8 @@ const ChannelIdPage = ({params}:ChannelIdPageProps) => {
                 
                 const {channel} = await getchannel.json();
                 setGchannel(channel);
-                const getmember = await fetch("/api/servers/getchannelid", {
+                console.log(gchannel);
+                const getmember = await fetch("/api/members/getmemberlid", {
                   method: "POST",
                   headers: {
                       "Content-Type": "application/json",
@@ -71,10 +73,10 @@ const ChannelIdPage = ({params}:ChannelIdPageProps) => {
 
         fetchData();
 
-    }, []); 
+    }, [session, router]); 
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
-      <ChatHeader />
+      <ChatHeader name={gchannel?.name} serverId={gchannel?.serverId} type="channel"/>
     </div>
   )
 }

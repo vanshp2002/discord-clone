@@ -14,11 +14,11 @@ const Login = () => {
   const session = useSession();
   const router = useRouter();
 
-  // useEffect(()=>{
-  //   if(session?.status === "authenticated"){
-  //     router.replace("channels");
-  //   }
-  // }, [session, router]);
+  useEffect(()=>{
+    if(session?.status === "authenticated"){
+      router.replace("channels");
+    }
+  }, [session, router]);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();

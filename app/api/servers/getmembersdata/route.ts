@@ -15,7 +15,7 @@ export async function POST(req) {
 
         // Populate user details for each member
         const populatedMembers = await Member.populate(members, { path: 'userId', model: User });
-        console.log("TIRTHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+        
         return NextResponse.json({ members: populatedMembers });
     } catch (error) {
         console.error(error);

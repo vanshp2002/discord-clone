@@ -9,9 +9,9 @@ import Channel from '@/models/channel';
 
 
 export async function POST(req: Request) {
-    console.log("Hi");
     try {
         const { name, imageUrl, email } = await req.json();
+        console.log(name, imageUrl, email);
         console.log(req.json());
         await connectMongoDB();
         const user = await User.findOne({ email });

@@ -172,6 +172,7 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
                             channelType="TEXT"
                             label="Text Channels"
                             server={ser}
+                            role={role}
                             user={userdata}
                         />
                         <div className="spca-y-[2px]">
@@ -187,6 +188,7 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
                         <ServerSection
                             sectionType="channels"
                             channelType="AUDIO"
+                            role={role}
                             label="Voice Channels"
                             server={ser}
                             user={userdata}
@@ -204,6 +206,7 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
                         <ServerSection
                             sectionType="channels"
                             channelType="VIDEO"
+                            role={role}
                             label="Video Channels"
                             server={ser}
                             user={userdata}

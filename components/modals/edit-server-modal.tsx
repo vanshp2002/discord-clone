@@ -92,11 +92,9 @@ export const EditServerModal = ({ email }) => {
             <DialogContent className="bg-white text-black  p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center font-bold">
-                        Create your server
+                        Edit server
                     </DialogTitle>
-                    <DialogDescription>
-                        Give your server a personality with a name and image , You can always change it later.
-                    </DialogDescription>
+                    
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
