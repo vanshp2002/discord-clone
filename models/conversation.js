@@ -1,13 +1,36 @@
-import { Schema, models, model } from 'mongoose';
+import mongoose, { Schema,models } from 'mongoose';
 
-const conversationSchema = new Schema({
-    memberOneId: { type: String, required: true, ref:'Member'},
-    memberTwoId: { type: String, required: true, ref:'Member' },
-    directMessages: [{ type: Schema.Types.ObjectId, ref: 'DirectMessage' }]
-  });
-  
-  conversationSchema.index({ memberTwoId: 1 });
-  conversationSchema.index({ memberOneId: 1, memberTwoId: 1 }, { unique: true });
-  
-  const Conversation = models.Conversation || model('Conversation', conversationSchema);
-  export default Conversation;
+const conversationSchema = new Schema(
+    {
+        memberOneId: 
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Member',
+                alias: 'memberOne',
+                required: true
+            }
+        ,
+        memberTwoId: 
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Member',
+                alias: 'memberTwo',
+                required: true
+            }
+        ,
+        directMessages: 
+            [
+                {
+                    type: Schema.Types.ObjectId,
+                    ref: 'DirectMessage'
+                }
+            ]
+        ,
+    }, {timestamps: true}
+);
+
+conversationSchema.index({ memberOneId: 1, memberTwoId: 1 }, { unique: true });
+
+const Conversation = models.Conversation || mongoose.model('Conversation', conversationSchema);
+
+export default Conversation;

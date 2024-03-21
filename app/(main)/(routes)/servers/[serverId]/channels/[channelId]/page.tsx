@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { channel } from 'diagnostics_channel';
 import ChatHeader from '@/components/chat/chat-header';
+import { ChatInput } from '@/components/chat/chat-input';
 
 interface ChannelIdPageProps{
   params:{
@@ -18,6 +19,7 @@ const ChannelIdPage = ({params}:ChannelIdPageProps) => {
     const router = useRouter();
     const [gchannel, setGchannel] = useState(null);
     const [gmember, setGmember] = useState(null);
+    const [guser, setGuser] = useState(null);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -35,6 +37,7 @@ const ChannelIdPage = ({params}:ChannelIdPageProps) => {
                 if (!user) {
                     router.push("/login");
                 }
+                setGuser(user);
                 const getchannel = await fetch("/api/channels/getchannelid", {
                     method: "POST",
                     headers: {
@@ -77,6 +80,17 @@ const ChannelIdPage = ({params}:ChannelIdPageProps) => {
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
       <ChatHeader name={gchannel?.name} serverId={gchannel?.serverId} type="channel"/>
+      <div className="flex-1">
+            Future Messages
+      </div>
+      {gchannel && (<ChatInput name={gchannel?.name}      type="channel" 
+      apiUrl="/api/socket/messages"
+      query={{
+        channelId: gchannel?._id,
+        serverId: gchannel?.serverId,
+        userId: guser?._id
+      }}
+      />)}
     </div>
   )
 }
