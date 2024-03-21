@@ -7,7 +7,7 @@ const messageSchema = new Schema(
             required: true
         },
         fileUrl:{
-            type: string,
+            type: String,
         },
         memberId:{
             type: Schema.Types.ObjectId,

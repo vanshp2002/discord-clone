@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter, redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChatHeader } from '@/components/chat/chat-header';
+import { ChatInput } from '@/components/chat/chat-input';
 
 
 interface ChannelIdPageProps {
@@ -19,6 +20,7 @@ const ChannelIdPage = ({params}: ChannelIdPageProps) => {
   const router = useRouter();
   const [gchannel, setGchannel] = useState(null);
   const [gmember, setGmember] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
 
@@ -35,6 +37,7 @@ const ChannelIdPage = ({params}: ChannelIdPageProps) => {
           });
 
           const user = await userfind.json();
+          setUser(user);
 
           const channelfind = await fetch(`/api/channels/fetchChannel`, {
             method: "POST",
@@ -82,6 +85,21 @@ const ChannelIdPage = ({params}: ChannelIdPageProps) => {
         type="channel"
         email={session?.user?.email}
       />) }
+
+      <div className='flex-1'>
+        Future Messages!!
+      </div>
+
+      {gchannel && (<ChatInput 
+        apiUrl="/api/socket/messages"
+        query={{
+            channelId: gchannel?._id,
+            serverId: gchannel?.serverId,
+            userId: user?._id,
+          }}
+        name={gchannel?.name}
+        type="channel"
+      />)}
     </div>
     )
 }
