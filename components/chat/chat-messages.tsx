@@ -15,6 +15,9 @@ const DATE_FORMAT = "d MMM yyyy, HH:mm";
 interface ChatMessagesProps {
     name: string;
     member: any;
+    otherName? :string;
+    otherUsername? :string;
+    otherImage? :string;
     chatId: string;
     apiUrl: string;
     socketUrl: string;
@@ -27,6 +30,9 @@ interface ChatMessagesProps {
 export const ChatMessages = ({
     name,
     member,
+    otherName,
+    otherUsername,
+    otherImage,
     chatId,
     apiUrl,
     socketUrl,
@@ -89,7 +95,7 @@ export const ChatMessages = ({
         <div ref={chatRef} className="flex-1 flex flex-col py-4 overflow-y-auto">
             {!hasNextPage && <div className="flex-1" />}
                 { !hasNextPage && 
-                  <ChatWelcome name={name} type={type} />
+                  <ChatWelcome name={name} type={type} username={otherUsername} src={otherImage}/>
                 }
 
         {hasNextPage && (
@@ -111,7 +117,8 @@ export const ChatMessages = ({
                 {data?.pages.map((group, i) => (
                     <Fragment key={i}>
                         {group.items.map((message) => (
-                            <ChatItem 
+                            <ChatItem
+                              type={type} 
                               key={message._id}
                               id={message._id}
                               currentMember={member}

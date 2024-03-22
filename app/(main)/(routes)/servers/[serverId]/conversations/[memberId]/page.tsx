@@ -5,6 +5,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ChatHeader from '@/components/chat/chat-header';
+import { ChatMessages } from '@/components/chat/chat-messages';
+import { ChatInput } from '@/components/chat/chat-input';
 
 interface MemberIdPageProps {
   params: {
@@ -20,6 +22,8 @@ const MemberIdPage = ({
   const router = useRouter();
   const [gchannel, setGchannel] = useState(null);
   const [gmember, setGmember] = useState(null);
+  const [guser, setGuser] = useState(null);
+  const [gconversation, setGconversation] = useState(null);
   const [otherMem, setOtherMem] = useState(null)
   useEffect(() => {
     const fetchData = async () => {
@@ -37,6 +41,7 @@ const MemberIdPage = ({
         if (!user) {
           router.push("/login");
         }
+        setGuser(user);
         const currentmember = await fetch("/api/servers/getmemberdata", {
           method: "POST",
           headers: {
@@ -53,7 +58,8 @@ const MemberIdPage = ({
         if (!member) {
           return router.push("/");
         }
-
+        setGmember(member);
+        
         const con = await fetch("/api/conversations/getorcreateconversation", {
           method: "POST",
           headers: {
@@ -70,11 +76,11 @@ const MemberIdPage = ({
         if(!conversation){
           return router.push(`/servers/${params.serverId}`);
         }
-        console.log(conversation);
-
+        await setGconversation(conversation);
+        console.log(gconversation);
         const {memberOneId, memberTwoId} = await conversation;
         
-        const otherMember = await memberOneId.userId._id === user._id ? memberTwoId : memberOneId;
+        const otherMember = await memberOneId._id === user._id ? memberTwoId : memberOneId;
 
         await setOtherMem(otherMember);
 
@@ -87,8 +93,65 @@ const MemberIdPage = ({
 
   }, [session, router]);
   return (
-    <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
-      {<ChatHeader imageUrl={otherMem?.userId?.imageUrl} name={otherMem?.userId?.displayname} type="conversation"/>}
+  //   <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
+  //     {<ChatHeader imageUrl={otherMem?.userId?.imageUrl} name={otherMem?.userId?.displayname} type="conversation" serverId={params.serverId}/>}
+  //     {gconversation && <ChatMessages
+  //       member = {gmember}
+  //       otherName={otherMem?.userId?.displayname}
+  //       otherUsername={otherMem?.userId?.username}
+  //       otherImage={otherMem?.userId?.imageUrl}
+  //       name={otherMem?.userId?.displayname}
+  //       chatId={gconversation._id}
+  //       type="conversation"
+  //       apiUrl="/api/direct-messages"
+  //       paramKey="conversationId"
+  //       paramValue={gconversation._id}
+  //       socketUrl="/api/socket/direct-messages"
+  //       socketQuery={{
+  //         conversationId: gconversation._id,
+  //         userId: guser._id
+  //       }}
+  //     />}
+  //     {gconversation && <ChatInput
+  //       name={otherMem?.userId?.displayname}
+  //       type="conversation"
+  //       apiUrl="/api/socket/direct-messages"
+  //       query={{
+  //         conversationId: gconversation._id,
+  //         userId: guser._id,
+  //         memberId: gmember._id
+  //       }}
+  //     />}
+  //   </div>
+  // )
+  <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
+      {<ChatHeader imageUrl={otherMem?.imageUrl} name={otherMem?.displayname} type="conversation" serverId={params.serverId}/>}
+      {gconversation && <ChatMessages
+        member = {gmember}
+        otherName={otherMem?.displayname}
+        otherUsername={otherMem?.username}
+        otherImage={otherMem?.imageUrl}
+        name={otherMem?.displayname}
+        chatId={gconversation._id}
+        type="conversation"
+        apiUrl="/api/direct-messages"
+        paramKey="conversationId"
+        paramValue={gconversation._id}
+        socketUrl="/api/socket/direct-messages"
+        socketQuery={{
+          conversationId: gconversation._id,
+          userId: guser._id
+        }}
+      />}
+      {gconversation && <ChatInput
+        name={otherMem?.displayname}
+        type="conversation"
+        apiUrl="/api/socket/direct-messages"
+        query={{
+          conversationId: gconversation._id,
+          userId: guser._id
+        }}
+      />}
     </div>
   )
 }

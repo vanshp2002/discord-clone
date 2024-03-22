@@ -3,6 +3,7 @@ import React from 'react'
 import {MobileToggle} from '@/components/mobile-toggle'
 import {UserAvatar} from "@/components/user-avatar"
 import { SocketIndicator } from '@/components/socket-indicator';
+
 interface ChatHeaderProps {
     serverId: string;
     name: string;
@@ -10,7 +11,6 @@ interface ChatHeaderProps {
     imageUrl?: string;
     email?:string;
 }
-
 
 const ChatHeader = ({ serverId,
     name,

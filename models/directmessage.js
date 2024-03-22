@@ -11,7 +11,7 @@ const directMessageSchema = new Schema(
         },
         memberId:{
             type: Schema.Types.ObjectId,
-            ref: 'Member',
+            ref: 'User',    
         },
         conversationId:{
             type: Schema.Types.ObjectId,

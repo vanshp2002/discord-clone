@@ -1,6 +1,8 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import { NextResponse } from 'next/server';
 import Conversation from "@/models/conversation";
+import Member from "@/models/member";
+import User from "@/models/user";
 
 
 export async function POST(req: Request){
@@ -9,18 +11,24 @@ try {
     await connectMongoDB();
     const{memberOneId, memberTwoId} = await req.json();
 
+    const member1 = await Member.findOne({_id: memberOneId});   
+    const member2 = await Member.findOne({_id: memberTwoId});   
+
+    
     let conversation = await Conversation.findOne({
       $or: [
-        { memberOneId: memberOneId, memberTwoId: memberTwoId },
-        { memberOneId: memberTwoId, memberTwoId: memberOneId }
+        { memberOneId: member1.userId, memberTwoId: member2.userId },
+        { memberOneId: member2.userId, memberTwoId: member1.userId }
       ]
     });
+
+
 
     // If the conversation doesn't exist, create it
     if (!conversation) {
       conversation = new Conversation({
-        memberOneId,
-        memberTwoId,
+        memberOneId: member1.userId, 
+        memberTwoId: member2.userId,
         directMessages: [] // Initialize an empty array for direct messages
       });
       await conversation.save();
@@ -31,10 +39,7 @@ try {
     conversation = await Conversation.findById(conversation._id)
       .populate({
         path: 'memberOneId memberTwoId',
-        populate: {
-          path: 'userId',
-          model: 'User' // Adjust according to your User model name
-        }
+        model: 'User'
       });
 
     return NextResponse.json({conversation});
