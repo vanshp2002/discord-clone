@@ -3,6 +3,7 @@ import { NextApiRequest } from "next";
 import { NextApiResponseServerIo } from "@/types";
 import Channel from "@/models/channel";
 import Message from "@/models/message";
+import Member from "@/models/member";
 import User from "@/models/user";
 import Server from "@/models/server";
 import { connectMongoDB } from "@/lib/mongodb";
@@ -16,7 +17,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
         await connectMongoDB();
         const { channelId, serverId, userId } = req.query;
         const { content, fileUrl } = req.body;
-                console.log(channelId, serverId, userId, content, fileUrl)
 
         if (!channelId) {
         return res.status(400).json({ message: "Channel ID not found" });
@@ -62,7 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
             return res.status(404).json({ message: "Channel not found" });
         }
 
-
+        const member2 = await Member.find({channelId, serverId})
         const member = server.members.find((member) => member.userId._id.toString() === userId);
 
         if(!member){
