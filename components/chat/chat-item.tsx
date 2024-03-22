@@ -6,7 +6,9 @@ import qs from "query-string";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
+import Picker, { Emoji } from "emoji-picker-react";
+
+import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash, Smile } from "lucide-react";
 
 import { UserAvatar } from "@/components/user-avatar";
 import { ActionToolTip } from "@/components/ui/action-tooltip";
@@ -24,6 +26,8 @@ import Image from "next/image";
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { EmojiPicker }from "@/components/emoji-picker";
+import { EmojiReactionPicker } from "../emoji-reaction-picker";
 
 interface ChatItemProps {
     id: string;
@@ -61,6 +65,7 @@ export const ChatItem = ({
     socketQuery,
   }: ChatItemProps) => {
     const [isEditing, setIsEditing] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
     const params = useParams();
     const router = useRouter();
 
@@ -226,27 +231,33 @@ export const ChatItem = ({
                     </div>
                 </div>
 
-                {canDeleteMessage && (
-                    <div className="hidden group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm">
-                    {canEditMessage && (
-                        <ActionToolTip label="Edit">
-                        <Edit
-                            onClick={() => setIsEditing(true)}
-                            className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-                        />
+                {!isEditing && (<div className="relative group" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+            <div className={`group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm ${isHovered ? 'flex' : 'hidden'}`}>
+                        
+                        <ActionToolTip label="React">
+                            <EmojiReactionPicker isHovered={isHovered} />
                         </ActionToolTip>
-                    )}
-                    <ActionToolTip label="Delete">
-                        <Trash
-                            onClick={() => onOpen("deleteMessage", { 
-                                apiUrl: `${socketUrl}/${id}`,
-                                query: socketQuery,
-                        })}
-                        className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-                        />
-                    </ActionToolTip>
+                        {canEditMessage && ( 
+                            <ActionToolTip label="Edit">
+                                <Edit
+                                    onClick={() => setIsEditing(true)}
+                                    className="cursor-pointer w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+                                />
+                            </ActionToolTip>
+                        )}
+                        {canDeleteMessage && (
+                            <ActionToolTip label="Delete">
+                                <Trash
+                                    onClick={() => onOpen("deleteMessage", { 
+                                        apiUrl: `${socketUrl}/${id}`,
+                                        query: socketQuery,
+                                    })}
+                                    className="cursor-pointer w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+                                />
+                            </ActionToolTip>
+                        )}
                     </div>
-                )}
+                </div>)}
             </div>
     )
 }
