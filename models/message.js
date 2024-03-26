@@ -21,7 +21,11 @@ const messageSchema = new Schema(
             type: Boolean,
             default: false
         },
-        reactions: []
+        reactions: [],
+        edited: {
+            type: Boolean,
+            default: false
+        }
     }, {timestamps: true}
 );
 

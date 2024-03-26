@@ -121,7 +121,7 @@ export const ChatMessages = ({
                               reactions={message.reactions}
                               fileUrl={message.fileUrl}
                               timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
-                              isUpdated={message.updatedAt !== message.createdAt}
+                              isUpdated={message.edited}
                               socketUrl={socketUrl}
                               socketQuery={socketQuery}
                             />

@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     try{
 
         await connectMongoDB();
-        const { messageId, emoji, memberId } = await req.json();
+        const { messageId, memberId } = await req.json();
 
         let message = await Message.findOne({ _id: new ObjectId(messageId) });
 
@@ -25,18 +25,8 @@ export async function POST(req: Request) {
 
         if(reactionIndex !== -1){
             reaction[reactionIndex].memberId = reaction[reactionIndex].memberId.filter((m) => m.toString() !== memberId);
-        } 
-
-        // Check if the emoji already exists
-        let emojiIndex = reaction.findIndex((r) => r.emoji === emoji);
-        if(emojiIndex !== -1){
-            reaction[emojiIndex].memberId.push(new ObjectId(memberId));
-        }
-        else {
-            reaction.push({
-                emoji,
-                memberId: [new ObjectId(memberId)]
-            });
+        } else {
+            return new NextResponse("Reaction not found", { status: 404 });
         }
 
         message.reactions = reaction;

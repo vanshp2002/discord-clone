@@ -28,6 +28,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { EmojiPicker }from "@/components/emoji-picker";
 import { EmojiReactionPicker } from "../emoji-reaction-picker";
+import { ReactionDisplayer } from "../reaction-displayer";
 
 interface ChatItemProps {
     id: string;
@@ -71,6 +72,8 @@ export const ChatItem = ({
     const params = useParams();
     const router = useRouter();
 
+    const [messageReactions, setMessageReactions] = useState(reactions);
+
     const { onOpen } = useModal();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -99,6 +102,25 @@ export const ChatItem = ({
             memberId: currentMember._id,
             }),
         });
+        const {reactions} = await res.json();
+        router.refresh();
+        setMessageReactions(reactions);
+    };
+
+    const onReactionClick = async (currentMemberId: string) => {
+        const res = await fetch("/api/messages/removeReaction", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            messageId: id,
+            memberId: currentMemberId,
+          }),
+        });
+        const {reactions} = await res.json();
+        router.refresh();
+        setMessageReactions(reactions);
     };
 
     useEffect(() => {
@@ -212,13 +234,11 @@ export const ChatItem = ({
                         )}
                         </p>
 
-                        <div className="flex gap-x-2 mt-2 h-8 rounded items-center  bg-zinc-200/90 dark:bg-zinc-700/45 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200">
-                        {reactions.map((reaction: any) => (
-                            <div key={reaction.emoji} className="flex items-center">
+                        <div className="flex gap-x-2 mt-2">
+                        {messageReactions.map((reaction: any) => (
+                            <div key={reaction.emoji} className="flex gap-x-1">
                             {reaction.memberId.length > 0 && (
-                                <div className="">
-                                {reaction.emoji} {reaction.memberId.length }
-                                </div>
+                                <ReactionDisplayer messageReactions={messageReactions} emoji={reaction.emoji} memberId={reaction.memberId} currentMemberId={currentMember._id} onReactionClick={onReactionClick}/>
                             )}
                             </div>
                         ))}

@@ -90,7 +90,7 @@ export default async function handler(
         }
         message = await Message.findByIdAndUpdate(
             { _id: messageId },
-            { content: req.body.content },
+            { content: req.body.content, edited: true},
             { new: true }
         );
     }
