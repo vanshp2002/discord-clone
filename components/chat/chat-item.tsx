@@ -36,6 +36,7 @@ interface ChatItemProps {
     timestamp: string;
     fileUrl: string | null;
     deleted: boolean;
+    reactions: any;
     currentMember: any;
     isUpdated: boolean;
     socketUrl: string;
@@ -59,6 +60,7 @@ export const ChatItem = ({
     timestamp,
     fileUrl,
     deleted,
+    reactions,
     currentMember,
     isUpdated,
     socketUrl,
@@ -84,6 +86,20 @@ export const ChatItem = ({
         }
         router.push(`/servers/${params?.serverId}/conversations/${member?._id}`);
     }
+
+    const onChange = async (emoji: string) => {
+        const res = await fetch("/api/messages/react", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            emoji,
+            messageId: id,
+            memberId: currentMember._id,
+            }),
+        });
+    };
 
     useEffect(() => {
         const handleKeyDown = (event: any) => {
@@ -182,17 +198,32 @@ export const ChatItem = ({
                 )}
 
                 {!fileUrl && !isEditing && (
-                    <p className={cn(
-                    "text-sm text-zinc-600 dark:text-zinc-300",
-                    deleted && "italic text-zinc-500 dark:text-zinc-400 text-xs mt-1"
-                    )}>
-                    {content}
-                    {isUpdated && !deleted && (
-                        <span className="text-[10px] mx-2 text-zinc-500 dark:text-zinc-400">
-                        (edited)
-                        </span>
-                    )}
-                    </p>
+                    <div>   
+                        
+                        <p className={cn(
+                        "text-sm text-zinc-600 dark:text-zinc-300",
+                        deleted && "italic text-zinc-500 dark:text-zinc-400 text-xs mt-1"
+                        )}>
+                        {content}
+                        {isUpdated && !deleted && (
+                            <span className="text-[10px] mx-2 text-zinc-500 dark:text-zinc-400">
+                            (edited)
+                            </span>
+                        )}
+                        </p>
+
+                        <div className="flex gap-x-2 mt-2 h-8 rounded items-center  bg-zinc-200/90 dark:bg-zinc-700/45 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200">
+                        {reactions.map((reaction: any) => (
+                            <div key={reaction.emoji} className="flex items-center">
+                            {reaction.memberId.length > 0 && (
+                                <div className="">
+                                {reaction.emoji} {reaction.memberId.length }
+                                </div>
+                            )}
+                            </div>
+                        ))}
+                        </div>
+                    </div>
                 )}
 
                     {!fileUrl && isEditing && (
@@ -235,7 +266,7 @@ export const ChatItem = ({
             <div className={`group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm ${isHovered ? 'flex' : 'hidden'}`}>
                         
                         <ActionToolTip label="React">
-                            <EmojiReactionPicker isHovered={isHovered} />
+                            <EmojiReactionPicker onChange={(emoji: string) => onChange(emoji)} isHovered={isHovered} />
                         </ActionToolTip>
                         {canEditMessage && ( 
                             <ActionToolTip label="Edit">

@@ -17,12 +17,12 @@ import {
 import { EmojiStyle, Theme, SuggestionMode } from 'emoji-picker-react';
 
 interface EmojiReactionPickerProps {
-  // onChange: (value: string) => void;
+  onChange: (value: string) => void;
   isHovered: boolean;
 }
 
 
-export const EmojiReactionPicker = ({isHovered}: EmojiReactionPickerProps) => {
+export const EmojiReactionPicker = ({onChange, isHovered}: EmojiReactionPickerProps) => {
     const { resolvedTheme } = useTheme();
     const [ shouldShow, setShouldShow ] = useState(false);
 
@@ -35,6 +35,11 @@ export const EmojiReactionPicker = ({isHovered}: EmojiReactionPickerProps) => {
 
     const handleOpenChange = () => {
         setShouldShow(!shouldShow);
+    }
+
+    const handleEmojiClick = (emoji: any) => {
+        onChange(emoji.emoji);
+        setShouldShow(false);
     }
 
     return (
@@ -55,7 +60,7 @@ export const EmojiReactionPicker = ({isHovered}: EmojiReactionPickerProps) => {
                 theme={Theme.DARK}
                 allowExpandReactions={true}
                 suggestedEmojisMode={SuggestionMode.RECENT}
-                // onEmojiClick={(emoji: any) => onChange(emoji.emoji)}
+                onReactionClick={(emoji: any) => handleEmojiClick(emoji)}
                 reactionsDefaultOpen={true}
                 />
             </PopoverContent>

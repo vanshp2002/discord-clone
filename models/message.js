@@ -20,7 +20,8 @@ const messageSchema = new Schema(
         deleted:{
             type: Boolean,
             default: false
-        }
+        },
+        reactions: []
     }, {timestamps: true}
 );
 
