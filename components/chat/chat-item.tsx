@@ -128,6 +128,8 @@ export const ChatItem = ({
     const isPDF = fileType === "pdf" && fileUrl;
     const isImage = !isPDF && fileUrl;
 
+    const isConversationMessageOwner = type === "conversation" && currentMember?.userId?._id===member._id;
+
     return (
         <>
             {type==="channel" && <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
@@ -254,13 +256,13 @@ export const ChatItem = ({
             {type ==="conversation" && <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
                 <div className="group flex gap-x-2 items-start w-full">
                     <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
-                        {member && <UserAvatar src={member?.userId?.imageUrl} />}
+                        {member && <UserAvatar src={member?.imageUrl} />}
                     </div>
                     <div className="flex flex-col w-full">
                         <div className="flex items-center gap-x-2">
                             <div className="flex items-center">
                                 <p onClick={onMemberClick} className="font-semibold text-sm hover:underline cursor-pointer">
-                                    {member?.userId?.displayname}
+                                    {member?.displayname}
                                 </p>
                                 
                             </div>
@@ -348,9 +350,9 @@ export const ChatItem = ({
                     </div>
                 </div>
 
-                {canDeleteMessage && (
+                {isConversationMessageOwner && (
                     <div className="hidden group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm">
-                        {canEditMessage && (
+                        {(
                             <ActionTooltip label="Edit">
                                 <Edit
                                     onClick={() => setIsEditing(true)}

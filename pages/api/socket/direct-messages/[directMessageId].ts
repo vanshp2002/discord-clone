@@ -6,6 +6,7 @@ import User from "@/models/user";
 import Server from "@/models/server";
 import Channel from "@/models/channel";
 import Message from "@/models/message";
+import DirectMessage from "@/models/directmessage";
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,69 +17,40 @@ export default async function handler(
   }
 
   try{
-    const {userId, channelId, serverId, memberId, messageId} = req.query;
+    const {conversationId, userId, directmessageId} = req.query;
 
     await connectMongoDB();
 
     const user = await User.findById({ _id: userId });
-    let server = await Server.findById({ _id: serverId });
 
-    if (!user || !server) {
+    if (!user) {
       return res.status(404).json({ error: "Not found" });
     }
 
-    let channel = await Channel.findById({ _id: channelId });
-    
-    if (!channel) {
-      return res.status(404).json({ error: "Channel not found" });
-    }
-
-    server = await Server.populate(server, [{
-            path: "channels",
-            model: "Channel",
-        },
-        {
-            path: "members",
-            model: "Member",
-            populate: {
-                path: "userId",
-                model: "User",
-            },
-        }]
-    );
-
-    const member = server.members.find((member) => member.userId._id.toString() === user._id.toString());
-
-    if(!member){
-      return res.status(403).json({ error: "Forbidden" });
-    }
-
-    let message = await Message.findById({
-        _id: messageId,
+    let message = await DirectMessage.findById({
+        _id: directmessageId,
     });
 
     if(!message || message?.deleted) {
         return res.status(404).json({ error: "Message not found" });
     }
 
-    message = await Message.populate(message, 
+    message = await DirectMessage.populate(message, 
     {
         path: "memberId",
-        model: "Member",
+        model: "User",
     });
 
-    const isMessageOwner = message.memberId._id.toString() === member._id.toString();
-    const isAdmin = member.role === "ADMIN";
-    const isModerator = member.role === "MODERATOR";
-    const canModify = isMessageOwner || isAdmin || isModerator;
+    const isMessageOwner = message.memberId._id.toString() === user._id.toString();
+    const canModify = isMessageOwner;
 
     if(!canModify){
       return res.status(403).json({ error: "Forbidden" });
     }
 
     if(req.method === "DELETE"){
-        message = await Message.findByIdAndUpdate(
-            { _id: messageId },
+        message = await DirectMessage.findByIdAndUpdate(
+            { _id: directmessageId },
             { fileUrl: null, content: "This message has been deleted.", deleted: true },
             { new: true }
         );
@@ -88,23 +60,25 @@ export default async function handler(
         if(!isMessageOwner) {
             return res.status(403).json({ error: "Forbidden" });
         }
-        message = await Message.findByIdAndUpdate(
-            { _id: messageId },
+        message = await DirectMessage.findByIdAndUpdate(
+            { _id: directmessageId },
             { content: req.body.content },
             { new: true }
         );
     }
 
-    message = await Message.populate(message, {
-        path: "memberId",
-        model: "Member",
-        populate: {
-            path: "userId",
+    message = await DirectMessage.populate(message, [
+        {
+            path: "memberId",
             model: "User",
         },
-    });
+        {
+            path: "conversationId",
+            model: "Conversation",
+        },
+    ]);
 
-    const updateKey = `chat:${channelId}:messages:update`;
+    const updateKey = `chat:${conversationId}:messages:update`;
 
     res?.socket?.server?.io?.emit(updateKey, message);
 

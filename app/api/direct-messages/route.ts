@@ -14,9 +14,8 @@ export async function POST(req: Request) {
         await connectMongoDB();
         const { searchParams } = new URL(req.url);
 
-        
-        const {cursor, conversationId, userId} = await req.json();
-        console.log(cursor, conversationId, userId)
+        const {cursor, channelId, userId} = await req.json();
+        const conversationId = channelId;
 
         const user = await User.findOne({ _id: userId });
 
@@ -32,25 +31,29 @@ export async function POST(req: Request) {
 
         if(cursor) {
             messages = await DirectMessage.find({ conversationId: new ObjectId(conversationId), _id: { $lt: new ObjectId(cursor) } }).sort({ createdAt: -1 }).limit(MESSAGES_BATCH);
-            messages = await DirectMessage.populate(messages, {
-                path: "memberId",
-                model: "Member",
-                populate: {
-                    path: "userId",
-                    model: "User"
-                }
-            });
+            messages = await DirectMessage.populate(messages, [
+                {
+                    path: "memberId",
+                    model: "User",
+                },
+                {
+                    path: "conversationId",
+                    model: "Conversation",
+                },
+            ]);
             console.log("[DIRECT_MESSAGES_GET]",messages);
         } else {
-            messages = await Message.find({ conversationId: new ObjectId(conversationId) }).sort({ createdAt: -1 }).limit(MESSAGES_BATCH);
-            messages = await Message.populate(messages, {
-                path: "memberId",
-                model: "Member",
-                populate: {
-                    path: "userId",
-                    model: "User"
-                }
-            });
+            messages = await DirectMessage.find({ conversationId: new ObjectId(conversationId) }).sort({ createdAt: -1 }).limit(MESSAGES_BATCH);
+            messages = await DirectMessage.populate(messages, [
+                {
+                    path: "memberId",
+                    model: "User",
+                },
+                {
+                    path: "conversationId",
+                    model: "Conversation",
+                },
+            ]);
         }
 
         let nextCursor = null;

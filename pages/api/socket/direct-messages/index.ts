@@ -18,7 +18,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
         await connectMongoDB();
         const { conversationId, userId } = req.query;
         const { content, fileUrl } = req.body;
-
         
 
         if(!userId) {
