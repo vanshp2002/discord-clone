@@ -104,7 +104,7 @@ const ChannelIdPage = ({params}: ChannelIdPageProps) => {
           type="channel"
         />
       )}
-
+      
       {gchannel && (<ChatInput 
         apiUrl="/api/socket/messages"
         query={{

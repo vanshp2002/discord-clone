@@ -3,7 +3,7 @@ import { currentProfile } from "@/lib/current-profile";
 import { set } from "mongoose";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
-
+import {ModeToggle} from "@/components/mode-toggle"
 import { NavigationAction } from "@/components/navigation/navigation-action";
 import { Separator } from "../ui/separator";
 import { ScrollArea } from "../ui/scroll-area";
@@ -65,7 +65,9 @@ export const NavigationSidebar = ({email}) => {
                 }
             </ScrollArea>)}
             <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
-            
+            <div className="pb-3 mt-auto flex items-center flex-col">
+                <ModeToggle/>
+            </div>
             {userdata && 
             
                 <div className="flex items-center justify-center w-10 h-10 bg-zinc-300 dark:bg-zinc-700 rounded-full cursor-pointer">

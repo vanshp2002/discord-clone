@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import Picker, { Emoji } from "emoji-picker-react";
 
-import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash, Smile } from "lucide-react";
+import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash, Smile, Reply } from "lucide-react";
 
 import { UserAvatar } from "@/components/user-avatar";
 import { ActionToolTip } from "@/components/ui/action-tooltip";
@@ -29,6 +29,17 @@ import { useRouter, useParams } from "next/navigation";
 import { EmojiPicker }from "@/components/emoji-picker";
 import { EmojiReactionPicker } from "../emoji-reaction-picker";
 import { ReactionDisplayer } from "../reaction-displayer";
+
+import {
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetDescription,
+    SheetFooter,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+  } from "@/components/ui/sheet"
 
 interface ChatItemProps {
     id: string;
@@ -284,7 +295,9 @@ export const ChatItem = ({
 
                 {!isEditing && (<div className="relative group" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
             <div className={`group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm ${isHovered ? 'flex' : 'hidden'}`}>
-                        
+                        <ActionToolTip label="reply">
+                            <Reply className="cursor-pointer w-5 h-5 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"/>           
+                        </ActionToolTip>
                         <ActionToolTip label="React">
                             <EmojiReactionPicker onChange={(emoji: string) => onChange(emoji)} isHovered={isHovered} />
                         </ActionToolTip>
