@@ -10,34 +10,34 @@ import { connectMongoDB } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponseServerIo) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
+    if (req.method !== "POST") {
+        return res.status(405).json({ message: "Method not allowed" });
     }
-    try{
+    try {
         await connectMongoDB();
         const { channelId, serverId, userId, reply } = req.query;
         const { content, fileUrl } = req.body;
 
         if (!channelId) {
-        return res.status(400).json({ message: "Channel ID not found" });
+            return res.status(400).json({ message: "Channel ID not found" });
         }
 
-        if(!serverId) {
+        if (!serverId) {
             return res.status(400).json({ message: "Server ID not found" });
         }
 
-        if(!userId) {
+        if (!userId) {
             return res.status(400).json({ message: "Unauthorized" });
         }
 
-        if(!content){
+        if (!content) {
             return res.status(400).json({ message: "Content is required" });
         }
 
-        const user = await User.findOne({ _id: userId});
+        const user = await User.findOne({ _id: userId });
         let server = await Server.findOne({ _id: serverId });
 
-        if(!server){
+        if (!server) {
             return res.status(404).json({ message: "Server not found" });
         }
 
@@ -58,30 +58,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
 
         const channel = await Channel.findOne({ _id: channelId, serverId: serverId });
 
-        if(!channel){
+        if (!channel) {
             return res.status(404).json({ message: "Channel not found" });
         }
 
-        const member2 = await Member.find({channelId, serverId})
+        const member2 = await Member.find({ channelId, serverId })
         const member = server.members.find((member) => member.userId._id.toString() === userId);
 
-        if(!member){
+        if (!member) {
             return res.status(404).json({ message: "Member not found" });
         }
 
         let message;
 
-        if(reply){  
+        if (reply) {
             message = new Message({
                 content,
-                reply,
+                reply: new ObjectId(reply),
                 replyExist: true,
                 fileUrl,
                 channelId,
                 memberId: member._id,
             });
         }
-        else{
+        else {
             message = new Message({
                 content,
                 fileUrl,
@@ -92,14 +92,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
 
         await message.save();
 
-        message = await Message.populate(message, {
-            path: "memberId",
-            model: "Member",
-            populate: {
-                path: "userId",
-                model: "User"
+        message = await Message.populate(message, [
+            {
+                path: "memberId",
+                model: "Member",
+                populate: {
+                    path: "userId",
+                    model: "User"
+                }
+            },
+            {
+                path: "reply",
+                model: "Message",
+                populate: [
+                    {
+                        path: "memberId",
+                        model: "Member"
+                    },
+                    {
+                        path: "memberId.userId",
+                        model: "User"
+                    }
+                ]
             }
-        });
+        ]);
+
 
         const channelKey = `chat:${channelId}:messages`;
 
@@ -108,8 +125,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
         return res.status(200).json(message);
 
     }
-    catch(err){
-      console.log(err);
-      return res.status(500).json({ message: "Internal server error" });
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: "Internal server error" });
     }
 }

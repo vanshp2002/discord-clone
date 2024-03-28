@@ -24,11 +24,11 @@ import Image from "next/image";
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import {useSharedState } from "../providers/reply-provider";
+import { useSharedState } from "../providers/reply-provider";
 
 interface ChatItemProps {
-    type: "channel"|"conversation";
-    reply: string;
+    type: "channel" | "conversation";
+    reply: any;
     id: string;
     content: string;
     member: any;
@@ -119,11 +119,11 @@ export const ChatItem = ({
         }
     }
 
-    const handleChange = (content: any, name: string) => {
-        console.log(content);
-        setReplyMessage({"content":content, "name":name});
+    const handleChange = (id: string) => {
+        console.log(id);
+        setReplyMessage(id);
     };
-    
+
 
     const isLoading = form.formState.isSubmitting;
 
@@ -137,11 +137,11 @@ export const ChatItem = ({
     const isPDF = fileType === "pdf" && fileUrl;
     const isImage = !isPDF && fileUrl;
 
-    const isConversationMessageOwner = type === "conversation" && currentMember?.userId?._id===member._id;
+    const isConversationMessageOwner = type === "conversation" && currentMember?.userId?._id === member._id;
 
     return (
         <>
-            {type==="channel" && <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
+            {type === "channel" && <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
                 <div className="group flex gap-x-2 items-start w-full">
                     <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
                         {member && <UserAvatar src={member?.userId?.imageUrl} />}
@@ -159,13 +159,14 @@ export const ChatItem = ({
                             <span className="text-xs text-zinc-500 dark:text-zinc-400">
                                 {timestamp}
                             </span>
-                                {reply && ( <div className="flex">
-                                    
-                                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mx-2">Reply to</p> <p onClick={onMemberClick} className="font-semibold text-sm cursor-pointer">
-                                            {reply}
-                                            </p>
-                                    </div>
-                                )}
+                            {reply && (<div className="flex">
+
+                                <p className="text-xs text-zinc-500 dark:text-zinc-400 mx-2">Reply to</p> <p onClick={onMemberClick} className="font-semibold text-sm cursor-pointer">
+                                    {reply?.memberId?.userId?.displayname}
+                                    {reply?.content}
+                                </p>
+                            </div>
+                            )}
                         </div>
                         {isImage && (
                             <a
@@ -250,12 +251,12 @@ export const ChatItem = ({
                 {canDeleteMessage && (
                     <div className="hidden group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm">
                         <ActionTooltip label="reply">
-                                
-                            <Reply 
+
+                            <Reply
                                 className="cursor-pointer w-5 h-5 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-                                onClick={()=>handleChange(content, member?.userId?.displayname)}
+                                onClick={() => handleChange(id)}
                             />
-                               
+
                         </ActionTooltip>
                         {canEditMessage && (
                             <ActionTooltip label="Edit">
@@ -277,7 +278,7 @@ export const ChatItem = ({
                     </div>
                 )}
             </div>}
-            {type ==="conversation" && <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
+            {type === "conversation" && <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
                 <div className="group flex gap-x-2 items-start w-full">
                     <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
                         {member && <UserAvatar src={member?.imageUrl} />}
@@ -288,7 +289,7 @@ export const ChatItem = ({
                                 <p onClick={onMemberClick} className="font-semibold text-sm hover:underline cursor-pointer">
                                     {member?.displayname}
                                 </p>
-                                
+
                             </div>
                             <span className="text-xs text-zinc-500 dark:text-zinc-400">
                                 {timestamp}
@@ -377,9 +378,9 @@ export const ChatItem = ({
                 {isConversationMessageOwner && (
                     <div className="hidden group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm">
                         <ActionTooltip label="reply">
-                                
-                                <Reply onClick={()=>handleChange(content, member?.displayname)}className="cursor-pointer w-5 h-5 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"/>
-                                   
+
+                            <Reply onClick={() => handleChange(content, member?.displayname)} className="cursor-pointer w-5 h-5 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+
                         </ActionTooltip>
                         {(
                             <ActionTooltip label="Edit">

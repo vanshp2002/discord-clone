@@ -6,10 +6,7 @@
   import ChatHeader from '@/components/chat/chat-header';
   import { ChatInput } from '@/components/chat/chat-input';
   import { ChatMessages } from '@/components/chat/chat-messages';
-  import { useSharedState } from '@/components/providers/reply-provider';
-  import {Button} from "@/components/ui/button"
-  import { Input } from "@/components/ui/input"
-
+  
 
   interface ChannelIdPageProps {
     params: {
@@ -24,10 +21,7 @@
     const [gchannel, setGchannel] = useState(null);
     const [gmember, setGmember] = useState(null);
     const [guser, setGuser] = useState(null);
-    const { replyMessage, setReplyMessage } = useSharedState("$"); 
-    const handleClose = () => {
-      setReplyMessage("$");
-    }
+   
     useEffect(() => {
       const fetchData = async () => {
         try {
@@ -113,22 +107,12 @@
         />
         )}
         
-        {replyMessage !=="$" &&   
-          <div className="flex">
-             <Input 
-              className="px-14 py-6 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black dark:text-white"
-              placeholder={`${replyMessage?.name}-->${replyMessage?.content}`} disabled/>
-             <Button onClick={handleClose}>Click</Button>
-          </div>
-        }
-
-        {replyMessage && gchannel && (<ChatInput
+       {gchannel && (<ChatInput
           apiUrl="/api/socket/messages"
           query={{
             channelId: gchannel?._id,
             serverId: gchannel?.serverId,
             userId: guser?._id,
-            reply: replyMessage?.content
           }}
           name={gchannel?.name}
           type="channel"

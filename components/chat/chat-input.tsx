@@ -7,6 +7,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Smile } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useSharedState } from '@/components/providers/reply-provider';
+import {Button} from "@/components/ui/button"
+
 
 import {
     Form,
@@ -39,6 +42,12 @@ export const ChatInput = ({
 
     const router = useRouter();
     const {onOpen} = useModal();
+    
+    const { replyMessage, setReplyMessage } = useSharedState(""); 
+
+    const handleClose = () => {
+      setReplyMessage("");
+    }
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -51,22 +60,37 @@ export const ChatInput = ({
 
       const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
+          const queryWithMessageId = {
+            ...query,
+            reply: replyMessage,
+          };      
           const url = qs.stringifyUrl({
             url: apiUrl,
-            query,
+            query: queryWithMessageId,
           });
-    
-          console.log(url, values)    
+      
+          console.log(url, values);
           await axios.post(url, values);
           form.reset();
+          setReplyMessage("");
           router.refresh();
         } catch (error) {
           console.log(error);
         }
+      
       }
 
     return (
-        <Form {...form}>
+      <div>      
+      {replyMessage &&   
+          <div className="flex">
+             <Input 
+              className="px-14 py-6 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black dark:text-white"
+              placeholder={`${replyMessage}`} disabled/>
+             <Button onClick={handleClose}>Click</Button>
+          </div>
+      }
+      <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
@@ -100,5 +124,7 @@ export const ChatInput = ({
         />
       </form>
     </Form>
+    </div>
+
     )
 }

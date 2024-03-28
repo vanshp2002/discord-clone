@@ -16,8 +16,8 @@ export async function POST(req: Request) {
         // let cursor = searchParams.get("cursor");
         // const channelId = searchParams.get("channelId");
 
-        
-        const {cursor, channelId, userId} = await req.json();
+
+        const { cursor, channelId, userId } = await req.json();
 
         // const userId = searchParams.get("userId");
 
@@ -27,43 +27,69 @@ export async function POST(req: Request) {
             return new NextResponse("Unauthorized", { status: 404 });
         }
 
-        if(!channelId){
+        if (!channelId) {
             return new NextResponse("Channel not found", { status: 404 });
         }
 
         let messages = [];
 
-        if(cursor) {
+        if (cursor) {
             messages = await Message.find({ channelId: new ObjectId(channelId), _id: { $lt: new ObjectId(cursor) } }).sort({ createdAt: -1 }).limit(MESSAGES_BATCH);
-            messages = await Message.populate(messages, {
+            messages = await Message.populate(messages, [{
                 path: "memberId",
                 model: "Member",
                 populate: {
                     path: "userId",
                     model: "User"
                 }
-            });
-            console.log("[MESSAGES_GET]",messages);
+            },
+            {
+                path: "reply",
+                model: "Message",
+                populate: {
+                    path: "memberId",
+                    model: "Member",
+                    populate: {
+                        path: "userId",
+                        model: "User"
+                    }
+                }
+            }
+            ]);
+            console.log("[MESSAGES_GET]", messages);
         } else {
             messages = await Message.find({ channelId: new ObjectId(channelId) }).sort({ createdAt: -1 }).limit(MESSAGES_BATCH);
-            messages = await Message.populate(messages, {
+            messages = await Message.populate(messages, [{
                 path: "memberId",
                 model: "Member",
                 populate: {
                     path: "userId",
                     model: "User"
                 }
-            });
+            },
+            {
+                path: "reply",
+                model: "Message",
+                populate: {
+                    path: "memberId",
+                    model: "Member",
+                    populate: {
+                        path: "userId",
+                        model: "User"
+                    }
+                }
+            }
+            ]);
         }
 
         let nextCursor = null;
-        if(messages.length === MESSAGES_BATCH){
+        if (messages.length === MESSAGES_BATCH) {
             nextCursor = messages[MESSAGES_BATCH - 1]._id;
         }
 
         return NextResponse.json({ items: messages, nextCursor });
-    }catch(err){
-        console.log("[MESSAGES_GET]",err);
+    } catch (err) {
+        console.log("[MESSAGES_GET]", err);
         return new NextResponse("Internal Server Error", { status: 500 });
     }
 

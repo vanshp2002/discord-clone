@@ -1,34 +1,35 @@
-import mongoose, { Schema,models } from 'mongoose';
+import mongoose, { Schema, models } from 'mongoose';
 
 const messageSchema = new Schema(
     {
-        content:{
+        content: {
             type: String,
             required: true
         },
-        replyExist:{
+        replyExist: {
             type: Boolean,
             default: false
         },
-        reply:{
+        reply: {
+            type: Schema.Types.ObjectId,
+            ref: 'Message'
+        },
+        fileUrl: {
             type: String,
         },
-        fileUrl:{
-            type: String,
-        },
-        memberId:{
+        memberId: {
             type: Schema.Types.ObjectId,
             ref: 'Member',
         },
-        channelId:{
+        channelId: {
             type: Schema.Types.ObjectId,
             ref: 'Channel'
         },
-        deleted:{
+        deleted: {
             type: Boolean,
             default: false
         }
-    }, {timestamps: true}
+    }, { timestamps: true }
 );
 
 const Message = models.Message || mongoose.model('Message', messageSchema);
