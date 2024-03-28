@@ -6,7 +6,6 @@ import React from 'react';
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import ServerState from './../../../../context/servers/serverContext';
 
 export default function Home() {
 
@@ -62,9 +61,7 @@ export default function Home() {
 
     return (
         <>
-            <ServerState>
-                {ser && <InitialModal email={session?.user?.email} />}
-            </ServerState>
+    {ser && <InitialModal email={session?.user?.email} />}
         </>
-    );
+    );          
 }

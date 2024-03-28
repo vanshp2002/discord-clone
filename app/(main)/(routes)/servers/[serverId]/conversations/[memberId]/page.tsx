@@ -7,6 +7,9 @@ import { useEffect, useState } from "react";
 import ChatHeader from '@/components/chat/chat-header';
 import { ChatMessages } from '@/components/chat/chat-messages';
 import { ChatInput } from '@/components/chat/chat-input';
+import { useSharedState } from '@/components/providers/reply-provider';
+import {Button} from "@/components/ui/button"
+import {Textarea} from "@/components/ui/textarea"
 
 interface MemberIdPageProps {
   params: {
@@ -24,7 +27,11 @@ const MemberIdPage = ({
   const [gmember, setGmember] = useState(null);
   const [guser, setGuser] = useState(null);
   const [gconversation, setGconversation] = useState(null);
-  const [otherMem, setOtherMem] = useState(null)
+  const [otherMem, setOtherMem] = useState(null);
+  const { replyMessage, setReplyMessage } = useSharedState(""); 
+    const handleClose = () => {
+      setReplyMessage("");
+    }
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -143,6 +150,12 @@ const MemberIdPage = ({
           userId: guser._id
         }}
       />}
+      {replyMessage && (
+             <div>
+             <Textarea placeholder={`${replyMessage?.name}-->${replyMessage?.content}`} disabled/>
+             <Button onClick={handleClose}>Click</Button>
+           </div>
+        )}
       {gconversation && <ChatInput
         name={otherMem?.displayname}
         type="conversation"

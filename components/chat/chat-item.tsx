@@ -6,7 +6,7 @@ import qs from "query-string";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
+import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash, Reply } from "lucide-react";
 
 import { UserAvatar } from "@/components/user-avatar";
 import { ActionTooltip } from "@/components/action-tooltip";
@@ -24,6 +24,7 @@ import Image from "next/image";
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
+import {useSharedState } from "../providers/reply-provider";
 
 interface ChatItemProps {
     type: "channel"|"conversation";
@@ -65,7 +66,7 @@ export const ChatItem = ({
     const [isEditing, setIsEditing] = useState(false);
     const params = useParams();
     const router = useRouter();
-
+    const { replyMessage, setReplyMessage } = useSharedState("");
     const { onOpen } = useModal();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -115,6 +116,12 @@ export const ChatItem = ({
             console.log(error);
         }
     }
+
+    const handleChange = (content: any, name: string) => {
+        console.log(content);
+        setReplyMessage({"content":content, "name":name});
+    };
+    
 
     const isLoading = form.formState.isSubmitting;
 
@@ -233,6 +240,14 @@ export const ChatItem = ({
 
                 {canDeleteMessage && (
                     <div className="hidden group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm">
+                        <ActionTooltip label="reply">
+                                
+                            <Reply 
+                                className="cursor-pointer w-5 h-5 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+                                onClick={()=>handleChange(content, member?.userId?.displayname)}
+                            />
+                               
+                        </ActionTooltip>
                         {canEditMessage && (
                             <ActionTooltip label="Edit">
                                 <Edit
@@ -352,6 +367,11 @@ export const ChatItem = ({
 
                 {isConversationMessageOwner && (
                     <div className="hidden group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm">
+                        <ActionTooltip label="reply">
+                                
+                                <Reply onClick={()=>handleChange(content, member?.displayname)}className="cursor-pointer w-5 h-5 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"/>
+                                   
+                        </ActionTooltip>
                         {(
                             <ActionTooltip label="Edit">
                                 <Edit

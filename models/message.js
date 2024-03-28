@@ -6,6 +6,13 @@ const messageSchema = new Schema(
             type: String,
             required: true
         },
+        replyExist:{
+            type: Boolean,
+            default: false
+        },
+        reply:{
+            type: String
+        },
         fileUrl:{
             type: String,
         },
