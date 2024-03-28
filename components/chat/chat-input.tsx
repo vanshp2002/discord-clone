@@ -34,7 +34,7 @@ export const ChatInput = ({
     apiUrl,
     query,
     name,
-    type,
+    type
   }: ChatInputProps) => {
 
     const router = useRouter();

@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
     }
     try{
         await connectMongoDB();
-        const { channelId, serverId, userId } = req.query;
+        const { channelId, serverId, userId, reply } = req.query;
         const { content, fileUrl } = req.body;
 
         if (!channelId) {
@@ -69,12 +69,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
             return res.status(404).json({ message: "Member not found" });
         }
 
-        let message = new Message({
-            content,
-            fileUrl,
-            channelId,
-            memberId: member._id,
-        });
+        let message;
+
+        if(reply){  
+            message = new Message({
+                content,
+                reply,
+                replyExist: true,
+                fileUrl,
+                channelId,
+                memberId: member._id,
+            });
+        }
+        else{
+            message = new Message({
+                content,
+                fileUrl,
+                channelId,
+                memberId: member._id,
+            });
+        }
 
         await message.save();
 

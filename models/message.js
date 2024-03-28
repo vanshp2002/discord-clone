@@ -11,7 +11,7 @@ const messageSchema = new Schema(
             default: false
         },
         reply:{
-            type: String
+            type: String,
         },
         fileUrl:{
             type: String,

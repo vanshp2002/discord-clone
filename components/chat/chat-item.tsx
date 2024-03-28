@@ -28,6 +28,7 @@ import {useSharedState } from "../providers/reply-provider";
 
 interface ChatItemProps {
     type: "channel"|"conversation";
+    reply: string;
     id: string;
     content: string;
     member: any;
@@ -52,6 +53,7 @@ const formSchema = z.object({
 
 export const ChatItem = ({
     type,
+    reply,
     id,
     content,
     member,
@@ -157,6 +159,13 @@ export const ChatItem = ({
                             <span className="text-xs text-zinc-500 dark:text-zinc-400">
                                 {timestamp}
                             </span>
+                                {reply && ( <div className="flex">
+                                    
+                                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mx-2">Reply to</p> <p onClick={onMemberClick} className="font-semibold text-sm cursor-pointer">
+                                            {reply}
+                                            </p>
+                                    </div>
+                                )}
                         </div>
                         {isImage && (
                             <a
