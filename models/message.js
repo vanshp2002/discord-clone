@@ -25,7 +25,14 @@ const messageSchema = new Schema(
         edited: {
             type: Boolean,
             default: false
-        }
+        },
+        reply: {
+            type: Object,
+        },
+        replyExist: {
+            type: Boolean,
+            default: false
+        },
     }, {timestamps: true}
 );
 

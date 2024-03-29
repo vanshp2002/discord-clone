@@ -15,71 +15,52 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
     try{
         await connectMongoDB();
         const { channelId, serverId, userId } = req.query;
-        const { content, fileUrl } = req.body;
+        const { content, fileUrl, replyMessage } = req.body;
 
-        if (!channelId) {
-        return res.status(400).json({ message: "Channel ID not found" });
+        if (!channelId || !serverId || !userId || !content) {
+            return res.status(400).json({ message: "Invalid input data" });
         }
 
-        if(!serverId) {
-            return res.status(400).json({ message: "Server ID not found" });
-        }
+        const server = await Server.findById(serverId).populate({
+            path: "members",
+            populate: {
+                path: "userId",
+                model: "User"
+            }
+        });
 
-        if(!userId) {
-            return res.status(400).json({ message: "Unauthorized" });
-        }
-
-        if(!content){
-            return res.status(400).json({ message: "Content is required" });
-        }
-
-        const user = await User.findOne({ _id: userId});
-        let server = await Server.findOne({ _id: serverId });
-
-        if(!server){
+        if (!server) {
             return res.status(404).json({ message: "Server not found" });
         }
 
-        server = await Server.populate(server, [
-            {
-                path: "members",
-                model: "Member",
-                populate: {
-                    path: "userId",
-                    model: "User"
-                }
-            },
-            {
-                path: "channels",
-                model: "Channel"
-            }
-        ]);
-
         const channel = await Channel.findOne({ _id: channelId, serverId: serverId });
 
-        if(!channel){
+        if (!channel) {
             return res.status(404).json({ message: "Channel not found" });
         }
 
+        const member = server.members.find(member => member.userId._id.toString() === userId);
 
-        const member = server.members.find((member) => member.userId._id.toString() === userId);
-
-        if(!member){
+        if (!member) {
             return res.status(404).json({ message: "Member not found" });
         }
 
-        let message = new Message({
+        const newMessageData = {
             content,
             fileUrl,
             channelId,
-            memberId: member._id,
-        });
+            memberId: member._id
+        };
 
-        await message.save();
+        if (replyMessage) {
+            newMessageData.reply = replyMessage;
+            newMessageData.replyExist = true;
+        }
 
-        message = await Message.populate(message, {
+        const message = await Message.create(newMessageData);
+
+        const populatedMessage = await Message.populate(message, {
             path: "memberId",
-            model: "Member",
             populate: {
                 path: "userId",
                 model: "User"
@@ -87,10 +68,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
         });
 
         const channelKey = `chat:${channelId}:messages`;
+        res?.socket?.server?.io?.emit(channelKey, populatedMessage);
 
-        res?.socket?.server?.io?.emit(channelKey, message);
-
-        return res.status(200).json(message);
+        return res.status(200).json(populatedMessage);
 
     }
     catch(err){

@@ -50,7 +50,15 @@ export async function POST(req: Request) {
                     path: "userId",
                     model: "User"
                 }
-            }
+            },
+            // {
+            //     path: "reply",
+            //     model: "Message",
+            // },
+            // {
+            //     path: "replyTo",
+            //     model: "User"
+            // }
         ]);
         } else {
             messages = await Message.find({ channelId: new ObjectId(channelId) }).sort({ createdAt: -1 }).limit(MESSAGES_BATCH);
@@ -69,7 +77,15 @@ export async function POST(req: Request) {
                     path: "userId",
                     model: "User"
                 }
-            }
+            },
+            // {
+            //     path: "reply",
+            //     model: "Message",
+            // },
+            // {
+            //     path: "replyTo",
+            //     model: "User"
+            // }
         ]);
         }
 

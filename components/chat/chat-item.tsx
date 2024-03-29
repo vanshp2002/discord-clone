@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import Picker, { Emoji } from "emoji-picker-react";
 
-import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash, Smile } from "lucide-react";
+import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash, Smile, Reply } from "lucide-react";
 
 import { UserAvatar } from "@/components/user-avatar";
 import { ActionToolTip } from "@/components/ui/action-tooltip";
@@ -29,10 +29,13 @@ import { useRouter, useParams } from "next/navigation";
 import { EmojiPicker }from "@/components/emoji-picker";
 import { EmojiReactionPicker } from "../emoji-reaction-picker";
 import { ReactionDisplayer } from "../reaction-displayer";
+import { useSharedState } from "../providers/reply-provider";
 
 interface ChatItemProps {
     id: string;
     content: string;
+    reply: any;
+    message: any;
     member: any;
     timestamp: string;
     fileUrl: string | null;
@@ -57,6 +60,8 @@ const formSchema = z.object({
 export const ChatItem = ({
     id,
     content,
+    reply,
+    message,
     member,
     timestamp,
     fileUrl,
@@ -73,6 +78,7 @@ export const ChatItem = ({
     const router = useRouter();
 
     const [messageReactions, setMessageReactions] = useState(reactions);
+    const { replyMessage, setReplyMessage } = useSharedState({});
 
     const { onOpen } = useModal();
 
@@ -82,6 +88,10 @@ export const ChatItem = ({
             content: content
         }
     });
+
+    const handleChange = () => {
+        setReplyMessage({ replyToId: member._id, replyToName: member.userId.displayname, replyToAvatar: member.userId.imageUrl, replyToContent: content});
+    };
 
     const onMemberClick = () => {
         if(member._id === currentMember._id) {
@@ -170,13 +180,22 @@ export const ChatItem = ({
     const isImage = !isPDF && fileUrl;
 
     return (
-        <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
-            <div className="group flex gap-x-2 items-start w-full">
+        <div className="relative group items-center hover:bg-black/5 p-4 transition w-full">
+            {reply && (
+                <div className="ml-4 text-xs flex items-center gap-x-2 p-2 rounded-md">
+                    <Reply className="w-4 h-4 text-zinc-500 dark:text-zinc-400" style={{ transform: 'scaleX(-1)' }} />
+                    <UserAvatar src={reply.replyToAvatar} className="h-3 w-3 md:h-3 md:w-3" />
+                    <p className="text-xs text-zinc-600 dark:text-zinc-200">
+                    {reply.replyToName}: {reply.replyToContent}
+                    </p>
+                </div>
+            )}
+                    <div className="group flex gap-x-2 items-start w-full">
                 <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
                 {member && <UserAvatar src={member?.userId?.imageUrl} />}
                 </div>
                 <div className="flex flex-col w-full">
-                <div className="flex items-center gap-x-2">
+                <div className="flex items-center gap-x-2"> 
                     <div className="flex items-center">
                     <p onClick={onMemberClick} className="font-semibold text-sm hover:underline cursor-pointer">
                         {member?.userId?.displayname}
@@ -282,11 +301,19 @@ export const ChatItem = ({
                     </div>
                 </div>
 
-                {!isEditing && (<div className="relative group" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-            <div className={`group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm ${isHovered ? 'flex' : 'hidden'}`}>
+                {!isEditing && (
+                <div className="absolute top-1/2 right-0 transform -translate-y-1/2">
+                <div className="relative group" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+                    <div className={`group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm ${isHovered ? 'flex' : 'hidden'}`}>
                         
                         <ActionToolTip label="React">
                             <EmojiReactionPicker onChange={(emoji: string) => onChange(emoji)} isHovered={isHovered} />
+                        </ActionToolTip>
+                        <ActionToolTip label="Reply">
+                            <Reply
+                                className="cursor-pointer w-5 h-5 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+                                onClick={handleChange}
+                            />
                         </ActionToolTip>
                         {canEditMessage && ( 
                             <ActionToolTip label="Edit">
@@ -308,7 +335,9 @@ export const ChatItem = ({
                             </ActionToolTip>
                         )}
                     </div>
-                </div>)}
+                </div>
+                </div>
+            )}
             </div>
     )
 }
