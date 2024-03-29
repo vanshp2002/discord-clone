@@ -11,6 +11,8 @@ This is a repository for Fullstack Discord Clone: Next.js 13, React, MongoDB, So
 - Real-time messaging using Socket.io
 - Send attachments as messages using UploadThing
 - Delete & Edit messages in real time for all users
+- React to Messages
+- Reply to a particular message
 - Create Text, Audio and Video call Channels
 - 1:1 conversation between members
 - 1:1 video calls between members
