@@ -28,6 +28,7 @@ import FileUpload  from "@/components/file-upload";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
 import { useEffect } from "react";
+import { useServerState } from "@/components/providers/server-provider";
 
 
 const formSchema = z.object({
@@ -42,6 +43,8 @@ export const UserModal = ({}) => {
 
     const isModalOpen = isOpen && type==="editUser";
     const { user } = data;
+    const { serverUpdated, setServerUpdated } = useServerState();
+
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -73,10 +76,10 @@ export const UserModal = ({}) => {
                     displayname: values.displayName,
                 }),
             });
+            setServerUpdated(prevServerUpdated => prevServerUpdated + 1);
             form.reset();
             router.refresh();
             onClose();
-            window.location.reload();
         }catch(error){
             console.error("Error modifying user details", error);
         }

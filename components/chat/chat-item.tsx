@@ -119,9 +119,8 @@ export const ChatItem = ({
         }
     }
 
-    const handleChange = (id: string) => {
-        console.log(id);
-        setReplyMessage(id);
+    const handleChange = () => {
+        setReplyMessage({ replyExist: true, replyId: id, replyContent: content, replyName: member?.userId?.displayname, replyImg: ""});
     };
 
 
@@ -141,7 +140,18 @@ export const ChatItem = ({
 
     return (
         <>
-            {type === "channel" && <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
+            {type === "channel" && <div className="relative group items-center hover:bg-black/5 p-4 transition w-full">
+            
+            {reply && (
+                <div className="ml-4 text-xs flex items-center gap-x-2 p-2 rounded-md">
+                    <Reply className="w-4 h-4 text-zinc-500 dark:text-zinc-400" style={{ transform: 'scaleX(-1)' }} />
+                    {/* <UserAvatar src={reply.replyToAvatar} className="h-3 w-3 md:h-3 md:w-3" /> */}
+                    <p className="text-xs text-zinc-600 dark:text-zinc-200">
+                    {reply.replyName}: {reply.replyContent}
+                    </p>
+                </div>
+            )}
+                
                 <div className="group flex gap-x-2 items-start w-full">
                     <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
                         {member && <UserAvatar src={member?.userId?.imageUrl} />}
@@ -159,14 +169,7 @@ export const ChatItem = ({
                             <span className="text-xs text-zinc-500 dark:text-zinc-400">
                                 {timestamp}
                             </span>
-                            {reply && (<div className="flex">
-
-                                <p className="text-xs text-zinc-500 dark:text-zinc-400 mx-2">Reply to</p> <p onClick={onMemberClick} className="font-semibold text-sm cursor-pointer">
-                                    {reply?.memberId?.userId?.displayname}
-                                    {reply?.content}
-                                </p>
-                            </div>
-                            )}
+                            
                         </div>
                         {isImage && (
                             <a
@@ -254,7 +257,7 @@ export const ChatItem = ({
 
                             <Reply
                                 className="cursor-pointer w-5 h-5 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-                                onClick={() => handleChange(id)}
+                                onClick={() => handleChange()}
                             />
 
                         </ActionTooltip>

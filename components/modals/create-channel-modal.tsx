@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from 'react-hook-form';
@@ -33,6 +33,8 @@ import {
     SelectTrigger,
     SelectValue
 } from "@/components/ui/select"
+import { useServerState } from "@/components/providers/server-provider";
+
 
 const channelT = ['TEXT', 'AUDIO', 'VIDEO'];
 
@@ -52,12 +54,15 @@ const formSchema = z.object({
 
 export const CreateChannelModal = ({ email }) => {
 
-    const { isOpen, onClose, type, data} = useModal();
+    const { isOpen, onClose, type, data } = useModal();
     const router = useRouter();
-    const {server} = data;
-    const {user} = data;
-    const {channelType} = data;
+    const { server } = data;
+    const { user } = data;
+    const { channelType } = data;
     const isModalOpen = isOpen && type === "createChannel";
+
+    const { serverUpdated, setServerUpdated } = useServerState();
+
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -67,11 +72,11 @@ export const CreateChannelModal = ({ email }) => {
         }
     });
 
-    useEffect(()=>{
-        if(channelType){
+    useEffect(() => {
+        if (channelType) {
             form.setValue("type", channelType);
         }
-        else{
+        else {
             form.setValue("type", "TEXT");
         }
     }, [channelType, form])
@@ -95,11 +100,11 @@ export const CreateChannelModal = ({ email }) => {
                 })
             })
             const toJson = await newchannel.json();
+            setServerUpdated(prevServerUpdated => prevServerUpdated + 1);
             console.log(toJson);
             form.reset();
             router.refresh();
             onClose();
-            window.location.reload();
         } catch (error) {
             console.error("Error creating server", error);
         }
@@ -163,7 +168,7 @@ export const CreateChannelModal = ({ email }) => {
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                        <FormMessage/>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />

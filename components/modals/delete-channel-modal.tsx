@@ -13,20 +13,24 @@ import {
 import { useModal } from "@/hooks/use-modal-store";
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
+import { useServerState } from "@/components/providers/server-provider";
+
 
 export const DeleteChannelModal = ({ email }) => {
 
-    const {isOpen, onClose, type, data} = useModal();
+    const { isOpen, onClose, type, data } = useModal();
     const router = useRouter();
-    const isModalOpen = isOpen && type === "deleteChannel";   
-    const {server} = data;     
-    const {user} = data;    
-    const {channel} = data; 
+    const isModalOpen = isOpen && type === "deleteChannel";
+    const { server } = data;
+    const { user } = data;
+    const { channel } = data;
 
     const [isLoading, setIsLoading] = useState(false);
     const [loadingId, setLoadingId] = useState(false);
-    
-    const onDelete= async (channelId: string) => {
+    const { serverUpdated, setServerUpdated } = useServerState();
+
+
+    const onDelete = async (channelId: string) => {
         try {
             setLoadingId(channelId);
             const updatedServers = await fetch("/api/channels/deletechannel", {
@@ -39,10 +43,9 @@ export const DeleteChannelModal = ({ email }) => {
                     channelId
                 })
             })
-            onClose();
+            setServerUpdated(prevServerUpdated => prevServerUpdated + 1);
             router.refresh();
-            window.location.reload();
-
+            onClose();
         } catch (error) {
             console.log(error);
         }
@@ -80,7 +83,7 @@ export const DeleteChannelModal = ({ email }) => {
                         >
                             Confirm
                         </Button>
-                    </div>                    
+                    </div>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

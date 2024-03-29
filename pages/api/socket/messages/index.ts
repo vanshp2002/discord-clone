@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
     }
     try {
         await connectMongoDB();
-        const { channelId, serverId, userId, reply } = req.query;
+        const { channelId, serverId, userId, replyId, replyExist, replyContent, replyName, replyImg } = req.query;
         const { content, fileUrl } = req.body;
 
         if (!channelId) {
@@ -71,11 +71,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
 
         let message;
 
-        if (reply) {
+        if (replyExist) {
             message = new Message({
                 content,
-                reply: new ObjectId(reply),
+                replyId: new ObjectId(replyId),
                 replyExist: true,
+                replyContent,
+                replyName,
+                replyImg,
                 fileUrl,
                 channelId,
                 memberId: member._id,
@@ -92,7 +95,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
 
         await message.save();
 
-        message = await Message.populate(message, [
+        message = await Message.populate(message, 
             {
                 path: "memberId",
                 model: "Member",
@@ -100,22 +103,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
                     path: "userId",
                     model: "User"
                 }
-            },
-            {
-                path: "reply",
-                model: "Message",
-                populate: [
-                    {
-                        path: "memberId",
-                        model: "Member"
-                    },
-                    {
-                        path: "memberId.userId",
-                        model: "User"
-                    }
-                ]
-            }
-        ]);
+            });
 
 
         const channelKey = `chat:${channelId}:messages`;

@@ -26,6 +26,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import FileUpload from '../file-upload';
 import { useModal } from "@/hooks/use-modal-store";
+import { useServerState } from "@/components/providers/server-provider";
+
 
 const formSchema = z.object({
     name: z.string().min(1, {
@@ -38,11 +40,11 @@ const formSchema = z.object({
 
 export const CreateServerModal = ({ email }) => {
 
-    const {isOpen, onClose, type} = useModal();
+    const { isOpen, onClose, type } = useModal();
     const router = useRouter();
-
     const isModalOpen = isOpen && type === "createServer";
-  
+    const { serverUpdated, setServerUpdated } = useServerState();
+
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -64,20 +66,19 @@ export const CreateServerModal = ({ email }) => {
                 body: JSON.stringify({
                     name: values.name,
                     imageUrl: values.imageUrl,
-                    email: email,   
+                    email: email,
                 })
             })
+            setServerUpdated(prevServerUpdated => prevServerUpdated + 1);
             form.reset();
             router.refresh();
             onClose();
-            window.location.reload();
-
         } catch (error) {
             console.error("Error creating server", error);
         }
     }
-    
-    const handleClose = () =>{
+
+    const handleClose = () => {
         form.reset();
         router.refresh();
         onClose();

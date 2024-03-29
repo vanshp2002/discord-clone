@@ -13,6 +13,8 @@ import {
 import { useModal } from "@/hooks/use-modal-store";
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
+import { useServerState } from "@/components/providers/server-provider";
+
 
 export const DeleteServerModal = ({ email }) => {
 
@@ -22,7 +24,9 @@ export const DeleteServerModal = ({ email }) => {
     const {server} = data;     
     const {user} = data;     
 
+    const { serverUpdated, setServerUpdated } = useServerState();
     const [isLoading, setIsLoading] = useState(false);
+
     const onClick = async () => {
         try {
             setIsLoading(true);
@@ -35,10 +39,9 @@ export const DeleteServerModal = ({ email }) => {
                     serverId: server?._id,
                 })
             })
-            onClose();
+            setServerUpdated(prevServerUpdated => prevServerUpdated + 1);
             router.refresh();
-            window.location.reload();
-            // router.push("/");
+            onClose();
         } catch (error) {
             console.log(error);
         }
@@ -68,7 +71,7 @@ export const DeleteServerModal = ({ email }) => {
                             Cancel
                         </Button>
                         <Button
-                            disabled={isLoading}
+                            // disabled={isLoading}
                             onClick={onClick}
                             variant="primary"
                         >

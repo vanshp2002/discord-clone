@@ -10,9 +10,18 @@ const messageSchema = new Schema(
             type: Boolean,
             default: false
         },
-        reply: {
+        replyId:{
             type: Schema.Types.ObjectId,
-            ref: 'Message'
+            ref: 'Message',
+        },
+        replyContent: {
+            type: String
+        },
+        replyName:{
+            type: String
+        },
+        replyImg: {  
+            type: String
         },
         fileUrl: {
             type: String,

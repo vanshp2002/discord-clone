@@ -35,51 +35,25 @@ export async function POST(req: Request) {
 
         if (cursor) {
             messages = await Message.find({ channelId: new ObjectId(channelId), _id: { $lt: new ObjectId(cursor) } }).sort({ createdAt: -1 }).limit(MESSAGES_BATCH);
-            messages = await Message.populate(messages, [{
+            messages = await Message.populate(messages, {
                 path: "memberId",
                 model: "Member",
                 populate: {
                     path: "userId",
                     model: "User"
                 }
-            },
-            {
-                path: "reply",
-                model: "Message",
-                populate: {
-                    path: "memberId",
-                    model: "Member",
-                    populate: {
-                        path: "userId",
-                        model: "User"
-                    }
-                }
-            }
-            ]);
+            });
             console.log("[MESSAGES_GET]", messages);
         } else {
             messages = await Message.find({ channelId: new ObjectId(channelId) }).sort({ createdAt: -1 }).limit(MESSAGES_BATCH);
-            messages = await Message.populate(messages, [{
+            messages = await Message.populate(messages, {
                 path: "memberId",
                 model: "Member",
                 populate: {
                     path: "userId",
                     model: "User"
                 }
-            },
-            {
-                path: "reply",
-                model: "Message",
-                populate: {
-                    path: "memberId",
-                    model: "Member",
-                    populate: {
-                        path: "userId",
-                        model: "User"
-                    }
-                }
-            }
-            ]);
+            });
         }
 
         let nextCursor = null;

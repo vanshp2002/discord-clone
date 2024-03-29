@@ -9,12 +9,16 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { NavigationItem } from '@/components/navigation/navigation-item';
 import {ModeToggle} from "@/components/mode-toggle"
 import { UserProfile } from "../user-profile-icon";
+import { useServerState } from "@/components/providers/server-provider";
+
 
 export const NavigationSidebar =  () => {
     const { data: session } = useSession();
     const router = useRouter();
     const [servers, setServers] = useState([]);
     const [userdata,setUserdata] = useState(null);
+    const { serverUpdated, setServerUpdated } = useServerState();
+        
 
     useEffect(() => {
         const fetchData = async () => {
@@ -56,7 +60,7 @@ export const NavigationSidebar =  () => {
 
         fetchData();
 
-    }, [session, router]);
+    }, [serverUpdated]);
 
 
     return (

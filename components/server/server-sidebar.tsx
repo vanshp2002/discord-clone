@@ -14,6 +14,8 @@ import ServerSection from './server-section';
 import { channel } from 'diagnostics_channel';
 import ServerChannel from './server-channel';
 import ServerMember from './server-member';
+import { useServerState } from "@/components/providers/server-provider";
+
 
 interface ServerSidebarProps{
     serverId: string;
@@ -43,6 +45,9 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
     const [audioChannels, setAudioChannels] = useState([]);
     const [videoChannels, setVideoChannels] = useState([]);
     const [members, setMembers] = useState([])
+    const { serverUpdated, setServerUpdated } = useServerState();
+
+
     useEffect(() => {
         setIsMounted(true);
     }, [])
@@ -112,7 +117,7 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
 
         fetchData();
 
-    }, [session, router]);
+    }, [serverUpdated]);
     
         if (!isMounted) {
             return null;

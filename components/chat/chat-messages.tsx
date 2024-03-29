@@ -119,7 +119,7 @@ export const ChatMessages = ({
             {group.items.map((message) => (
               <ChatItem
                 type={type}
-                reply={message.replyExist ? message.reply : ""}
+                reply={message.replyExist ? message : ""}
                 key={message._id}
                 id={message._id}
                 currentMember={member}

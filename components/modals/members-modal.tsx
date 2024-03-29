@@ -14,6 +14,7 @@ import { useOrigin } from '@/hooks/use-origin';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {UserAvatar} from '../user-avatar';
 import { Check, Gavel, Loader2, MoreVertical, Shield, ShieldAlert, ShieldCheck, ShieldIcon, ShieldQuestion } from 'lucide-react';
+import { useServerState } from "@/components/providers/server-provider";
 
 import {
     DropdownMenu,
@@ -42,6 +43,9 @@ export const MembersModal = ({ email }) => {
     const [membersData, setMembersData] = useState([]);
     const [loadingId, setLoadingId] = useState("");
     const router = useRouter();
+    const { serverUpdated, setServerUpdated } = useServerState();
+
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -81,6 +85,7 @@ export const MembersModal = ({ email }) => {
             })
             const toJson = await updatedServers.json();
             router.refresh();
+            setServerUpdated(prevServerUpdated => prevServerUpdated + 1);
             onOpen("members", { server: toJson.server });
 
         } catch (error) {
@@ -106,6 +111,7 @@ export const MembersModal = ({ email }) => {
             })
             const toJson = await updatedServers.json();
             router.refresh();
+            setServerUpdated(prevServerUpdated => prevServerUpdated + 1);
             onOpen("members", { server: toJson.server });
 
         } catch (error) {

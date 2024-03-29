@@ -26,6 +26,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import FileUpload from '../file-upload';
 import { useModal } from "@/hooks/use-modal-store";
+import { useServerState } from "@/components/providers/server-provider";
 
 
 const formSchema = z.object({
@@ -39,11 +40,12 @@ const formSchema = z.object({
 
 export const EditServerModal = ({ email }) => {
 
-    const {isOpen, onClose, type, data} = useModal();
+    const { isOpen, onClose, type, data } = useModal();
     const router = useRouter();
+    const { serverUpdated, setServerUpdated } = useServerState();
 
     const isModalOpen = isOpen && type === "editServer";
-    const {server} = data;
+    const { server } = data;
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -52,7 +54,7 @@ export const EditServerModal = ({ email }) => {
         }
     });
     useEffect(() => {
-        if(server){
+        if (server) {
             form.setValue("name", server.name);
             form.setValue("imageUrl", server.imageUrl);
         }
@@ -73,17 +75,17 @@ export const EditServerModal = ({ email }) => {
                     imageUrl: values.imageUrl
                 })
             })
+            setServerUpdated(prevServerUpdated => prevServerUpdated + 1);
             form.reset();
             router.refresh();
             onClose();
-            window.location.reload();
 
         } catch (error) {
             console.error("Error creating server", error);
         }
     }
-    
-    const handleClose = () =>{
+
+    const handleClose = () => {
         onClose();
     }
 
@@ -94,7 +96,7 @@ export const EditServerModal = ({ email }) => {
                     <DialogTitle className="text-2xl text-center font-bold">
                         Edit server
                     </DialogTitle>
-                    
+
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

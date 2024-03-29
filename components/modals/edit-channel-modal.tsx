@@ -34,6 +34,9 @@ import {
     SelectValue
 } from "@/components/ui/select"
 
+import { useServerState } from "@/components/providers/server-provider";
+
+
 const channelT = ['TEXT', 'AUDIO', 'VIDEO'];
 
 const formSchema = z.object({
@@ -56,6 +59,8 @@ export const EditChannelModal = ({ email }) => {
     const router = useRouter();
     const {channel} = data;
     const isModalOpen = isOpen && type === "editChannel";
+    const { serverUpdated, setServerUpdated } = useServerState();
+
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -88,10 +93,10 @@ export const EditChannelModal = ({ email }) => {
                     type: values.type
                 })
             })
+            setServerUpdated(prevServerUpdated => prevServerUpdated + 1);
             form.reset();
             router.refresh();
             onClose();
-            window.location.reload();
         } catch (error) {
             console.error("Error creating server", error);
         }

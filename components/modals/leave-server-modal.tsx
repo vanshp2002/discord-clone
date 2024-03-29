@@ -13,20 +13,24 @@ import {
 import { useModal } from "@/hooks/use-modal-store";
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
+import { useServerState } from "@/components/providers/server-provider";
+
 
 export const LeaveServerModal = ({ email }) => {
 
-    const {isOpen, onClose, type, data} = useModal();
+    const { isOpen, onClose, type, data } = useModal();
     const router = useRouter();
-    const isModalOpen = isOpen && type === "leaveServer";   
-    const {server} = data;     
-    const {user} = data;     
+    const isModalOpen = isOpen && type === "leaveServer";
+    const { server } = data;
+    const { user } = data;
 
     const [isLoading, setIsLoading] = useState(false);
+    const { serverUpdated, setServerUpdated } = useServerState();
+
     const onClick = async () => {
         try {
             setIsLoading(true);
-            const leaveserver = await fetch("/api/servers/leaveserver",{
+            const leaveserver = await fetch("/api/servers/leaveserver", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -38,13 +42,13 @@ export const LeaveServerModal = ({ email }) => {
             })
             onClose();
             router.refresh();
-            window.location.reload();
-            // router.push("/");
+            setServerUpdated(prevServerUpdated => prevServerUpdated + 1);
+
         } catch (error) {
             console.log(error);
         }
     }
-   
+
     return (
         <Dialog open={isModalOpen} onOpenChange={onClose}>
             <DialogContent className="bg-white text-black  p-0 overflow-hidden">
@@ -72,7 +76,7 @@ export const LeaveServerModal = ({ email }) => {
                         >
                             Confirm
                         </Button>
-                    </div>                    
+                    </div>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
