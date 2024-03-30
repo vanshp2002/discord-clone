@@ -11,28 +11,28 @@ import { ObjectId } from "mongodb";
 import Conversation from "@/models/conversation";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponseServerIo) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
+    if (req.method !== "POST") {
+        return res.status(405).json({ message: "Method not allowed" });
     }
-    try{
+    try {
         await connectMongoDB();
         const { conversationId, userId } = req.query;
         const { content, fileUrl } = req.body;
-        
 
-        if(!userId) {
+
+        if (!userId) {
             return res.status(400).json({ message: "Unauthorized" });
         }
 
-        if(!content){
+        if (!content) {
             return res.status(400).json({ message: "Content is required" });
         }
 
-        const user = await User.findOne({ _id: userId});
-        
-        let conversation = await Conversation.findOne({_id: conversationId});
+        const user = await User.findOne({ _id: userId });
 
-        if(!conversation){
+        let conversation = await Conversation.findOne({ _id: conversationId });
+
+        if (!conversation) {
             return res.status(400).json({ message: "conversation is required" });
         }
 
@@ -43,13 +43,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
             conversationId,
         });
         await message.save();
-        console.log("||||||||||||||||||||||||||||||||||||||||   ")        
-        console.log(message);   
-        console.log("||||||||||||||||||||||||||||||||||||||||")
+
 
         const conversationUpdated = await Conversation.findOneAndUpdate(
-            { _id: conversationId }, 
-            { $push: { directMessages: message._id } }, 
+            { _id: conversationId },
+            { $push: { directMessages: message._id } },
             { new: true }
         );
 
@@ -71,8 +69,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
         return res.status(200).json(message);
 
     }
-    catch(err){
-      console.log(err);
-      return res.status(500).json({ message: "Internal server error" });
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: "Internal server error" });
     }
 }

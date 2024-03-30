@@ -9,7 +9,6 @@ import Channel from '@/models/channel';
 import { ObjectId } from "mongodb";
 
 export async function POST(req: Request) {
-    console.log("Hi");
     try {
         const {channelId, name, type} = await req.json();
         const updatedChannel = await Channel.findByIdAndUpdate(new ObjectId(channelId), { name, type }, { new: true });

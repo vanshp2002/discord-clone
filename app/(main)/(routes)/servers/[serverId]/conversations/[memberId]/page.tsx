@@ -8,8 +8,8 @@ import ChatHeader from '@/components/chat/chat-header';
 import { ChatMessages } from '@/components/chat/chat-messages';
 import { ChatInput } from '@/components/chat/chat-input';
 import { useSharedState } from '@/components/providers/reply-provider';
-import {Button} from "@/components/ui/button"
-import {Textarea} from "@/components/ui/textarea"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
 
 interface MemberIdPageProps {
   params: {
@@ -28,10 +28,10 @@ const MemberIdPage = ({
   const [guser, setGuser] = useState(null);
   const [gconversation, setGconversation] = useState(null);
   const [otherMem, setOtherMem] = useState(null);
-  const { replyMessage, setReplyMessage } = useSharedState(""); 
-    const handleClose = () => {
-      setReplyMessage("");
-    }
+  const { replyMessage, setReplyMessage } = useSharedState("");
+  const handleClose = () => {
+    setReplyMessage("");
+  }
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -66,7 +66,7 @@ const MemberIdPage = ({
           return router.push("/");
         }
         setGmember(member);
-        
+
         const con = await fetch("/api/conversations/getorcreateconversation", {
           method: "POST",
           headers: {
@@ -78,15 +78,14 @@ const MemberIdPage = ({
           }),
         })
 
-        const { conversation } = await con.json();  
+        const { conversation } = await con.json();
 
-        if(!conversation){
+        if (!conversation) {
           return router.push(`/servers/${params.serverId}`);
         }
         await setGconversation(conversation);
-        console.log(gconversation);
-        const {memberOneId, memberTwoId} = await conversation;
-        
+        const { memberOneId, memberTwoId } = await conversation;
+
         const otherMember = await memberOneId._id === user._id ? memberTwoId : memberOneId;
 
         await setOtherMem(otherMember);
@@ -100,41 +99,41 @@ const MemberIdPage = ({
 
   }, [session, router]);
   return (
-  //   <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
-  //     {<ChatHeader imageUrl={otherMem?.userId?.imageUrl} name={otherMem?.userId?.displayname} type="conversation" serverId={params.serverId}/>}
-  //     {gconversation && <ChatMessages
-  //       member = {gmember}
-  //       otherName={otherMem?.userId?.displayname}
-  //       otherUsername={otherMem?.userId?.username}
-  //       otherImage={otherMem?.userId?.imageUrl}
-  //       name={otherMem?.userId?.displayname}
-  //       chatId={gconversation._id}
-  //       type="conversation"
-  //       apiUrl="/api/direct-messages"
-  //       paramKey="conversationId"
-  //       paramValue={gconversation._id}
-  //       socketUrl="/api/socket/direct-messages"
-  //       socketQuery={{
-  //         conversationId: gconversation._id,
-  //         userId: guser._id
-  //       }}
-  //     />}
-  //     {gconversation && <ChatInput
-  //       name={otherMem?.userId?.displayname}
-  //       type="conversation"
-  //       apiUrl="/api/socket/direct-messages"
-  //       query={{
-  //         conversationId: gconversation._id,
-  //         userId: guser._id,
-  //         memberId: gmember._id
-  //       }}
-  //     />}
-  //   </div>
-  // )
-  <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
-      {<ChatHeader imageUrl={otherMem?.imageUrl} name={otherMem?.displayname} type="conversation" serverId={params.serverId}/>}
+    //   <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
+    //     {<ChatHeader imageUrl={otherMem?.userId?.imageUrl} name={otherMem?.userId?.displayname} type="conversation" serverId={params.serverId}/>}
+    //     {gconversation && <ChatMessages
+    //       member = {gmember}
+    //       otherName={otherMem?.userId?.displayname}
+    //       otherUsername={otherMem?.userId?.username}
+    //       otherImage={otherMem?.userId?.imageUrl}
+    //       name={otherMem?.userId?.displayname}
+    //       chatId={gconversation._id}
+    //       type="conversation"
+    //       apiUrl="/api/direct-messages"
+    //       paramKey="conversationId"
+    //       paramValue={gconversation._id}
+    //       socketUrl="/api/socket/direct-messages"
+    //       socketQuery={{
+    //         conversationId: gconversation._id,
+    //         userId: guser._id
+    //       }}
+    //     />}
+    //     {gconversation && <ChatInput
+    //       name={otherMem?.userId?.displayname}
+    //       type="conversation"
+    //       apiUrl="/api/socket/direct-messages"
+    //       query={{
+    //         conversationId: gconversation._id,
+    //         userId: guser._id,
+    //         memberId: gmember._id
+    //       }}
+    //     />}
+    //   </div>
+    // )
+    <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
+      {<ChatHeader imageUrl={otherMem?.imageUrl} name={otherMem?.displayname} type="conversation" serverId={params.serverId} />}
       {gconversation && <ChatMessages
-        member = {gmember}
+        member={gmember}
         otherName={otherMem?.displayname}
         otherUsername={otherMem?.username}
         otherImage={otherMem?.imageUrl}
@@ -150,12 +149,6 @@ const MemberIdPage = ({
           userId: guser._id
         }}
       />}
-      {replyMessage && (
-             <div>
-             <Textarea placeholder={`${replyMessage?.name}-->${replyMessage?.content}`} disabled/>
-             <Button onClick={handleClose}>Click</Button>
-           </div>
-        )}
       {gconversation && <ChatInput
         name={otherMem?.displayname}
         type="conversation"

@@ -25,7 +25,6 @@ export async function POST(req: Request) {
             { new: true } // Return the modified customer document
         );
 
-        console.log(customerUpdateResult);
 
         return NextResponse.json(postResult);
 

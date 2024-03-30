@@ -16,7 +16,6 @@ export async function POST(req) {
         }
 
         const server = await Server.findById(serverId).populate('channels').populate('members');
-        console.log(server);
         
         if (!server) {
             return new NextResponse("User not found", { status: 404 });

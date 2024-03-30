@@ -84,9 +84,7 @@ export const CreateChannelModal = ({ email }) => {
     const isLoading = form.formState.isSubmitting;
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            console.log(values);
-            console.log(server);
-            console.log(user);
+            
             const newchannel = await fetch("/api/channels/createchannel", {
                 method: "POST",
                 headers: {
@@ -101,7 +99,6 @@ export const CreateChannelModal = ({ email }) => {
             })
             const toJson = await newchannel.json();
             setServerUpdated(prevServerUpdated => prevServerUpdated + 1);
-            console.log(toJson);
             form.reset();
             router.refresh();
             onClose();

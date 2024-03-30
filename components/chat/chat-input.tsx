@@ -70,7 +70,6 @@ export const ChatInput = ({
         query: queryWithMessage,
       });
 
-      console.log(url, values);
       await axios.post(url, values);
       form.reset();
       setReplyMessage("");

@@ -9,7 +9,6 @@ import Channel from '@/models/channel';
 import { ObjectId } from "mongodb";
 
 export async function POST(req: Request) {
-    console.log("Hi");
     try {
         const {serverId, name, imageUrl} = await req.json();
         const updatedServer = await Server.findByIdAndUpdate(new ObjectId(serverId), { name, imageUrl }, { new: true });

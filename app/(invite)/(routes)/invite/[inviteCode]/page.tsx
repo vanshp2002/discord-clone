@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { NavigationSidebar } from './../../../../../components/navigation/navigation-sidebar';
+import {useServerState} from '@/components/providers/server-provider';
 
 interface InvitecodePageProps {
     params: {
@@ -14,7 +15,8 @@ const InviteCodePage = ({
 }: InvitecodePageProps) => {
     const { data: session } = useSession();
     const [dataFetched, setDataFetched] = useState(false);
-    useState
+    const { serverUpdated, setServerUpdated } = useServerState();
+
     const router = useRouter();
     let flag=false;
     useEffect(() => {
@@ -32,7 +34,6 @@ const InviteCodePage = ({
                         }),
                     });
                     const user = await userfind.json();
-                    console.log(user);
                     setDataFetched(true); // Mark data as fetched
 
                     const server = await fetch("/api/servers/ismember", {
@@ -62,9 +63,9 @@ const InviteCodePage = ({
 
                     })
                     const serverUpdatedJson = await serverUpdated.json();
-                    console.log(serverUpdatedJson.server)
-                    flag=true
-                    return router.push(`/servers/${serverUpdatedJson.server._id}`);                    
+                    flag=true;
+                    setServerUpdated(prevServerUpdated => prevServerUpdated + 1);                       
+                    return redirect(`/servers/${serverUpdatedJson.server._id}`);                    
 
                 } catch (error) {
                     console.error("Error fetching data:", error);

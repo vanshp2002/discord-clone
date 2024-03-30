@@ -23,7 +23,6 @@ export async function POST(req: Request) {
             { new: true }
         );
 
-        console.log(serverUpdateResult);
 
         return NextResponse.json(channelResult);
 

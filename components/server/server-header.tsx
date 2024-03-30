@@ -8,11 +8,6 @@ import { ChevronDown, UserPlus, Settings, Users, PlusCircle, Trash, LogOut } fro
 import { useModal } from '@/hooks/use-modal-store';
 
 const ServerHeader = ({ user, server, role }) => {
-
-    useEffect(() => {
-        console.log(server);
-        console.log(user);
-    }, [])
     const isAdmin = role === 'ADMIN';
     const isModerator = isAdmin || role === 'MODERATOR';
     const { onOpen } = useModal();

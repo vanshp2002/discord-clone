@@ -17,14 +17,14 @@ import ServerMember from './server-member';
 import { useServerState } from "@/components/providers/server-provider";
 
 
-interface ServerSidebarProps{
+interface ServerSidebarProps {
     serverId: string;
 }
 
 const iconMap = {
-    "TEXT": <Hash className="mr-2 h-4 w-4"/>,
-    "AUDIO": <Mic className="mr-2 h-4 w-4"/>,
-    "VIDEO": <Video className="mr-2 h-4 w-4"/>
+    "TEXT": <Hash className="mr-2 h-4 w-4" />,
+    "AUDIO": <Mic className="mr-2 h-4 w-4" />,
+    "VIDEO": <Video className="mr-2 h-4 w-4" />
 }
 
 const roleIconMap = {
@@ -33,8 +33,8 @@ const roleIconMap = {
     "ADMIN": <ShieldAlert className="mr-2 h-4 w-4 text-rose-500" />
 }
 
-const ServerSidebar = ({serverId}: ServerSidebarProps) => {
-    
+const ServerSidebar = ({ serverId }: ServerSidebarProps) => {
+
     const { data: session } = useSession();
     const router = useRouter();
     const [ser, setSer] = useState(null);
@@ -51,7 +51,7 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
     useEffect(() => {
         setIsMounted(true);
     }, [])
-    
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -65,11 +65,11 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
                     }),
                 });
 
-                if(!userfind){
+                if (!userfind) {
                     router.push("/");
                 }
-                
-                const user  = await userfind.json();
+
+                const user = await userfind.json();
                 setUserdata(user);
                 const servers = await fetch("/api/servers/getserverchannelsmembers", {
                     method: "POST",
@@ -84,7 +84,6 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
                     router.push("/");
                 }
                 const toJson = await servers.json();
-                // console.log(toJson.server);  
                 const channels = toJson.server.channels;
                 const response = await fetch("/api/servers/getmembersdata", {
                     method: "POST",
@@ -118,18 +117,18 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
         fetchData();
 
     }, [serverUpdated]);
-    
-        if (!isMounted) {
-            return null;
-        }
-    
+
+    if (!isMounted) {
+        return null;
+    }
+
     return (
         <div className="flex flex-col h-full tetx-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
-            {<ServerHeader user={userdata} server={ser} role={role}/>}
+            {<ServerHeader user={userdata} server={ser} role={role} />}
             <ScrollArea className="flex-1 px-3">
                 <div className="mt-2">
                     <ServerSearch
-                        data = {[
+                        data={[
                             {
                                 label: "TEXT CHANNELS",
                                 type: "channel",
@@ -169,7 +168,7 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
                         ]}
                     />
                 </div>
-                <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2"/>
+                <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
                 {!!textChannels?.length && (
                     <div className="mb-2">
                         <ServerSection
@@ -182,8 +181,8 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
                         />
                         <div className="spca-y-[2px]">
                             {textChannels.map((channel) => (
-                                <ServerChannel key={channel._id} channel={channel} role={role} server={ser}/>
-                                ))}
+                                <ServerChannel key={channel._id} channel={channel} role={role} server={ser} />
+                            ))}
                         </div>
                     </div>
 
@@ -199,9 +198,9 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
                             user={userdata}
                         />
                         <div className="spca-y-[2px]">
-                        {audioChannels.map((channel) => (
-                            <ServerChannel key={channel._id} channel={channel} role={role} server={ser}/>
-                        ))}
+                            {audioChannels.map((channel) => (
+                                <ServerChannel key={channel._id} channel={channel} role={role} server={ser} />
+                            ))}
                         </div>
                     </div>
 
@@ -217,9 +216,9 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
                             user={userdata}
                         />
                         <div className="spca-y-[2px]">
-                        {videoChannels.map((channel) => (
-                            <ServerChannel key={channel._id} channel={channel} role={role} server={ser}/>
-                        ))}
+                            {videoChannels.map((channel) => (
+                                <ServerChannel key={channel._id} channel={channel} role={role} server={ser} />
+                            ))}
                         </div>
                     </div>
 
@@ -233,14 +232,14 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
                             server={ser}
                         />
                         <div className="spca-y-[2px]">
-                        {members.map((member) => (
-                            <ServerMember key={member._id} member={member} server={ser}/>
-                        ))}
+                            {members.map((member) => (
+                                <ServerMember key={member._id} member={member} server={ser} />
+                            ))}
                         </div>
                     </div>
 
                 )}
-            </ScrollArea>               
+            </ScrollArea>
         </div>
     )
 }

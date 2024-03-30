@@ -22,7 +22,6 @@ const Login = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log(email, password);
     if (email === "" || password === "") {
       setError("Don't keep any detail empty.")
       return;

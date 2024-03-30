@@ -52,7 +52,6 @@
 
           const { channel } = await getchannel.json();
           setGchannel(channel);
-          console.log(gchannel);
           const getmember = await fetch("/api/members/getmemberid", {
             method: "POST",
             headers: {

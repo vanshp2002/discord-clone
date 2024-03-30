@@ -80,8 +80,7 @@ export const EditChannelModal = ({ email }) => {
     const isLoading = form.formState.isSubmitting;
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            console.log(values);
-            console.log(channel);
+           
             const newchannel = await fetch("/api/channels/editchannels", {
                 method: "POST",
                 headers: {

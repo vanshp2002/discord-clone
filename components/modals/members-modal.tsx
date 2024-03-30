@@ -49,7 +49,6 @@ export const MembersModal = ({ email }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // console.log(server?.members);
                 const response = await fetch("/api/servers/getmembersdata", {
                     method: "POST",
                     headers: {
@@ -61,7 +60,6 @@ export const MembersModal = ({ email }) => {
                 });
                 const data = await response.json();
                 setMembersData(Object.values(data.members));
-                console.log(Object.values(data.members));
             } catch (error) {
                 console.error("Error fetching members data:", error);
             }

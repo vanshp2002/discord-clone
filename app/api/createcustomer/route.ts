@@ -5,7 +5,6 @@ import Customer from "@/models/customer";
 
 
 export async function POST(req: Request) {
-    console.log("Tirth")
     try{
         const { name, email, password } = await req.json();
         
@@ -16,7 +15,6 @@ export async function POST(req: Request) {
           });
       
           const result = await Customer.collection.insertOne(newCustomer);
-          console.log(result);
           return NextResponse.json(result);
 
     }catch(error){
