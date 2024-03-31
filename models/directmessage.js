@@ -1,27 +1,44 @@
-import mongoose, { Schema,models } from 'mongoose';
+import mongoose, { Schema, models } from 'mongoose';
 
 const directMessageSchema = new Schema(
     {
-        content:{
+        content: {
             type: String,
             required: true
         },
-        fileUrl:{
+        replyExist: {
+            type: Boolean,
+            default: false
+        },
+        replyId: {
+            type: Schema.Types.ObjectId,
+            ref: 'DirectMessage',
+        },
+        replyContent: {
+            type: String
+        },
+        replyName: {
+            type: String
+        },
+        replyImg: {
+            type: String
+        },
+        fileUrl: {
             type: String,
         },
-        memberId:{
+        memberId: {
             type: Schema.Types.ObjectId,
-            ref: 'User',    
+            ref: 'User',
         },
-        conversationId:{
+        conversationId: {
             type: Schema.Types.ObjectId,
             ref: 'Conversation'
         },
-        deleted:{
+        deleted: {
             type: Boolean,
             default: false
         }
-    }, {timestamps: true}
+    }, { timestamps: true }
 );
 
 const DirectMessage = models.DirectMessage || mongoose.model('DirectMessage', directMessageSchema);
