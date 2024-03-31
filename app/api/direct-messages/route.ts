@@ -37,13 +37,10 @@ export async function POST(req: Request) {
                 path: "memberId",
                 model: "User",
             },
-            // {
-            //     path: "reactions.memberId",
-            //     model: "Member",
-            //     populate: {
-            //         path: "userId",
-            //         model: "User"
-            //     }
+            {
+                path: "reactions.memberId",
+                model: "User"
+            }
             // },
             // {
             //     path: "reply",
@@ -60,14 +57,10 @@ export async function POST(req: Request) {
                 path: "memberId",
                 model: "User"
             },
-            // {
-            //     path: "reactions.memberId",
-            //     model: "Member",
-            //     populate: {
-            //         path: "userId",
-            //         model: "User"
-            //     }
-            // },
+            {
+                path: "reactions.memberId",
+                model: "User",
+            },
             // {
             //     path: "reply",
             //     model: "Message",

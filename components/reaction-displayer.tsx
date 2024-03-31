@@ -18,9 +18,9 @@ import { Separator } from "@radix-ui/react-dropdown-menu";
 import { set } from "mongoose";
 
 interface ReactionDisplayerProps {
-    onReactionClick: (value: string) => void;
+    onReactionClick: (value1:string, value2: string) => void;
 //   isHovered: boolean;
-    messageReactions: any;
+    type: string;
     emoji: string;
     memberId: any;
     currentMemberId: string;
@@ -36,8 +36,8 @@ const roleIconMap = {
 export const ReactionDisplayer = ({
     // onChange,
     // isHovered,
-    messageReactions,
     onReactionClick,
+    type,
     emoji,
     memberId,
     currentMemberId
@@ -51,14 +51,15 @@ export const ReactionDisplayer = ({
     //     }
 
     // }, [isHovered]);
+    console.log("memberId", memberId);
 
     const handleOpenChange = () => {
         setShouldShow(!shouldShow);
     }
 
-    const handleClick = (currentMemberId: string) => {
+    const handleClick = (emoji: string, currentMemberId: string) => {
         return () => {
-            onReactionClick(currentMemberId);
+            onReactionClick(emoji, currentMemberId);
             setShouldShow(false);
         }
     }
@@ -84,13 +85,16 @@ export const ReactionDisplayer = ({
                     {memberId.map((member: any) => (
                         <div>
                         <div className="flex px-1 py-1 rounded bg-zinc-700/55 hover:bg-zinc-700/85" key={member._id}>
-                            <UserAvatar src={member.userId.imageUrl} className="h-8 w-8 md:h-8 md:w-8" />
-                            <span className="text-[14px] ml-1 py-1 px-2 flex"> {member.userId.username} 
+                            {type==="channel" && <UserAvatar src={member.userId.imageUrl} className="h-8 w-8 md:h-8 md:w-8" />}
+                            {type==="conversation" && <UserAvatar src={member.imageUrl} className="h-8 w-8 md:h-8 md:w-8" />}
+                            {type==="channel" && <span className="text-[14px] ml-1 py-1 px-2 flex"> {member.userId.username} 
                                     {roleIconMap[member.role]}
-                            </span>
+                            </span>}
+                            {type==="conversation" && <span className="text-[14px] ml-1 py-1 px-2 flex"> {member.username}
+                            </span>}
                             
                                 {member._id === currentMemberId && (
-                                    <button onClick={handleClick(currentMemberId)} className="ml-14 text-[10px] items-right">
+                                    <button onClick={handleClick(emoji, currentMemberId)} className="ml-14 text-[10px] items-right">
                                         Tap to remove
                                     </button>
                                 )}

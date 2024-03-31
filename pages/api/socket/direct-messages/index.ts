@@ -22,6 +22,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
             return res.status(400).json({ message: "Invalid input data" });
         }
 
+        const user = await User.findOne({ _id: new ObjectId(userId) });
+
         const newMessageData = {
             content,
             fileUrl,
@@ -46,11 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
             {
                 path: "memberId",
                 model: "User",
-            },
-            {
-                path: "conversationId",
-                model: "Conversation",
-            },
+            }
         ]);
 
         const channelKey = `chat:${conversationId}:messages`;

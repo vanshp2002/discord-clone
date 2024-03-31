@@ -17,15 +17,15 @@ const directMessageSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'Conversation'
         },
-        // deleted:{
-        //     type: Boolean,
-        //     default: false
-        // },
-        // edited:{
-        //     type: Boolean,
-        //     default: false
-        // },
-        // reactions
+        deleted:{
+            type: Boolean,
+            default: false
+        },
+        edited:{
+            type: Boolean,
+            default: false
+        },
+        reactions:[],
     }, {timestamps: true}
 );
 
