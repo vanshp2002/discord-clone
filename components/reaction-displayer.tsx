@@ -90,11 +90,11 @@ export const ReactionDisplayer = ({
                             {type==="channel" && <span className="text-[14px] ml-1 py-1 px-2 flex"> {member.userId.username} 
                                     {roleIconMap[member.role]}
                             </span>}
-                            {type==="conversation" && <span className="text-[14px] ml-1 py-1 px-2 flex"> {member.username}
+                            {type==="conversation" && <span className="text-[14px] ml-1 mr-9 py-1 px-2"> {member.username}
                             </span>}
                             
                                 {member._id === currentMemberId && (
-                                    <button onClick={handleClick(emoji, currentMemberId)} className="ml-14 text-[10px] items-right">
+                                    <button onClick={handleClick(emoji, currentMemberId)} className="ml-14 top-1/2 text-[10px] items-right">
                                         Tap to remove
                                     </button>
                                 )}

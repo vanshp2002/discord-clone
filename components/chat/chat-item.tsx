@@ -80,8 +80,6 @@ export const ChatItem = ({
     const [isHovered, setIsHovered] = useState(false);
     const params = useParams();
     const router = useRouter();
-
-    const [messageReactions, setMessageReactions] = useState(reactions);
     const { replyMessage, setReplyMessage } = useSharedState({});
 
     const { onOpen } = useModal();
@@ -104,24 +102,7 @@ export const ChatItem = ({
         router.push(`/servers/${params?.serverId}/conversations/${member?._id}`);
     }
 
-    const onChange = async (emoji: string) => {
-        const res = await fetch("/api/messages/react", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            emoji,
-            messageId: id,
-            memberId: currentMember._id,
-            }),
-        });
-        const {reactions} = await res.json();
-        router.refresh();
-        setMessageReactions(reactions);
-    };
-
-    const onConAddReaction = async (emoji: string) => {
+    const onAddReaction = async (emoji: string) => {
         const url = qs.stringifyUrl({
             url: `${socketUrl}/${id}`,
             query: socketQuery,
@@ -138,7 +119,7 @@ export const ChatItem = ({
         router.refresh();
     }
 
-    const onConRemoveReaction = async (emoji: string, currentMemberId: string) => {
+    const onRemoveReaction = async (emoji: string, currentMemberId: string) => {
         const url = qs.stringifyUrl({
             url: `${socketUrl}/${id}`,
             query: socketQuery,
@@ -154,23 +135,6 @@ export const ChatItem = ({
         await axios.post(url, body);
         router.refresh();
     }
-
-
-    const onReactionClick = async (emoji: string, currentMemberId: string) => {
-        const res = await fetch("/api/messages/removeReaction", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            messageId: id,
-            memberId: currentMemberId,
-          }),
-        });
-        const {reactions} = await res.json();
-        router.refresh();
-        setMessageReactions(reactions);
-    };
 
     useEffect(() => {
         const handleKeyDown = (event: any) => {
@@ -297,10 +261,10 @@ export const ChatItem = ({
                         </p>
 
                         <div className="flex gap-x-2 mt-2">
-                        {messageReactions.map((reaction: any) => (
+                        {reactions.map((reaction: any) => (
                             <div key={reaction.emoji} className="flex gap-x-1">
                             {reaction.memberId.length > 0 && (
-                                <ReactionDisplayer type={type} emoji={reaction.emoji} memberId={reaction.memberId} currentMemberId={currentMember._id} onReactionClick={onReactionClick}/>
+                                <ReactionDisplayer type={type} emoji={reaction.emoji} memberId={reaction.memberId} currentMemberId={currentMember._id} onReactionClick={onRemoveReaction}/>
                             )}
                             </div>
                         ))}
@@ -350,7 +314,7 @@ export const ChatItem = ({
                     <div className={`group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm ${isHovered ? 'flex' : 'hidden'}`}>
                         
                         <ActionToolTip label="React">
-                            <EmojiReactionPicker onChange={(emoji: string) => onChange(emoji)} isHovered={isHovered} />
+                            <EmojiReactionPicker onChange={(emoji: string) => onAddReaction(emoji)} isHovered={isHovered} />
                         </ActionToolTip>
                         <ActionToolTip label="Reply">
                             <Reply
@@ -453,7 +417,7 @@ export const ChatItem = ({
                         {reactions.map((reaction: any) => (
                             <div key={reaction.emoji} className="flex gap-x-1">
                             {reaction.memberId.length > 0 && (
-                                <ReactionDisplayer type={type} emoji={reaction.emoji} memberId={reaction.memberId} currentMemberId={currentMember._id} onReactionClick={onConRemoveReaction}/>
+                                <ReactionDisplayer type={type} emoji={reaction.emoji} memberId={reaction.memberId} currentMemberId={currentMember._id} onReactionClick={onRemoveReaction}/>
                             )}
                             </div>
                         ))}
@@ -503,7 +467,7 @@ export const ChatItem = ({
                     <div className={`group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm ${isHovered ? 'flex' : 'hidden'}`}>
                         
                         <ActionToolTip label="React">
-                            <EmojiReactionPicker onChange={(emoji: string) => onConAddReaction(emoji)} isHovered={isHovered} />
+                            <EmojiReactionPicker onChange={(emoji: string) => onAddReaction(emoji)} isHovered={isHovered} />
                         </ActionToolTip>
                         <ActionToolTip label="Reply">
                             <Reply

@@ -6,12 +6,13 @@ import User from "@/models/user";
 import Server from "@/models/server";
 import Channel from "@/models/channel";
 import Message from "@/models/message";
+import {ObjectId} from "mongodb";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponseServerIo,
 ) {
-  if (req.method !== "DELETE" && req.method !== "PATCH") {
+  if (req.method !== "DELETE" && req.method !== "PATCH" && req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
@@ -72,10 +73,6 @@ export default async function handler(
     const isModerator = member.role === "MODERATOR";
     const canModify = isMessageOwner || isAdmin || isModerator;
 
-    if(!canModify){
-      return res.status(403).json({ error: "Forbidden" });
-    }
-
     if(req.method === "DELETE"){
         message = await Message.findByIdAndUpdate(
             { _id: messageId },
@@ -95,14 +92,77 @@ export default async function handler(
         );
     }
 
-    message = await Message.populate(message, {
+    if(req.method === "POST") {
+      const { task, emoji, messageId, memberId } = req.body;
+
+      if (!task || !messageId || !memberId) {
+        return res.status(400).json({ error: "Invalid input data" });
+      }
+
+      if(task === "addReaction") {
+
+        let reaction = message.reactions;
+
+        // Check if any reaction memberId array contains the memberId
+        let reactionIndex = reaction.findIndex((r) => r.memberId.find((m) => m.toString() === memberId));
+
+        if(reactionIndex !== -1){
+            reaction[reactionIndex].memberId = reaction[reactionIndex].memberId.filter((m) => m.toString() !== memberId);
+        } 
+
+        // Check if the emoji already exists
+        let emojiIndex = reaction.findIndex((r) => r.emoji === emoji);
+        if(emojiIndex !== -1){
+            reaction[emojiIndex].memberId.push(new ObjectId(memberId));
+        }
+        else {
+            reaction.push({
+                emoji,
+                memberId: [new ObjectId(memberId)]
+            });
+        }
+
+        message.reactions = reaction;
+        message.markModified('reactions');
+        await message.save();
+      }
+
+      if(task === "removeReaction") {
+        let reaction = message.reactions;
+
+        // Check if any reaction memberId array contains the memberId
+        let reactionIndex = reaction.findIndex((r) => r.memberId.find((m) => m.toString() === memberId));
+
+        if(reactionIndex !== -1){
+            reaction[reactionIndex].memberId = reaction[reactionIndex].memberId.filter((m) => m.toString() !== memberId);
+        } else {
+            return res.status(404).json({ error: "Reaction not found" });
+        }
+
+        message.reactions = reaction;
+        message.markModified('reactions');
+        await message.save();
+      }
+
+    }
+
+    message = await Message.populate(message, [{
         path: "memberId",
         model: "Member",
         populate: {
             path: "userId",
             model: "User",
         },
-    });
+    },
+    {
+        path: "reactions.memberId",
+        model: "Member",
+        populate: {
+            path: "userId",
+            model: "User",
+        },
+    }
+  ]);
 
     const updateKey = `chat:${channelId}:messages:update`;
 
