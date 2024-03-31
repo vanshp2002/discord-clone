@@ -5,7 +5,7 @@ const conversationSchema = new Schema(
         memberOneId: 
             {
                 type: Schema.Types.ObjectId,
-                ref: 'Member',
+                ref: 'User',
                 alias: 'memberOne',
                 required: true
             }
@@ -13,7 +13,7 @@ const conversationSchema = new Schema(
         memberTwoId: 
             {
                 type: Schema.Types.ObjectId,
-                ref: 'Member',
+                ref: 'User',
                 alias: 'memberTwo',
                 required: true
             }

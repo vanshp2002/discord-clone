@@ -18,6 +18,7 @@ const DATE_FORMAT = "d MMM yyyy, HH:mm";
 interface ChatMessagesProps {
     name: string;
     member: any;
+    otherMember: any;
     chatId: string;
     apiUrl: string;
     socketUrl: string;
@@ -49,6 +50,7 @@ function fetchData(useChatQuery: any, queryKey: any, apiUrl: any, paramKey: any,
 export const ChatMessages = ({
     name,
     member,
+    otherMember,
     chatId,
     apiUrl,
     socketUrl,
@@ -155,8 +157,7 @@ export const ChatMessages = ({
     return (
         <div ref={chatRef} className="flex-1 flex flex-col py-4 overflow-y-auto">
             {!hasNextPage && <div className="flex-1" />}
-                { !hasNextPage && 
-                  <ChatWelcome name={name} type={type} />
+                { !hasNextPage && <ChatWelcome name={name} type={type} username={otherMember?.username} src={otherMember?.imageUrl} />
                 }
 
         {hasNextPage && (
@@ -179,18 +180,19 @@ export const ChatMessages = ({
                     <Fragment key={i}>
                         {group.items.map((message) => (
                             <ChatItem 
+                              type={type}
                               key={message._id}
                               message={message}
                               id={message._id}
-                              reply={message.reply}
+                              reply={message?.reply}
                               currentMember={member}
                               member={message.memberId}
                               content = {message.content}
                               deleted={message.deleted}
-                              reactions={message.reactions}
+                              reactions={message?.reactions}
                               fileUrl={message.fileUrl}
                               timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
-                              isUpdated={message.edited}
+                              isUpdated={message?.edited}
                               socketUrl={socketUrl}
                               socketQuery={socketQuery}
                               onReplyClick={handleReplyClick}

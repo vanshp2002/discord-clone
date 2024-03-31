@@ -1,6 +1,6 @@
 import { NextApiResponse } from "next";
 import { connectMongoDB } from "@/lib/mongodb";
-import DirectMessage from "@/models/directMessage";
+import DirectMessage from "@/models/directmessage";
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 

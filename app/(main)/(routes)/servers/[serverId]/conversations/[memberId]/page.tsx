@@ -6,6 +6,8 @@ import { useRouter, redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getOrCreateConversation } from '@/lib/conversation';
 import { ChatHeader } from '@/components/chat/chat-header';
+import { ChatMessages } from '@/components/chat/chat-messages';
+import { ChatInput } from '@/components/chat/chat-input';
 
 interface MemberIdPageProps {
   params:{
@@ -23,6 +25,7 @@ const MemberIdPage = ({
   const router = useRouter();
   const [currentMember, setCurrentMember] = useState(null);
   const [otherMember, setOtherMember] = useState(null);
+  const [gconversation, setGconversation] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,6 +39,7 @@ const MemberIdPage = ({
             });
 
             const user = await userfind.json();
+            setCurrentMember(user);
             
             const memberfind = await fetch(`/api/channels/fetchMember`, {
               method: "POST",
@@ -49,7 +53,7 @@ const MemberIdPage = ({
             });
 
             const currentMember = await memberfind.json();
-            setCurrentMember(currentMember);
+            // setCurrentMember(currentMember);
 
             if(!currentMember){
               redirect("/");
@@ -61,9 +65,11 @@ const MemberIdPage = ({
               redirect(`/servers/${params.serverId}`);
             }
 
+            setGconversation(conversation);
+
             const {memberOneId, memberTwoId} = conversation;
 
-            const otherMember = memberOneId.userId._id === user._id ? memberTwoId : memberOneId;
+            const otherMember = memberOneId._id === user._id ? memberTwoId : memberOneId;
             setOtherMember(otherMember);
           }
           catch(error){
@@ -77,11 +83,40 @@ const MemberIdPage = ({
     return (
       <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
       {otherMember && (<ChatHeader 
-        imageUrl={otherMember.userId.imageUrl}
+        imageUrl={otherMember.imageUrl}
         serverId={params.serverId}
-        name={otherMember.userId.displayname}
+        name={otherMember.displayname}
         type="conversation"
         email={session?.user?.email}
+      />)}
+
+      { otherMember && currentMember && (<ChatMessages
+          member={currentMember}
+          otherMember={otherMember}
+          name={otherMember?.displayname}
+          chatId={gconversation?._id}
+          apiUrl="/api/direct-messages"
+          socketUrl="/api/socket/direct-messages"
+          socketQuery={{
+            conversationId: gconversation?._id,
+            userId: currentMember?._id,
+            otherUserId: otherMember?._id,
+          }}
+          paramKey="conversationId"
+          paramValue={gconversation?._id}
+          type="conversation"
+        />
+      )}
+
+      {gconversation && (<ChatInput 
+        apiUrl="/api/socket/direct-messages"
+        query={{
+            conversationId: gconversation?._id,
+            userId: currentMember?._id,
+            otherUserId: otherMember?._id,
+          }}
+        name={otherMember?.displayname}
+        type="conversation"
       />)}
     </div>
     );

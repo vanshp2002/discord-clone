@@ -11,16 +11,21 @@ const directMessageSchema = new Schema(
         },
         memberId:{
             type: Schema.Types.ObjectId,
-            ref: 'Member',
+            ref: 'User',
         },
         conversationId:{
             type: Schema.Types.ObjectId,
             ref: 'Conversation'
         },
-        deleted:{
-            type: Boolean,
-            default: false
-        }
+        // deleted:{
+        //     type: Boolean,
+        //     default: false
+        // },
+        // edited:{
+        //     type: Boolean,
+        //     default: false
+        // },
+        // reactions
     }, {timestamps: true}
 );
 

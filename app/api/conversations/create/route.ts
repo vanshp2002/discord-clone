@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectMongoDB } from "@/lib/mongodb";
 import Conversation from "@/models/conversation";
+import Member from "@/models/member";
 import { ObjectId } from "mongodb"; // Import ObjectId
 
 export async function POST(req) {
@@ -9,26 +10,21 @@ export async function POST(req) {
         
         const { memberOneId, memberTwoId } = await req.json();
 
+        const member1 = await Member.findById(memberOneId);
+        const member2 = await Member.findById(memberTwoId);
+
         let conversation = await Conversation.create(
-            {memberOneId: new ObjectId(memberOneId), memberTwoId: new ObjectId(memberTwoId)},
+            {memberOneId: new ObjectId(member1.userId), memberTwoId: new ObjectId(member2.userId)},
         );
 
         conversation = await Conversation.populate(conversation, [
             {
                 path: 'memberOneId',
-                model: 'Member',
-                populate: {
-                    path: 'userId', 
-                    model: 'User'
-                }
+                model: 'User'
             },
             {
                 path: 'memberTwoId',
-                model: 'Member',
-                populate: {
-                    path: 'userId',
-                    model: 'User'
-                }
+                model: 'User'
             }
         ]);
 

@@ -32,6 +32,7 @@ import { ReactionDisplayer } from "../reaction-displayer";
 import { useSharedState } from "../providers/reply-provider";
 
 interface ChatItemProps {
+    type: "channel" | "conversation";
     id: string;
     content: string;
     reply: any;
@@ -59,6 +60,7 @@ const formSchema = z.object({
 });
 
 export const ChatItem = ({
+    type,
     id,
     content,
     reply,
@@ -181,8 +183,12 @@ export const ChatItem = ({
     const isPDF = fileType === "pdf" && fileUrl;
     const isImage = !isPDF && fileUrl;
 
+    const isMessageOwner = type==="conversation" && currentMember._id === member._id;
+
     return (
-        <div id={id} className="relative group items-center hover:bg-black/5 p-4 transition w-full">
+        <>
+        {type==="channel" && 
+            <div id={id} className="relative group items-center hover:bg-black/5 p-4 transition w-full">
             {reply && (
                 <Button onClick={() => onReplyClick(reply.replyToId)} className="ml-4 text-xs flex items-center gap-x-2 p-2 rounded-md">
                     <Reply className="w-4 h-4 text-zinc-500 dark:text-zinc-400" style={{ transform: 'scaleX(-1)' }} />
@@ -341,5 +347,162 @@ export const ChatItem = ({
                 </div>
             )}
             </div>
+        }
+
+  {/* ----------------------------------------------------------------------------------------------------------------------------------------------------------       */}
+
+        {type==="conversation" && 
+            <div id={id} className="relative group items-center hover:bg-black/5 p-4 transition w-full">
+        
+                    <div className="group flex gap-x-2 items-start w-full">
+                <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
+                {member && <UserAvatar src={member?.imageUrl} />}
+                </div>
+                <div className="flex flex-col w-full">
+                <div className="flex items-center gap-x-2"> 
+                    <div className="flex items-center">
+                    <p onClick={onMemberClick} className="font-semibold text-sm hover:underline cursor-pointer">
+                        {member?.displayname}
+                    </p>
+                    </div>
+                    <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                    {timestamp}
+                    </span>
+                </div>
+                {isImage && (
+                    <a 
+                    href={fileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative aspect-square rounded-md mt-2 overflow-hidden border flex items-center bg-secondary h-48 w-48"
+                    >
+                    <Image
+                        src={fileUrl}
+                        alt={content}
+                        fill
+                        className="object-cover"
+                    />
+                    </a>
+                )}
+
+                {isPDF && (
+                    <div className="relative flex items-center p-2 mt-2 rounded-md bg-background/10">
+                    <FileIcon className="h-10 w-10 fill-indigo-200 stroke-indigo-400" />
+                    <a 
+                        href={fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ml-2 text-sm text-indigo-500 dark:text-indigo-400 hover:underline"
+                    >
+                        PDF File
+                    </a>
+                    </div>
+                )}
+
+                {!fileUrl && !isEditing && (
+                    <div>   
+                        
+                        <p className={cn(
+                        "text-sm text-zinc-600 dark:text-zinc-300",
+                        deleted && "italic text-zinc-500 dark:text-zinc-400 text-xs mt-1"
+                        )}>
+                        {content}
+                        {isUpdated && !deleted && (
+                            <span className="text-[10px] mx-2 text-zinc-500 dark:text-zinc-400">
+                            (edited)
+                            </span>
+                        )}
+                        </p>
+
+                        {/* <div className="flex gap-x-2 mt-2">
+                        {messageReactions.map((reaction: any) => (
+                            <div key={reaction.emoji} className="flex gap-x-1">
+                            {reaction.memberId.length > 0 && (
+                                <ReactionDisplayer messageReactions={messageReactions} emoji={reaction.emoji} memberId={reaction.memberId} currentMemberId={currentMember._id} onReactionClick={onReactionClick}/>
+                            )}
+                            </div>
+                        ))}
+                        </div> */}
+                    </div>
+                )}
+
+                    {!fileUrl && isEditing && (
+                        <Form {...form}>
+                        <form 
+                            className="flex items-center w-full gap-x-2 pt-2"
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            >
+                            <FormField
+                                control={form.control}
+                                name="content"
+                                render={({ field }) => (
+                                <FormItem className="flex-1">
+                                    <FormControl>
+                                    <div className="relative w-full">
+                                        <Input
+                                        disabled={isLoading}
+                                        className="p-2 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
+                                        placeholder="Edited message"
+                                        {...field}
+                                        />
+                                    </div>
+                                    </FormControl>
+                                </FormItem>
+                                )}
+                            />
+                            <Button disabled={isLoading} size="sm" variant="primary">
+                                Save
+                            </Button>
+                        </form>
+                        <span className="text-[10px] mt-1 text-zinc-400">
+                            Press escape to cancel, enter to save
+                        </span>
+                        </Form>
+                    )}
+                    </div>
+                </div>
+
+                {!isEditing && (
+                <div className="absolute top-1/2 right-2 transform -translate-y-1/2">
+                <div className="relative group" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+                    <div className={`group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm ${isHovered ? 'flex' : 'hidden'}`}>
+                        
+                        <ActionToolTip label="React">
+                            <EmojiReactionPicker onChange={(emoji: string) => onChange(emoji)} isHovered={isHovered} />
+                        </ActionToolTip>
+                        <ActionToolTip label="Reply">
+                            <Reply
+                                className="cursor-pointer w-5 h-5 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+                                onClick={handleChange}
+                            />
+                        </ActionToolTip>
+                        {isMessageOwner && ( 
+                            <ActionToolTip label="Edit">
+                                <Edit
+                                    onClick={() => setIsEditing(true)}
+                                    className="cursor-pointer w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+                                />
+                            </ActionToolTip>
+                        )}
+                        {isMessageOwner && (
+                            <ActionToolTip label="Delete">
+                                <Trash
+                                    onClick={() => onOpen("deleteMessage", { 
+                                        apiUrl: `${socketUrl}/${id}`,
+                                        query: socketQuery,
+                                    })}
+                                    className="cursor-pointer w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+                                />
+                            </ActionToolTip>
+                        )}
+                    </div>
+                </div>
+                </div>
+            )}
+            </div>
+        }
+
+        </>
+        
     )
 }
