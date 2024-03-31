@@ -37,7 +37,7 @@ const Test = () => {
 
         fetchData();
 
-    }, [session, router]);
+    }, []);
 
 
     return (

@@ -97,7 +97,7 @@ const MemberIdPage = ({
     }
     fetchData();
 
-  }, [session, router]);
+  }, []);
   return (
     //   <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
     //     {<ChatHeader imageUrl={otherMem?.userId?.imageUrl} name={otherMem?.userId?.displayname} type="conversation" serverId={params.serverId}/>}
