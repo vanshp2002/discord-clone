@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
     }
     try {
         await connectMongoDB();
-        const { conversationId, userId } = req.query;
+        const { conversationId, userId, replyId, replyExist, replyContent, replyName, replyImg } = req.query;
         const { content, fileUrl } = req.body;
 
 
@@ -36,12 +36,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
             return res.status(400).json({ message: "conversation is required" });
         }
 
-        let message = new DirectMessage({
-            content,
-            fileUrl,
-            memberId: new ObjectId(userId),
-            conversationId,
-        });
+        let message;
+
+        if (replyExist) {
+            message = new DirectMessage({
+                content,
+                fileUrl,
+                replyExist: true,
+                replyContent,
+                replyId,
+                replyName,
+                replyImg,
+                memberId: new ObjectId(userId),
+                conversationId,
+            });
+        }
+        else {
+
+            message = new DirectMessage({
+                content,
+                fileUrl,
+                memberId: new ObjectId(userId),
+                conversationId,
+            });
+        }
         await message.save();
 
 

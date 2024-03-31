@@ -70,7 +70,7 @@ export const ChatItem = ({
     const router = useRouter();
     const { replyMessage, setReplyMessage } = useSharedState("");
     const { onOpen } = useModal();
-
+    const [isHovered, setIsHovered] = useState(false);
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -120,9 +120,12 @@ export const ChatItem = ({
     }
 
     const handleChange = () => {
-        setReplyMessage({ replyExist: true, replyId: id, replyContent: content, replyName: member?.userId?.displayname, replyImg: ""});
+        setReplyMessage({ replyExist: true, replyId: id, replyContent: content, replyName: member?.userId?.displayname, replyImg: "" });
     };
 
+    const handleChange1 = () => {
+        setReplyMessage({ replyExist: true, replyId: id, replyContent: content, replyName: member?.displayname, replyImg: "" });
+    };
 
     const isLoading = form.formState.isSubmitting;
 
@@ -141,17 +144,17 @@ export const ChatItem = ({
     return (
         <>
             {type === "channel" && <div className="relative group items-center hover:bg-black/5 p-4 transition w-full">
-            
-            {reply && (
-                <div className="ml-4 text-xs flex items-center gap-x-2 p-2 rounded-md">
-                    <Reply className="w-4 h-4 text-zinc-500 dark:text-zinc-400" style={{ transform: 'scaleX(-1)' }} />
-                    {/* <UserAvatar src={reply.replyToAvatar} className="h-3 w-3 md:h-3 md:w-3" /> */}
-                    <p className="text-xs text-zinc-600 dark:text-zinc-200">
-                    {reply.replyName}: {reply.replyContent}
-                    </p>
-                </div>
-            )}
-                
+
+                {reply && (
+                    <div className="ml-4 text-xs flex items-center gap-x-2 p-2 rounded-md">
+                        <Reply className="w-4 h-4 text-zinc-500 dark:text-zinc-400" style={{ transform: 'scaleX(-1)' }} />
+                        {/* <UserAvatar src={reply.replyToAvatar} className="h-3 w-3 md:h-3 md:w-3" /> */}
+                        <p className="text-xs text-zinc-600 dark:text-zinc-200">
+                            {reply.replyName}: {reply.replyContent}
+                        </p>
+                    </div>
+                )}
+
                 <div className="group flex gap-x-2 items-start w-full">
                     <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
                         {member && <UserAvatar src={member?.userId?.imageUrl} />}
@@ -169,7 +172,7 @@ export const ChatItem = ({
                             <span className="text-xs text-zinc-500 dark:text-zinc-400">
                                 {timestamp}
                             </span>
-                            
+
                         </div>
                         {isImage && (
                             <a
@@ -251,37 +254,51 @@ export const ChatItem = ({
                     </div>
                 </div>
 
-                {canDeleteMessage && (
-                    <div className="hidden group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm">
-                        <ActionTooltip label="reply">
 
-                            <Reply
-                                className="cursor-pointer w-5 h-5 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-                                onClick={() => handleChange()}
-                            />
+                <div className="absolute top-1/2 right-2 transform -translate-y-1/2">
 
-                        </ActionTooltip>
-                        {canEditMessage && (
-                            <ActionTooltip label="Edit">
-                                <Edit
-                                    onClick={() => setIsEditing(true)}
+                    <div className="relative group" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+                        <div className={`group-hover:flex items-center gap-x-2 absolute p-1-top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm ${isHovered ? 'flex' : 'hidden'}`}>
+                            <ActionTooltip label="reply">
+
+                                <Reply
+                                    className="cursor-pointer w-5 h-5 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+                                    onClick={() => handleChange()}
+                                />
+
+                            </ActionTooltip>
+                            {canEditMessage && (
+                                <ActionTooltip label="Edit">
+                                    <Edit
+                                        onClick={() => setIsEditing(true)}
+                                        className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+                                    />
+                                </ActionTooltip>
+                            )}
+                            {canDeleteMessage && (<ActionTooltip label="Delete">
+                                <Trash
+                                    onClick={() => onOpen("deleteMessage", {
+                                        apiUrl: `${socketUrl}/${id}`,
+                                        query: socketQuery,
+                                    })}
                                     className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
                                 />
-                            </ActionTooltip>
-                        )}
-                        <ActionTooltip label="Delete">
-                            <Trash
-                                onClick={() => onOpen("deleteMessage", {
-                                    apiUrl: `${socketUrl}/${id}`,
-                                    query: socketQuery,
-                                })}
-                                className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-                            />
-                        </ActionTooltip>
+                            </ActionTooltip>)}
+                        </div>
+                    </div>
+                </div>
+
+            </div>}
+            {type === "conversation" && <div className="relative group items-center hover:bg-black/5 p-4 transition w-full">
+                {reply && (
+                    <div className="ml-4 text-xs flex items-center gap-x-2 p-2 rounded-md">
+                        <Reply className="w-4 h-4 text-zinc-500 dark:text-zinc-400" style={{ transform: 'scaleX(-1)' }} />
+                        {/* <UserAvatar src={reply.replyToAvatar} className="h-3 w-3 md:h-3 md:w-3" /> */}
+                        <p className="text-xs text-zinc-600 dark:text-zinc-200">
+                            {reply.replyName}: {reply.replyContent}
+                        </p>
                     </div>
                 )}
-            </div>}
-            {type === "conversation" && <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
                 <div className="group flex gap-x-2 items-start w-full">
                     <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
                         {member && <UserAvatar src={member?.imageUrl} />}
@@ -378,32 +395,37 @@ export const ChatItem = ({
                     </div>
                 </div>
 
-                {isConversationMessageOwner && (
-                    <div className="hidden group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm">
-                        <ActionTooltip label="reply">
+                <div className="absolute top-1/2 right-2 transform -translate-y-1/2">
 
-                            <Reply onClick={() => handleChange(content, member?.displayname)} className="cursor-pointer w-5 h-5 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+                    <div className="relative group" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+                        <div className={`group-hover:flex items-center gap-x-2 absolute p-1-top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm ${isHovered ? 'flex' : 'hidden'}`}>
+                    <ActionTooltip label="reply">
 
-                        </ActionTooltip>
-                        {(
+                        <Reply onClick={() => handleChange1()} className="cursor-pointer w-5 h-5 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+
+                    </ActionTooltip>
+                    {isConversationMessageOwner && (
+                        <>
                             <ActionTooltip label="Edit">
                                 <Edit
                                     onClick={() => setIsEditing(true)}
                                     className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
                                 />
                             </ActionTooltip>
-                        )}
-                        <ActionTooltip label="Delete">
-                            <Trash
-                                onClick={() => onOpen("deleteMessage", {
-                                    apiUrl: `${socketUrl}/${id}`,
-                                    query: socketQuery,
-                                })}
-                                className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-                            />
-                        </ActionTooltip>
+                            <ActionTooltip label="Delete">
+                                <Trash
+                                    onClick={() => onOpen("deleteMessage", {
+                                        apiUrl: `${socketUrl}/${id}`,
+                                        query: socketQuery,
+                                    })}
+                                    className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+                                />
+                            </ActionTooltip>
+                        </>
+                    )}
                     </div>
-                )}
+                </div>
+                </div>
             </div>}
         </>
     )
