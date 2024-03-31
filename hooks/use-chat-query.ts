@@ -10,6 +10,7 @@ interface ChatQueryProps {
   paramValue: string;
   socketQuery: Record<string, string>;
     channelId: string;
+    looping: boolean;
 };
 
 export const useChatQuery = ({
@@ -19,6 +20,7 @@ export const useChatQuery = ({
     paramValue,
     socketQuery,
     channelId,
+    looping,
   }: ChatQueryProps) => {
 
     const { isConnected } = useSocket();
@@ -59,9 +61,13 @@ export const useChatQuery = ({
             queryKey: [queryKey],
             queryFn: fetchMessages,
             getNextPageParam: (lastPage) => lastPage?.nextCursor,
-            refetchInterval: isConnected ? false : 800,
+            refetchInterval: isConnected ? false : 100,
             initialPageParam: undefined, // Add this line
         });
+    
+    if(looping) {
+        fetchNextPage();
+    }
     
       return {
         data,

@@ -44,6 +44,7 @@ interface ChatItemProps {
     currentMember: any;
     isUpdated: boolean;
     socketUrl: string;
+    onReplyClick: (messageId: string) => void;
     socketQuery: Record<string, string>;
   };
 
@@ -71,6 +72,7 @@ export const ChatItem = ({
     isUpdated,
     socketUrl,
     socketQuery,
+    onReplyClick,
   }: ChatItemProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
@@ -90,7 +92,7 @@ export const ChatItem = ({
     });
 
     const handleChange = () => {
-        setReplyMessage({ replyToId: member._id, replyToName: member.userId.displayname, replyToAvatar: member.userId.imageUrl, replyToContent: content});
+        setReplyMessage({ replyToId: id, replyToName: member.userId.displayname, replyToAvatar: member.userId.imageUrl, replyToContent: content});
     };
 
     const onMemberClick = () => {
@@ -165,7 +167,7 @@ export const ChatItem = ({
         } catch (error) {
           console.log(error);
         }
-      }
+    };
 
     const isLoading = form.formState.isSubmitting;
 
@@ -180,15 +182,15 @@ export const ChatItem = ({
     const isImage = !isPDF && fileUrl;
 
     return (
-        <div className="relative group items-center hover:bg-black/5 p-4 transition w-full">
+        <div id={id} className="relative group items-center hover:bg-black/5 p-4 transition w-full">
             {reply && (
-                <div className="ml-4 text-xs flex items-center gap-x-2 p-2 rounded-md">
+                <Button onClick={() => onReplyClick(reply.replyToId)} className="ml-4 text-xs flex items-center gap-x-2 p-2 rounded-md">
                     <Reply className="w-4 h-4 text-zinc-500 dark:text-zinc-400" style={{ transform: 'scaleX(-1)' }} />
                     <UserAvatar src={reply.replyToAvatar} className="h-3 w-3 md:h-3 md:w-3" />
                     <p className="text-xs text-zinc-600 dark:text-zinc-200">
                     {reply.replyToName}: {reply.replyToContent}
                     </p>
-                </div>
+                </Button>
             )}
                     <div className="group flex gap-x-2 items-start w-full">
                 <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
@@ -302,7 +304,7 @@ export const ChatItem = ({
                 </div>
 
                 {!isEditing && (
-                <div className="absolute top-1/2 right-0 transform -translate-y-1/2">
+                <div className="absolute top-1/2 right-2 transform -translate-y-1/2">
                 <div className="relative group" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
                     <div className={`group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm ${isHovered ? 'flex' : 'hidden'}`}>
                         

@@ -5,9 +5,12 @@ import { useChatSocket } from "@/hooks/use-chat-socket";
 import { Loader2, ServerCrash } from "lucide-react";
 import { useChatQuery } from "@/hooks/use-chat-query";
 import { useChatScroll } from "@/hooks/use-chat-scroll";
-import { Fragment, useRef, ElementRef } from "react";
+import { Fragment, useRef, ElementRef, useEffect } from "react";
 import { ChatItem } from "./chat-item";
 import { format } from "date-fns";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { set } from "mongoose";
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
@@ -22,6 +25,25 @@ interface ChatMessagesProps {
     paramKey: "channelId" | "conversationId";
     paramValue: string;
     type: "channel" | "conversation";
+}
+
+function fetchData(useChatQuery: any, queryKey: any, apiUrl: any, paramKey: any, paramValue: any, socketQuery: any, chatId: any, member: any, looping: boolean) {
+    const addKey = `chat:${chatId}:messages`;
+    const updateKey = `chat:${chatId}:messages:update`;
+    
+    const { data , fetchNextPage, hasNextPage, isFetchingNextPage, status } = useChatQuery({
+        queryKey,
+        apiUrl,
+        paramKey,
+        paramValue,
+        socketQuery,
+        channelId: chatId,
+    });
+
+    useChatSocket({ queryKey, addKey, updateKey });
+
+    return { data , fetchNextPage, hasNextPage, isFetchingNextPage, status };
+
 }
 
 export const ChatMessages = ({
@@ -42,15 +64,31 @@ export const ChatMessages = ({
     const chatRef = useRef<ElementRef<"div">>(null);
     const bottomRef = useRef<ElementRef<"div">>(null);
 
-
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useChatQuery({
-        queryKey,
-        apiUrl,
-        paramKey,
-        paramValue,
-        socketQuery,
-        channelId: chatId,
-    });
+    const [loop, setLoop] = useState(false);
+    const router = useRouter();
+    // const [data, setData] = useState(null);
+    // const [fetchNextPage, setFetchNextPage] = useState();
+    // const [hasNextPage, setHasNextPage] = useState(null);
+    // const [isFetchingNextPage, setIsFetchingNextPage] = useState(null);
+    // const [status, setStatus] = useState(null);
+    
+    // const { data: fetchedData, fetchNextPage: nextPage, hasNextPage: nextPageStatus, isFetchingNextPage: fetchingStatus, status: fetchStatus } = useChatQuery({
+    const { data , fetchNextPage, hasNextPage, isFetchingNextPage, status } = useChatQuery({
+      queryKey,
+      apiUrl,
+      paramKey,
+      paramValue,
+      socketQuery,
+      channelId: chatId,
+      looping: loop,
+  });
+    // useEffect(() => {
+    //     setData(fetchedData);
+    //     setFetchNextPage(() => nextPage);
+    //     setHasNextPage(nextPageStatus);
+    //     setIsFetchingNextPage(fetchingStatus);
+    //     setStatus(fetchStatus);
+    // }, [fetchStatus]);
 
     useChatSocket({ queryKey, addKey, updateKey });
 
@@ -62,6 +100,35 @@ export const ChatMessages = ({
       count: data?.pages?.[0]?.items?.length ?? 0,
       isLatestByOwn: data?.pages?.[0]?.items?.[0]?.memberId._id === member._id,
     })
+
+
+    const handleReplyClick = async (messageId: string) => {
+      await fetchNextPage();
+        let messageElement = document.getElementById(messageId);
+        // while(!messageElement && hasNextPage) {
+        //     console.log("Fetching next page");
+        //     messageElement = document.getElementById(messageId);
+        // }
+          // messageElement = document.getElementById(messageId);
+          // const {data: newData, fetchNextPage: newFetchNextPage, hasNextPage: newHasNextPage, isFetchingNextPage: newIsFetchingNextPage, status: newStatus} = fetchData(useChatQuery, queryKey, apiUrl, paramKey, paramValue, socketQuery, chatId, member, true);
+          // setData(newData);
+          // setFetchNextPage(() => newFetchNextPage);
+          // setHasNextPage(newHasNextPage);
+          // setIsFetchingNextPage(newIsFetchingNextPage);
+          // setStatus(newStatus);
+        // }
+        // setLoop(false);
+
+        if (messageElement) {
+          messageElement.scrollIntoView({ behavior: "smooth", block: "center"});
+        } else {
+          console.log("Message not found");
+        }
+      }
+
+// --------------------------------------------------------------------------------
+
+
 
     if (status === "pending") {
         return (
@@ -126,6 +193,7 @@ export const ChatMessages = ({
                               isUpdated={message.edited}
                               socketUrl={socketUrl}
                               socketQuery={socketQuery}
+                              onReplyClick={handleReplyClick}
                             />
                         ))}
                     </Fragment>
