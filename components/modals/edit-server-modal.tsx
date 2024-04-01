@@ -76,7 +76,6 @@ export const EditServerModal = ({ email }) => {
             })
             setServerUpdated(prevServerUpdated => prevServerUpdated + 1);
             form.reset();
-            router.refresh();
             onClose();
 
         } catch (error) {

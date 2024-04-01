@@ -14,11 +14,11 @@ const Login = () => {
   const session = useSession();
   const router = useRouter();
 
-  useEffect(()=>{
-    if(session?.status === "authenticated"){
+  useEffect(() => {
+    if (session?.status === "authenticated") {
       router.replace("channels");
     }
-  }, [session, router]);
+  }, []);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -28,24 +28,24 @@ const Login = () => {
     }
     e.preventDefault();
 
-    try{
+    try {
       const res = await signIn("credentials", {
         email,
         password,
         redirect: false,
       });
 
-    if (res && res.error){
-      setError("Invalid Credentials");
-      return;
-    }
+      if (res && res.error) {
+        setError("Invalid Credentials");
+        return;
+      }
 
-    router.replace("channels");
+      router.replace("channels");
     }
-    catch(error){
+    catch (error) {
       console.log(error);
     }
-  
+
   }
 
   return (<>

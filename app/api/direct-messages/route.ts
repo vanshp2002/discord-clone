@@ -41,7 +41,6 @@ export async function POST(req: Request) {
                     model: "Conversation",
                 },
             ]);
-            console.log("[DIRECT_MESSAGES_GET]",messages);
         } else {
             messages = await DirectMessage.find({ conversationId: new ObjectId(conversationId) }).sort({ createdAt: -1 }).limit(MESSAGES_BATCH);
             messages = await DirectMessage.populate(messages, [
@@ -63,7 +62,6 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ items: messages, nextCursor });
     }catch(err){
-        console.log("[DIRECT_MESSAGES_GET]",err);
         return new NextResponse("Internal Server Error", { status: 500 });
     }
 

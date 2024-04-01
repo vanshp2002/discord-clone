@@ -26,8 +26,7 @@ const Test = () => {
                 });
 
 
-                const user  = await userfind.json();
-                console.log(user);
+                const user = await userfind.json();
                 setUserData(user);
 
             } catch (error) {
@@ -43,7 +42,7 @@ const Test = () => {
     return (
         <div>
             Create a Server
-            
+
         </div>
     )
 }

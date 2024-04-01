@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { NavigationSidebar } from './../../../../../components/navigation/navigation-sidebar';
-import {useServerState} from '@/components/providers/server-provider';
+import { useServerState } from '@/components/providers/server-provider';
 
 interface InvitecodePageProps {
     params: {
@@ -18,7 +18,7 @@ const InviteCodePage = ({
     const { serverUpdated, setServerUpdated } = useServerState();
 
     const router = useRouter();
-    let flag=false;
+    let flag = false;
     useEffect(() => {
         if (!dataFetched && session) {
             const fetchData = async () => {
@@ -30,10 +30,11 @@ const InviteCodePage = ({
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
-                            email: session.user.email,
+                            email: session?.user?.email,
                         }),
                     });
                     const user = await userfind.json();
+                    if (!user) return;
                     setDataFetched(true); // Mark data as fetched
 
                     const server = await fetch("/api/servers/ismember", {
@@ -63,9 +64,9 @@ const InviteCodePage = ({
 
                     })
                     const serverUpdatedJson = await serverUpdated.json();
-                    flag=true;
-                    setServerUpdated(prevServerUpdated => prevServerUpdated + 1);                       
-                    return redirect(`/servers/${serverUpdatedJson.server._id}`);                    
+                    flag = true;
+                    setServerUpdated(prevServerUpdated => prevServerUpdated + 1);
+                    return router.push(`/servers/${serverUpdatedJson.server._id}`);
 
                 } catch (error) {
                     console.error("Error fetching data:", error);
@@ -74,11 +75,11 @@ const InviteCodePage = ({
 
             fetchData();
         }
-    }, [session, dataFetched]); // Run the effect when session or dataFetched changes
+    }, [dataFetched]); // Run the effect when session or dataFetched changes
 
     return (
         <>
-            {flag && <NavigationSidebar/>}
+            {flag && <NavigationSidebar />}
         </>
     );
 };

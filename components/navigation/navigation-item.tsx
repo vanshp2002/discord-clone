@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { ActionTooltip } from "@/components/action-tooltip";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 interface NavigationItemProps {
     id: string;
@@ -19,9 +20,12 @@ export const NavigationItem = ({
 
     const params = useParams();
     const router = useRouter();
+    const [isClicked, setIsClicked] = useState(false);
 
     const onClick = () => {
+        setIsClicked(true);
         router.push(`/servers/${id}`);
+        setTimeout(() => setIsClicked(false), 100);
     }
 
     return (
@@ -32,7 +36,14 @@ export const NavigationItem = ({
         >
             <button
                 onClick={onClick}
-                className="group relative flex items-center"
+                className={cn(  
+                    "group relative flex items-center transition-all",
+                    isClicked && "transform translate-y-1"
+                )}
+                style={{
+                    borderRadius: "24px",
+                    padding: "0",
+                }}
             >
                 <div className={cn(
                     "absolute left-0 bg-primary rounded-r-full transition-all w-[4px]",

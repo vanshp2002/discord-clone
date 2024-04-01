@@ -31,7 +31,6 @@ const ServerChannel = ({
     const Icon = iconMap[channel.type];
 
     const onClick = () => {
-        console.log(params);
         router.push(`/servers/${params?.serverId}/channels/${channel._id}`)
     }
 

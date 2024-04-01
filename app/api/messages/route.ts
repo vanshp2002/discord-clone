@@ -43,7 +43,6 @@ export async function POST(req: Request) {
                     model: "User"
                 }
             });
-            console.log("[MESSAGES_GET]", messages);
         } else {
             messages = await Message.find({ channelId: new ObjectId(channelId) }).sort({ createdAt: -1 }).limit(MESSAGES_BATCH);
             messages = await Message.populate(messages, {
@@ -63,7 +62,6 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ items: messages, nextCursor });
     } catch (err) {
-        console.log("[MESSAGES_GET]", err);
         return new NextResponse("Internal Server Error", { status: 500 });
     }
 
