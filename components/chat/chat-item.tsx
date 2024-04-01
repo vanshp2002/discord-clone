@@ -30,6 +30,7 @@ import { EmojiPicker }from "@/components/emoji-picker";
 import { EmojiReactionPicker } from "../emoji-reaction-picker";
 import { ReactionDisplayer } from "../reaction-displayer";
 import { useSharedState } from "../providers/reply-provider";
+import { UserCardAvatar } from "../user-card-avatar";
 
 interface ChatItemProps {
     type: "channel" | "conversation";
@@ -204,8 +205,8 @@ export const ChatItem = ({
                 </div>
             )}
                     <div className="group flex gap-x-2 items-start w-full">
-                <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
-                {member && <UserAvatar src={member?.userId?.imageUrl} />}
+                <div className="cursor-pointer" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+                {member && <UserCardAvatar user={member?.userId} currentUserId={currentMember.userId._id} chatId={chatId} isHovered={isHovered} />}
                 </div>
                 <div className="flex flex-col w-full">
                 <div className="flex items-center gap-x-2"> 
@@ -368,8 +369,8 @@ export const ChatItem = ({
                 </div>
             )}
                     <div className="group flex gap-x-2 items-start w-full">
-                <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
-                {member && <UserAvatar src={member?.imageUrl} />}
+                <div className="cursor-pointer" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+                {member && <UserCardAvatar user={member} currentUserId={currentMember._id} chatId={chatId} isHovered={isHovered} />}
                 </div>
                 <div className="flex flex-col w-full">
                 <div className="flex items-center gap-x-2"> 

@@ -8,6 +8,7 @@ import { ModalProvider } from "@/components/providers/modal-provider";
 import { SocketProvider } from "@/components/providers/socket-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { SharedStateProvider } from '@/components/providers/reply-provider';
+import { ServerStateProvider } from '@/components/providers/server-provider';
 
 const font = Open_Sans({ subsets: ["latin"] });
 
@@ -25,6 +26,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={cn(font.className, "bg-white dark:bg-[#313338]")}>
         <AuthProvider>
+        <ServerStateProvider>
           <SharedStateProvider>
           <ThemeProvider
               attribute="class"
@@ -39,6 +41,7 @@ export default function RootLayout({
             </SocketProvider>
           </ThemeProvider>
           </SharedStateProvider>
+          </ServerStateProvider>
           </AuthProvider>
         </body>
     </html>

@@ -8,6 +8,7 @@ import { getOrCreateConversation } from '@/lib/conversation';
 import { ChatHeader } from '@/components/chat/chat-header';
 import { ChatMessages } from '@/components/chat/chat-messages';
 import { ChatInput } from '@/components/chat/chat-input';
+import { useServerState } from "@/components/providers/server-provider";
 
 interface MemberIdPageProps {
   params:{
@@ -26,6 +27,7 @@ const MemberIdPage = ({
   const [currentMember, setCurrentMember] = useState(null);
   const [otherMember, setOtherMember] = useState(null);
   const [gconversation, setGconversation] = useState(null);
+  const { serverUpdated, setServerUpdated } = useServerState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -78,7 +80,7 @@ const MemberIdPage = ({
         };
 
         fetchData();
-      }, [session, router]);
+      }, [session, router, serverUpdated]);
 
     return (
       <div className="bg-white dark:bg-[#313338] flex flex-col h-full">

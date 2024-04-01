@@ -9,11 +9,13 @@ import { Separator } from "../ui/separator";
 import { ScrollArea } from "../ui/scroll-area";
 import { NavigationItem } from "./navigation-item";
 import { UserProfile } from "@/components/user-profile-icon";
+import { useServerState } from "@/components/providers/server-provider";
 
 export const NavigationSidebar = ({email}) => {
 
     const [userdata,setUserdata] = useState(null);
     const [server, setServer] = useState([]);
+    const { serverUpdated, setServerUpdated } = useServerState();
 
     useEffect (() => {
 
@@ -45,7 +47,7 @@ export const NavigationSidebar = ({email}) => {
         }
 
         fetchData();
-    }, [email]);
+    }, [serverUpdated, email]);
 
 
     return (

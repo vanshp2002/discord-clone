@@ -24,6 +24,10 @@ const userSchema = new Schema(
             type: String,
             default: "https://utfs.io/f/0861b5a9-d246-42b0-bdcb-ab8cbb6d2cea-g7cq2y.png"
         },
+        note:{
+            type: String,
+            default: "Add a note here"
+        },
     }, {timestamps: true}
 );
 

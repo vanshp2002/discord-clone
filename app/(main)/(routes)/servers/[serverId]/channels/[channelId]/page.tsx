@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { ChatHeader } from '@/components/chat/chat-header';
 import { ChatInput } from '@/components/chat/chat-input';
 import { ChatMessages } from '@/components/chat/chat-messages';
+import { useServerState } from "@/components/providers/server-provider";
 
 
 interface ChannelIdPageProps {
@@ -22,6 +23,7 @@ const ChannelIdPage = ({params}: ChannelIdPageProps) => {
   const [gchannel, setGchannel] = useState(null);
   const [gmember, setGmember] = useState(null);
   const [user, setUser] = useState(null);
+  const { serverUpdated, setServerUpdated } = useServerState();
 
   useEffect(() => {
 
@@ -76,7 +78,7 @@ const ChannelIdPage = ({params}: ChannelIdPageProps) => {
 
     fetchData();
 
-  }, []);
+  }, [session, router, serverUpdated]);
 
     return (
       <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
