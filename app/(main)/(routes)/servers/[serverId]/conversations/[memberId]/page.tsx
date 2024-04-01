@@ -117,6 +117,7 @@ const MemberIdPage = ({
           }}
         name={otherMember?.displayname}
         type="conversation"
+        chatId= {gconversation?._id}
       />)}
     </div>
     );

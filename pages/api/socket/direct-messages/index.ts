@@ -31,10 +31,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
             memberId: new ObjectId(userId),
         };
 
-        // if (replyMessage) {
-        //     newMessageData.reply = replyMessage;
-        //     newMessageData.replyExist = true;
-        // }
+        if (replyMessage) {
+            newMessageData.reply = replyMessage;
+            newMessageData.replyExist = true;
+        }
 
         let message = await DirectMessage.create(newMessageData);
 

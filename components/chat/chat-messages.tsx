@@ -181,6 +181,7 @@ export const ChatMessages = ({
                         {group.items.map((message) => (
                             <ChatItem 
                               type={type}
+                              chatId={chatId}
                               key={message._id}
                               message={message}
                               id={message._id}

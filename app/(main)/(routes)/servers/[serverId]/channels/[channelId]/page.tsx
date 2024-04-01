@@ -114,6 +114,7 @@ const ChannelIdPage = ({params}: ChannelIdPageProps) => {
           }}
         name={gchannel?.name}
         type="channel"
+        chatId= {gchannel?._id}
       />)}
     </div>
     )

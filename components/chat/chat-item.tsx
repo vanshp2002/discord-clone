@@ -35,6 +35,7 @@ interface ChatItemProps {
     type: "channel" | "conversation";
     id: string;
     content: string;
+    chatId: string;
     reply: any;
     message: any;
     member: any;
@@ -63,6 +64,7 @@ export const ChatItem = ({
     type,
     id,
     content,
+    chatId,
     reply,
     message,
     member,
@@ -92,7 +94,11 @@ export const ChatItem = ({
     });
 
     const handleChange = () => {
-        setReplyMessage({ replyToId: id, replyToName: member.userId.displayname, replyToAvatar: member.userId.imageUrl, replyToContent: content});
+        setReplyMessage({ replyToId: id, replyToName: member.userId.displayname, replyToAvatar: member.userId.imageUrl, replyToContent: content, chatId: chatId});
+    };
+
+    const handleConChange = () => {
+        setReplyMessage({ replyToId: id, replyToName: member.displayname, replyToAvatar: member.imageUrl, replyToContent: content, chatId: chatId});
     };
 
     const onMemberClick = () => {
@@ -189,13 +195,13 @@ export const ChatItem = ({
         {type==="channel" && 
             <div id={id} className="relative group items-center hover:bg-black/5 p-4 transition w-full">
             {reply && (
-                <Button onClick={() => onReplyClick(reply.replyToId)} className="ml-4 text-xs flex items-center gap-x-2 p-2 rounded-md">
+                <div onClick={() => onReplyClick(reply.replyToId)} className="ml-4 text-xs flex items-center gap-x-2 p-2 rounded-md">
                     <Reply className="w-4 h-4 text-zinc-500 dark:text-zinc-400" style={{ transform: 'scaleX(-1)' }} />
                     <UserAvatar src={reply.replyToAvatar} className="h-3 w-3 md:h-3 md:w-3" />
                     <p className="text-xs text-zinc-600 dark:text-zinc-200">
                     {reply.replyToName}: {reply.replyToContent}
                     </p>
-                </Button>
+                </div>
             )}
                     <div className="group flex gap-x-2 items-start w-full">
                 <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
@@ -352,7 +358,15 @@ export const ChatItem = ({
 
         {type==="conversation" && 
             <div id={id} className="relative group items-center hover:bg-black/5 p-4 transition w-full">
-        
+                {reply && (
+                <div onClick={() => onReplyClick(reply.replyToId)} className="ml-4 text-xs flex items-center gap-x-2 p-2 rounded-md">
+                    <Reply className="w-4 h-4 text-zinc-500 dark:text-zinc-400" style={{ transform: 'scaleX(-1)' }} />
+                    <UserAvatar src={reply.replyToAvatar} className="h-3 w-3 md:h-3 md:w-3" />
+                    <p className="text-xs text-zinc-600 dark:text-zinc-200">
+                    {reply.replyToName}: {reply.replyToContent}
+                    </p>
+                </div>
+            )}
                     <div className="group flex gap-x-2 items-start w-full">
                 <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
                 {member && <UserAvatar src={member?.imageUrl} />}
@@ -472,7 +486,7 @@ export const ChatItem = ({
                         <ActionToolTip label="Reply">
                             <Reply
                                 className="cursor-pointer w-5 h-5 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-                                onClick={handleChange}
+                                onClick={handleConChange}
                             />
                         </ActionToolTip>
                         {isMessageOwner && ( 

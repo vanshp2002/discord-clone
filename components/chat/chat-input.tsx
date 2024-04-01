@@ -26,6 +26,7 @@ interface ChatInputProps {
     query: Record<string, any>;
     name: string;
     type: "conversation" | "channel";
+    chatId: string;
 }
 
 const formSchema = z.object({
@@ -37,6 +38,7 @@ export const ChatInput = ({
     query,
     name,
     type,
+    chatId,
   }: ChatInputProps) => {
 
     const router = useRouter();
@@ -68,13 +70,15 @@ export const ChatInput = ({
             url: apiUrl,
             query,
           });
+          
+          let newvalues = values;
 
-          const newvalues = {
-            ...values,
-            replyMessage,
-          };
-
-          console.log(newvalues);
+          if (replyMessage && replyMessage?.chatId === chatId) {
+            newvalues = {
+              ...values,
+              replyMessage,
+            };
+          } 
     
           await axios.post(url, newvalues);
           form.reset();
@@ -87,7 +91,7 @@ export const ChatInput = ({
 
     return (
       <div>      
-        {replyMessage?.replyToContent &&  
+        {replyMessage?.replyToContent && replyMessage?.chatId===chatId &&
           (
 
             <div className="flex p-4 border border-zinc-200 dark:border-zinc-700 rounded-lg">

@@ -26,6 +26,13 @@ const directMessageSchema = new Schema(
             default: false
         },
         reactions:[],
+        reply:{
+            type: Object
+        },
+        replyExist:{
+            type: Boolean,
+            default: false
+        }
     }, {timestamps: true}
 );
 
