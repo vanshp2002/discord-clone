@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react'
-import FriendSearch from './firend-search';
+import FriendSearch from './friend-search';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '../ui/separator';
 import { useEffect, useState } from 'react'

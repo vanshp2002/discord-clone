@@ -21,6 +21,11 @@ export async function POST(req: Request) {
             ]
         });
 
+        friends = await Friend.populate(friends, {
+            path: "userOneId userTwoId",
+            model: "User"
+        })
+
         return NextResponse.json({ friends });
 
     } catch (error) {

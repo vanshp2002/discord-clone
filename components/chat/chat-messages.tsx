@@ -123,6 +123,7 @@ export const ChatMessages = ({
                 key={message._id}
                 id={message._id}
                 currentMember={member}
+                chatId={chatId}
                 member={message.memberId}
                 content={message.content}
                 deleted={message.deleted}

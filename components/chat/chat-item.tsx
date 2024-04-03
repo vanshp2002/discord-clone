@@ -25,10 +25,12 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useSharedState } from "../providers/reply-provider";
+import { UserCardAvatar } from "../user-card-avatar";
 
 interface ChatItemProps {
     type: "channel" | "conversation";
     reply: any;
+    chatId: string;
     id: string;
     content: string;
     member: any;
@@ -54,6 +56,7 @@ const formSchema = z.object({
 export const ChatItem = ({
     type,
     reply,
+    chatId,
     id,
     content,
     member,
@@ -156,8 +159,8 @@ export const ChatItem = ({
                 )}
 
                 <div className="group flex gap-x-2 items-start w-full">
-                    <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
-                        {member && <UserAvatar src={member?.userId?.imageUrl} />}
+                    <div className="cursor-pointer" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+                        <UserCardAvatar user={member.userId} currentUserId={currentMember._id} chatId={chatId} isHovered={isHovered} />
                     </div>
                     <div className="flex flex-col w-full">
                         <div className="flex items-center gap-x-2">
@@ -300,8 +303,8 @@ export const ChatItem = ({
                     </div>
                 )}
                 <div className="group flex gap-x-2 items-start w-full">
-                    <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
-                        {member && <UserAvatar src={member?.imageUrl} />}
+                    <div className="cursor-pointer" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+                        <UserCardAvatar user={member} currentUserId={currentMember._id} chatId={chatId} isHovered={isHovered} />
                     </div>
                     <div className="flex flex-col w-full">
                         <div className="flex items-center gap-x-2">
@@ -399,34 +402,34 @@ export const ChatItem = ({
 
                     <div className="relative group" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
                         <div className={`group-hover:flex items-center gap-x-2 absolute p-1-top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm ${isHovered ? 'flex' : 'hidden'}`}>
-                    <ActionTooltip label="reply">
+                            <ActionTooltip label="reply">
 
-                        <Reply onClick={() => handleChange1()} className="cursor-pointer w-5 h-5 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+                                <Reply onClick={() => handleChange1()} className="cursor-pointer w-5 h-5 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
 
-                    </ActionTooltip>
-                    {isConversationMessageOwner && (
-                        <>
-                            <ActionTooltip label="Edit">
-                                <Edit
-                                    onClick={() => setIsEditing(true)}
-                                    className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-                                />
                             </ActionTooltip>
-                            <ActionTooltip label="Delete">
-                                <Trash
-                                    onClick={() => onOpen("deleteMessage", {
-                                        apiUrl: `${socketUrl}/${id}`,
-                                        query: socketQuery,
-                                    })}
-                                    className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-                                />
-                            </ActionTooltip>
-                        </>
-                    )}
+                            {isConversationMessageOwner && (
+                                <>
+                                    <ActionTooltip label="Edit">
+                                        <Edit
+                                            onClick={() => setIsEditing(true)}
+                                            className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+                                        />
+                                    </ActionTooltip>
+                                    <ActionTooltip label="Delete">
+                                        <Trash
+                                            onClick={() => onOpen("deleteMessage", {
+                                                apiUrl: `${socketUrl}/${id}`,
+                                                query: socketQuery,
+                                            })}
+                                            className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+                                        />
+                                    </ActionTooltip>
+                                </>
+                            )}
+                        </div>
                     </div>
                 </div>
-                </div>
-            </div>}
+            </div >}
         </>
     )
 }
