@@ -10,6 +10,8 @@ import { ScrollArea } from "../ui/scroll-area";
 import { NavigationItem } from "./navigation-item";
 import { UserProfile } from "@/components/user-profile-icon";
 import { useServerState } from "@/components/providers/server-provider";
+import {UserHome} from "@/components/navigation/user-home";
+import { User } from "lucide-react";
 
 export const NavigationSidebar = ({email}) => {
 
@@ -52,9 +54,11 @@ export const NavigationSidebar = ({email}) => {
 
     return (
         <div className="space-y-4 flex flex-col items-center h-full text-primary w-full dark:bg-[#1E1F22] py-3">
-            <NavigationAction />
+            <UserHome id={userdata?._id} />
             <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
-           {server && ( <ScrollArea className="flex-1 w-full">
+            <div className="flex-1 w-full ">
+           {server && ( 
+           <ScrollArea className="overflow-y-auto ">
                 {
                     server.map((server) => (
                         <div key={server._id} className="mb-4">
@@ -65,7 +69,11 @@ export const NavigationSidebar = ({email}) => {
                         </div>
                     ))
                 }
-            </ScrollArea>)}
+            </ScrollArea>
+            )}
+            <NavigationAction />
+            </div>
+
             <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
             
             {userdata && 

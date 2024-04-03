@@ -62,6 +62,7 @@ export const EmojiReactionPicker = ({onChange, isHovered}: EmojiReactionPickerPr
                 suggestedEmojisMode={SuggestionMode.RECENT}
                 onReactionClick={(emoji: any) => handleEmojiClick(emoji)}
                 reactionsDefaultOpen={true}
+                
                 />
             </PopoverContent>
         </Popover>

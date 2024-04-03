@@ -94,7 +94,7 @@ export const ReactionDisplayer = ({
                             </span>}
                             
                                 {member._id === currentMemberId && (
-                                    <button onClick={handleClick(emoji, currentMemberId)} className="ml-14 top-1/2 text-[10px] items-right">
+                                    <button onClick={handleClick(emoji, currentMemberId)} className="ml-8 top-1/2 text-[9px] items-right">
                                         Tap to remove
                                     </button>
                                 )}

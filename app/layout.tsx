@@ -9,6 +9,7 @@ import { SocketProvider } from "@/components/providers/socket-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { SharedStateProvider } from '@/components/providers/reply-provider';
 import { ServerStateProvider } from '@/components/providers/server-provider';
+import { SharedListProvider } from './../components/providers/list-provider';
 
 const font = Open_Sans({ subsets: ["latin"] });
 
@@ -26,23 +27,25 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={cn(font.className, "bg-white dark:bg-[#313338]")}>
         <AuthProvider>
-        <ServerStateProvider>
-          <SharedStateProvider>
-          <ThemeProvider
-              attribute="class"
-              defaultTheme="dark"
-              enableSystem={false}
-              storageKey="discord-theme">
-            <SocketProvider>
-              <ModalProvider />
-              <QueryProvider>
-                {children}
-              </QueryProvider>
-            </SocketProvider>
-          </ThemeProvider>
-          </SharedStateProvider>
-          </ServerStateProvider>
-          </AuthProvider>
+          <SharedListProvider>
+            <ServerStateProvider>
+              <SharedStateProvider>
+                <ThemeProvider
+                  attribute="class"
+                  defaultTheme="dark"
+                  enableSystem={false}
+                  storageKey="discord-theme">
+                    <SocketProvider>
+                      <ModalProvider />
+                      <QueryProvider>
+                        {children}
+                      </QueryProvider>
+                    </SocketProvider>
+                </ThemeProvider>
+              </SharedStateProvider>
+            </ServerStateProvider>
+          </SharedListProvider>
+        </AuthProvider>
         </body>
     </html>
   );

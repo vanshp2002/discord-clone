@@ -482,7 +482,7 @@ export const ChatItem = ({
                     <div className={`group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm ${isHovered ? 'flex' : 'hidden'}`}>
                         
                         <ActionToolTip label="React">
-                            <EmojiReactionPicker onChange={(emoji: string) => onAddReaction(emoji)} isHovered={isHovered} />
+                                <EmojiReactionPicker onChange={(emoji: string) => onAddReaction(emoji)} isHovered={isHovered} />
                         </ActionToolTip>
                         <ActionToolTip label="Reply">
                             <Reply
