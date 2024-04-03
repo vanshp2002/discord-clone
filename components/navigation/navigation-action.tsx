@@ -12,8 +12,10 @@ export const NavigationAction = () => {
     const [isClicked, setIsClicked] = useState(false);
     const onClick = () => {
         setIsClicked(true);
-        setTimeout(() => setIsClicked(false), 100);
-        onOpen("createServer", {});
+        setTimeout(() => {
+            setIsClicked(false);
+            onOpen("createServer", {});
+        }, 75);
     }   
     return (
         <div >

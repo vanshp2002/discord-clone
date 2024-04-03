@@ -6,6 +6,7 @@ import User from "@/models/user";
 import Server from "@/models/server";
 import Channel from "@/models/channel";
 import Message from "@/models/message";
+import Member from "@/models/member";
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,6 +18,7 @@ export default async function handler(
 
   try{
     const {userId, channelId, serverId, memberId, messageId} = req.query;
+    let chamber = Member.find({_id: memberId});
 
     await connectMongoDB();
 
@@ -60,6 +62,7 @@ export default async function handler(
     if(!message || message?.deleted) {
         return res.status(404).json({ error: "Message not found" });
     }
+    
 
     message = await Message.populate(message, 
     {
