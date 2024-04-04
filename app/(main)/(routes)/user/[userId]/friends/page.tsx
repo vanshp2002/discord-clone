@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import FriendList from '@/components/friend/friend-list';
 import FriendHeader from '@/components/friend/friend-header';
 import { useListState } from '@/components/providers/list-provider';
+import { Separator } from '@/components/ui/separator';
 
 
 interface FriendPageProps {
@@ -41,12 +42,26 @@ const FriendPage = ({
   }, [list]);
 
   return (
+  <>
     <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
-      {/* <FriendHeader />
-      {list && friends && <FriendList friends={friends} userId={params?.userId} />} */}
-      <FriendHeader />
-      {list && friends && <FriendList friends={friends} userId={params?.userId} />}
+    <FriendHeader />
+    <div className="flex h-full">
+    <div className="h-full" style={{width: "65%"}}>
+      {<FriendList friends={friends} userId={params?.userId} />}
     </div>
+    <Separator className="h-full bg-zinc-300 dark:bg-zinc-700 rounded-md w-[1px] mx-auto" />
+    <div className="h-full p-5" style={{width: "35%"}}>
+    <div className="font-bold dark:text-white text-xl mb-4 p-5">Active Now</div>
+          <div className="text-base font-bold dark:text-white text-center">
+              It's quiet for now...
+          </div>
+          <div className="dark:text-zinc-400 text-center py-2 px-6" style={{fontSize: "14px"}}>
+              When a friend starts an activity—like playing a game or hanging out on voice—we’ll show it here!
+          </div>
+    </div>
+    </div>
+  </div>
+  </>
   )
 }
 

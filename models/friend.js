@@ -8,6 +8,7 @@ const friendSchema = new Schema(
             type: String,
             default: 'PENDING'
         },
+        blockedBy: { type: Schema.Types.ObjectId, ref: 'User', default: null}
 
     }, { timestamps: true }
 );

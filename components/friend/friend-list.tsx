@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import FriendAll from './friend-all';
 import FriendBlocked from './friend-blocked';
 import FriendOnline from './friend-online';
@@ -8,8 +8,8 @@ import FriendAdd from './friend-add';
 import { useListState } from '@/components/providers/list-provider';
 
 interface FriendProps {
-    friends?: any,
-    userId?: string
+    friends: any,
+    userId: string
 }
 
 const FriendList = ({
@@ -20,13 +20,15 @@ const FriendList = ({
     const { list, setList } = useListState();
     const recvPending = friends?.filter((friend: {type: any}) => friend.status==='PENDING' && friend.userTwoId._id === userId);
     const sentPending = friends?.filter((friend: {type: any}) => friend.status==='PENDING' && friend.userOneId._id === userId);
+    const allFriends = friends?.filter((friend: {status: any}) => friend.status === 'ACCEPTED' && (friend.userOneId._id === userId || friend.userTwoId._id === userId));
+    const blockedFriends = friends?.filter((friend: {status: any}) => friend.status === 'BLOCKED' && friend.blockedBy === userId);
 
     return (
         <>
             {list === "online" && <FriendOnline />}
-            {list === "all" && <FriendAll />}
-            {list === "pending" && <FriendPending rec={recvPending} sent={sentPending}/>}
-            {list === "blocked" && <FriendBlocked />}
+            {list === "all" && allFriends && <FriendAll allfriends={allFriends} userId={userId} />}
+            {list === "pending" && recvPending && sentPending && <FriendPending rec={recvPending} sent={sentPending} />}
+            {list === "blocked" && <FriendBlocked blockedFriends={blockedFriends} userId={userId} />}
             {list === "addfriend" && <FriendAdd />}
         </>
     )
