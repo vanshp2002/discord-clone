@@ -28,6 +28,10 @@ const userSchema = new Schema(
             type: String,
             default: "Add a note here"
         },
+        bannerColor:{
+            type: String,
+            default: "#435EE6"
+        },
     }, {timestamps: true}
 );
 

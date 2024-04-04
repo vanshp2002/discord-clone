@@ -1,20 +1,26 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectMongoDB } from "@/lib/mongodb";
 import User from "@/models/user";
 import { ObjectId } from "mongodb";
 
-export async function POST(req) {
+export async function POST(req: NextRequest) {
     await connectMongoDB();
     const { userId, displayname, imageUrl } = await req.json();
-    let imageUrltemp = imageUrl;
+    let user = null;
     if(!imageUrl){
-        imageUrltemp = "https://utfs.io/f/0861b5a9-d246-42b0-bdcb-ab8cbb6d2cea-g7cq2y.png";
+        user = await User.findOneAndUpdate(
+            { _id: new ObjectId(userId) },
+            { displayname },
+            { new: true }
+        );
     }
-    const user = await User.findOneAndUpdate(
-        { _id: new ObjectId(userId) },
-        { displayname, imageUrl: imageUrltemp },
-        { new: true }
-    );
+    else{
+        user = await User.findOneAndUpdate(
+            { _id: new ObjectId(userId) },
+            { displayname, imageUrl, bannerColor: "#435EE6" },
+            { new: true }
+        );
+    }
 
     return NextResponse.json({ user });
 }
