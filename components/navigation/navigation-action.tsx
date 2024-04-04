@@ -16,7 +16,7 @@ export const NavigationAction = () => {
             setIsClicked(false);
             onOpen("createServer", {});
         }, 75);
-    }   
+    }
     return (
         <div >
             <ActionTooltip
@@ -24,16 +24,16 @@ export const NavigationAction = () => {
                 align="center"
                 label="Add a server"
             >
-                <button onClick={onClick} className={cn(  
+                <button onClick={onClick} className={cn(
                     "group relative flex items-center transition-all",
                     isClicked && "transform translate-y-1"
                 )}
-                style={{
-                    borderRadius: "24px",
-                    padding: "0",
-                }}>
-                    <div className="flex mx-3 h-[48px] w-[48px] rounded-[24px] group-hover:rounded-[16px] transition-all overflow-hidden items-center justify-center bg-background dark:bg-neutral-700 group-hover:bg-emerald-500">
-                        <Plus className="group-hover:text-white transition text-emerald-500" size={25}>
+                    style={{
+                        borderRadius: "26px",
+                        padding: "0",
+                    }}>
+                    <div className="flex mx-3 h-[52px] w-[52px] rounded-[26px] group-hover:rounded-[18px] transition-all overflow-hidden items-center justify-center bg-background dark:bg-neutral-700 group-hover:bg-[#248046]">
+                        <Plus className="group-hover:text-white transition text-[#248046]" size={25}>
 
                         </Plus>
                     </div>

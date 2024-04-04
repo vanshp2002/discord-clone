@@ -26,13 +26,15 @@ const FriendList = ({
 
     const allFriend = friends?.filter((friend: { type: any }) => friend.status === 'ACCEPTED' && (friend.userOneId._id === userId || friend.userTwoId._id === userId));
 
+    const blockedFriend = friends?.filter((friend: { type: any }) => friend.status === 'BLOCKED' && (friend.blockedBy === userId));
+
 
     return (
         <>
             {list === "online" && <FriendOnline />}
             {allFriend && list === "all" && <FriendAll allfriends={allFriend} userId={userId} />}
             {recPending && sentPending && list === "pending" && <FriendPending rec={recPending} sent={sentPending} />}
-            {list === "blocked" && <FriendBlocked />}
+            {blockedFriend && list === "blocked" && <FriendBlocked blockedFriends={blockedFriend} userId={userId} />}
             {list === "addfriend" && <FriendAdd />}
         </>
     )

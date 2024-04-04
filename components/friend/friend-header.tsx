@@ -40,12 +40,12 @@ const FriendHeader = ({ }: FriendHeaderProps) => {
                         list === "blocked" && "bg-zinc-600 dark:text-zinc-300 transition-all")}>
                         Blocked
                     </div>
-                    <div onClick={() => setList("addfriend")} className={cn("font-semibold cursor-pointer px-2 py-1/2 my-auto  text-zinc-900 dark:text-zinc-200 dark:bg-green-600 rounded",
-                        list === "addfriend" && "dark:text-green-500 dark:bg-[#313338] transition-all")}>
+                    <div onClick={() => setList("addfriend")} className={cn("font-semibold cursor-pointer px-2 py-1/2 my-auto  text-zinc-900 dark:text-zinc-200 dark:bg-[#248046] rounded",
+                        list === "addfriend" && "dark:text-[#248046] dark:bg-[#313338] transition-all")}>
                         Add Friend
                     </div>
                 </div>
-            </div>            
+            </div>
         </>
     );
 };

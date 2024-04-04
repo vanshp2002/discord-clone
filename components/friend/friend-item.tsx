@@ -4,21 +4,25 @@ import { ActionTooltip } from "../action-tooltip";
 import { MessageCircle } from "lucide-react";
 import { RxCross1 } from "react-icons/rx";
 import { TbMessageCircle2Filled } from "react-icons/tb";
-
+import {FaBan} from "react-icons/fa"
 interface FriendItemProps {
     friend?: any,
     userId?: string,
-    onRemoveFriend: (id: string) => void
+    onRemoveFriend: (id: string) => void,
+    onBlockFriend: (id: string) => void
 }
 
 const FriendItem = ({
     friend,
     userId,
-    onRemoveFriend
+    onRemoveFriend,
+    onBlockFriend
 }: FriendItemProps) => {
 
     const [isHovered, setIsHovered] = useState(false);
     const otherUser = friend.userOneId._id === userId ? friend.userTwoId : friend.userOneId;
+
+
 
     return (
         <div key={friend._id} className="p-3.5 flex justify-between gap-x-2 hover:bg-zinc-800/60" style={{ maxWidth: "94%" }}
@@ -38,6 +42,11 @@ const FriendItem = ({
                         <ActionTooltip label="Message" side='top'>
                             <div className=" flex justify-center items-center w-10 h-10 md:h-10 md:w-10 bg-zinc-300 dark:bg-zinc-700 rounded-full cursor-pointer">
                                 <TbMessageCircle2Filled className="stroke-1 text-zinc-200 text-sm h-6 w-6 md:h-6 md:w-6" />
+                            </div>
+                        </ActionTooltip>
+                        <ActionTooltip label="Block" side='top'>
+                            <div className="flex justify-center items-center w-10 h-10 md:h-10 md:w-10 bg-zinc-300 dark:bg-zinc-700 rounded-full cursor-pointer">
+                                <FaBan onClick={() => onBlockFriend(friend._id)} className="text-gray-300 h-4 w-4 md:h-5 md:w-5" />
                             </div>
                         </ActionTooltip>
                         <ActionTooltip label="Remove Friend" side='top'>

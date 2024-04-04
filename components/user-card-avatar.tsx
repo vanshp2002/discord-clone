@@ -102,17 +102,22 @@ export const UserCardAvatar = ({
             </PopoverTrigger>
             <PopoverContent side="right" hideWhenDetached={true} style={{ zIndex: 1 }}>
             <Card className={cn("w-[380px] bg-zinc-800", classNameCard)} >
-                <CardHeader className="bg-zinc-800 p-4">
-                <Avatar className={cn(
-                        "ml-5 mt-4 h-14 w-14 md:h-14.5 md:w-14.5",
-                        className
-                        )}>
-                        <AvatarImage src={user?.imageUrl} />
-                    </Avatar>
-                    <CardTitle className="ml-5 py-1">
+            <CardHeader className="bg-zinc-800 p-0">
+                <div style={{ position: "relative", display: "inline-block" }}>
+                    <div className="bg-black h-[80px]" style={{ position: "absolute", top: 0, left: 0, width: "100%" }} />
+                    <div className=" flex items-center ml-9 mt-8 bg-zinc-800" style={{ position: "relative", zIndex: 0, display: "inline-block", borderRadius: "75%", overflow: "hidden", width:"96px", height:"90px" }}>
+                            <Avatar className={cn(
+                                "ml-2 mt-2 h-20 w-20 md:h-20 md:w-20",
+                                className
+                            )} style={{ position: "relative" }}>
+                                <AvatarImage src={user?.imageUrl} />
+                            </Avatar>
+                    </div>
+                </div>
+                    <CardTitle className="ml-9 py-1">
                         {user?.displayname}
                     </CardTitle>
-                    <CardDescription className="ml-5">
+                    <CardDescription className="ml-9">
                         @{user?.username}
                     </CardDescription>
                 </CardHeader>

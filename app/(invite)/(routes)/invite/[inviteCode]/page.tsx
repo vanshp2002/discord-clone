@@ -18,9 +18,9 @@ const InviteCodePage = ({
     const { serverUpdated, setServerUpdated } = useServerState();
 
     const router = useRouter();
-    let flag = false;
+
     useEffect(() => {
-        if (!dataFetched && session) {
+        if (session) {
             const fetchData = async () => {
                 try {
                     // Fetch data only if it hasn't been fetched before and session is available
@@ -34,8 +34,6 @@ const InviteCodePage = ({
                         }),
                     });
                     const user = await userfind.json();
-                    if (!user) return;
-                    setDataFetched(true); // Mark data as fetched
 
                     const server = await fetch("/api/servers/ismember", {
                         method: "POST",
@@ -64,8 +62,7 @@ const InviteCodePage = ({
 
                     })
                     const serverUpdatedJson = await serverUpdated.json();
-                    flag = true;
-                    setServerUpdated(prevServerUpdated => prevServerUpdated + 1);
+                    // setServerUpdated(prevServerUpdated => prevServerUpdated + 1);
                     return router.push(`/servers/${serverUpdatedJson.server._id}`);
 
                 } catch (error) {
@@ -75,11 +72,11 @@ const InviteCodePage = ({
 
             fetchData();
         }
-    }, [dataFetched]); // Run the effect when session or dataFetched changes
+    }, [session]); // Run the effect when session or dataFetched changes
 
     return (
         <>
-            {flag && <NavigationSidebar />}
+            Redirecting...
         </>
     );
 };

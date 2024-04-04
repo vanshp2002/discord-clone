@@ -36,12 +36,12 @@ export const NavigationItem = ({
         >
             <button
                 onClick={onClick}
-                className={cn(  
+                className={cn(
                     "group relative flex items-center transition-all",
                     isClicked && "transform translate-y-1"
                 )}
                 style={{
-                    borderRadius: "24px",
+                    borderRadius: "26px",
                     padding: "0",
                 }}
             >
@@ -49,12 +49,12 @@ export const NavigationItem = ({
                     "absolute left-0 bg-primary rounded-r-full transition-all w-[4px]",
                     params?.serverId !== id && "group-hover:h-[20px]",
                     params?.serverId === id ? "h-[36px]" : "h-[8px]"
-                )}/> 
+                )} />
                 <div className={cn(
-                    "relative group flex mx-3 h-[48px] w-[48px] rounded-[24px] group-hover:rounded-[16px] transition-all overflow-hidden",
-                    params?.serverId === id && "bg-primary/10 text-primary rounded-[16px]"
+                    "relative group flex mx-3 h-[52px] w-[52px] rounded-[26px] group-hover:rounded-[18px] transition-all overflow-hidden",
+                    params?.serverId === id && "bg-primary/10 text-primary rounded-[18px]"
                 )}>
-                    <Image 
+                    <Image
                         fill
                         src={imageUrl}
                         alt="Channel"
