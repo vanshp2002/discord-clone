@@ -17,7 +17,7 @@ const FriendHeader = ({ }: FriendHeaderProps) => {
 
     return (
         <>
-            <div className="px-3 flex items-center h-12 border-natural-200 dark:border-neutral-800 border-b-2">
+            <div className="px-3 flex items-center py-3 border-natural-200 dark:border-neutral-800 border-b-2">
                 <div className="flex space-x-4">
                     <div className="text-white cursor-pointer flex font-semibold">
                         <HiUser className="h-6 w-6 mx-2 font-semibold text-m text-zinc-500 group-hover:text-zinc-600 dark:text-zinc-400 dark:group-hover:text-zinc-300 transition" />

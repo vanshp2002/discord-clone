@@ -20,18 +20,18 @@ const FriendList = ({
 
     const { list, setList } = useListState();
     console.log(friends);
-    
-    const recPending = friends?.filter((friend: {type: any}) => friend.status==='PENDING' && friend.userTwoId._id === userId);
-    const sentPending = friends?.filter((friend: {type: any}) => friend.status==='PENDING' && friend.userOneId._id === userId);
-    
-    const allFriend = friends?.filter((friend: {type: any}) => friend.status==='ACCEPTED' && (friend.userOneId._id === userId || friend.userTwoId._id === userId));
-    
+
+    const recPending = friends?.filter((friend: { type: any }) => friend.status === 'PENDING' && friend.userTwoId._id === userId);
+    const sentPending = friends?.filter((friend: { type: any }) => friend.status === 'PENDING' && friend.userOneId._id === userId);
+
+    const allFriend = friends?.filter((friend: { type: any }) => friend.status === 'ACCEPTED' && (friend.userOneId._id === userId || friend.userTwoId._id === userId));
+
 
     return (
         <>
             {list === "online" && <FriendOnline />}
-            {list === "all" && <FriendAll allFriend={allFriend}/>}
-            {list === "pending" && <FriendPending rec={recPending} sent={sentPending}/>}
+            {allFriend && list === "all" && <FriendAll allfriends={allFriend} userId={userId} />}
+            {recPending && sentPending && list === "pending" && <FriendPending rec={recPending} sent={sentPending} />}
             {list === "blocked" && <FriendBlocked />}
             {list === "addfriend" && <FriendAdd />}
         </>

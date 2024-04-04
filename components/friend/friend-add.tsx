@@ -15,6 +15,7 @@ const FriendAdd = ({
 }: FriendAddProps) => {
     const params = useParams();
     const [username, setUsername] = useState("");
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false); // State to control button disablement
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -28,9 +29,13 @@ const FriendAdd = ({
                 userOneId: params?.userId,
                 userTwoName: username
             })
-        })
+        });
         const toJson = await response.json();
         console.log(toJson.message);
+    }
+
+    const onChange = (e) => {
+        setUsername(e.target.value);
     }
 
     return (
@@ -44,12 +49,14 @@ const FriendAdd = ({
                     <form onSubmit={onSubmit}>
                         <input
                             type="text"
-                            onChange={(e) => setUsername(e.target.value)}
+                            value={username}
+                            onChange={onChange}
                             placeholder="You can add friends with their Discord username."
-                            className="bg-zinc-800 h-[55px] text-white w-full px-3 py-2 rounded-md focus:outline-none focus:ring focus:border-[#03a9f4]"
+                            className="bg-zinc-800 h-[55px] text-base w-full px-3 py-2 rounded-md focus:outline-none focus:ring focus:border-[#03a9f4]"
                         />
                         <button
-                            className="absolute font-semibold right-3 top-2 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+                            disabled={username === ""} // Disable button based on state
+                            className={`absolute font-semibold text-base right-3 top-2 ${username === "" ? 'bg-[#2f3570] text-[#9d9b9b] cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white'} px-4 py-2 rounded-md`}
                         >
                             Send Friend Request
                         </button>
