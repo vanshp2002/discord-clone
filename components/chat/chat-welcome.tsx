@@ -1,5 +1,9 @@
 import { Hash } from "lucide-react";
 import {UserAvatar} from "@/components/user-avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
+import { Separator } from "@radix-ui/react-dropdown-menu";
+
 interface ChatWelcomeProps {
     name: string;
     type: "channel" | "conversation";
@@ -22,8 +26,10 @@ export const ChatWelcome = ({
                 </div>
             )}
             {type === "conversation" && (
-                <div className="h-[75px] w-[75px] rounded-full bg-zinc-500 dark:bg-zinc-700 flex items-center justify-center">
-                    <UserAvatar src={src} className="h-12 w-12"/>
+                <div className="h-[75px] w-[75px] rounded-full bg-zinc-500 dark:bg-[#313338] flex items-center justify-center">
+                   <Avatar className="ml-2 mt-2 h-20 w-20 md:h-20 md:w-20" style={{ position: "relative" }}>
+                      <AvatarImage src={src} />
+                    </Avatar>
                 </div>
             )}
             <p className="text-xxl md:text-3xl font-bold">
@@ -34,11 +40,20 @@ export const ChatWelcome = ({
                    {username}
                 </p>
             )}
-            <p className="text-zinc-600 dark:text-zinc-400 text-sm">
+            <p className="text-zinc-600 dark:text-zinc-400 my-1 text-sm">
                 {type === "channel"
-                    ? `This is the start of the #${name} channel.`:`This is the start of your conversation with ${name}`
+                    ? `This is the start of the #${name} channel.`:`This is the beginning of your direct message with ${name}`
                 }
             </p>
+            {type === "conversation" && (
+                <div className="my-3">
+                <div class="flex space-x-4 my-3">
+                  <button class="hover:bg-gray-500 h-6 text-sm bg-gray-600 text-white py-auto px-4 rounded shadow-md">Remove Friend</button>
+                  <button class="hover:bg-gray-500 h-6 text-sm bg-gray-600 text-white py-auto px-4 rounded shadow-md">Block</button>
+                </div>              
+               <Separator className="h-[1px] bg-zinc-300 dark:bg-zinc-700 my-3 rounded-md w-full"/>
+                </div>
+            )}
         </div>
     )
 }

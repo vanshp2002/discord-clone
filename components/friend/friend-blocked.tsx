@@ -34,18 +34,18 @@ const FriendBlocked = ({
     return (
 
         <>
-            <div className="flex items-center mt-5 ml-8 p-2">
+            {blockedfriends?.length > 0 && <div className="flex items-center mt-5 ml-8 p-2">
                 <p className="text font-semibold text-zinc-500 dark:text-zinc-400">Blocked Friends - </p>
                 <p className="ml-1 text font-semibold text-muted-foreground dark:text-muted-foreground">{blockedFriends.length}</p>
-            </div>
+            </div>}
 
-            <div className="bg-[#313338] ml-7 p-2 rounded-lg">
+            {blockedfriends?.length > 0 && <div className="bg-[#313338] ml-7 p-2 rounded-lg">
                 <p className="text-gray-400 text-sm mb-4">
                     You can unblock friends from this list.
                 </p>
-            </div>
+            </div>}
 
-            <Separator className="h-[3px] bg-zinc-300 dark:bg-zinc-700 rounded-md ml-8" style={{ maxWidth: "93%" }} />
+            {blockedfriends?.length > 0 && <Separator className="h-[3px] bg-zinc-300 dark:bg-zinc-700 rounded-md ml-8" style={{ maxWidth: "93%" }} />}
             <div className="p-4 mt-3 flex flex-col gap-y-2 ml-5">
 
                 {blockedfriends?.length > 0 ? blockedfriends.map((friend: any) => (
@@ -55,13 +55,8 @@ const FriendBlocked = ({
                         userId={userId}
                         onUnblockFriend={onUnblockFriend}
                     />
-                )) : <div className="relative w-full h-64">
-                <img
-                  src="./friend_all.png"
-                  alt="Your Image"
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              </div>}
+                )) : (<div class="container"><img src="https://utfs.io/f/d297eb9b-ee65-40ed-8ed5-c737e8d01867-uzsjwf.png" alt="cartoon"/></div>
+              )}
             </div>
 
         </>

@@ -36,7 +36,7 @@ const FriendSearch = ({
             <button
                 onClick={() => setOpen(true)}
                 className="group px-2 py-1 rounded-md flex items-left gap-x-2 w-full dark:bg-zinc-900 hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition">
-                <p className="text-sm text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition">
+                <p className="text-sm text-zinc-500 dark:text-zinc-500 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition">
                     Find or start a conversation
                 </p>
             </button>

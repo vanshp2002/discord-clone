@@ -13,8 +13,8 @@ const FriendOnline = ({
 
     return (
 
-        <div className="flex items-center justify-between py-2">
-            FriendOnline
+        <div className="container">
+            <img src="https://utfs.io/f/4340240d-a646-42ef-a6dc-9c1fcad8d8bf-uzt67v.png" alt="cartoon"/>
         </div>
     )
 }

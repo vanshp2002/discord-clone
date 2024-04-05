@@ -1,5 +1,5 @@
-import {Avatar, AvatarImage} from "@/components/ui/avatar";
-import {cn} from "@/lib/utils";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
 import { Popover, PopoverTrigger } from "./ui/popover";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
@@ -28,20 +28,20 @@ export const UserCardAvatar = ({
     className,
     classNameCard,
     isHovered
-}: UserCardAvatarProps) =>{
+}: UserCardAvatarProps) => {
     const [shouldShow, setShouldShow] = useState(false);
 
     const [editHovered, setEditHovered] = useState(false);
 
     const [editing, setEditing] = useState(false);
-    const[note, setNote] = useState(user?.note);
+    const [note, setNote] = useState(user?.note);
     const { serverUpdated, setServerUpdated } = useServerState();
     const router = useRouter();
 
     const isOwner = user._id === currentUserId;
 
     useEffect(() => {
-        if(!isHovered && shouldShow){
+        if (!isHovered && shouldShow) {
             setShouldShow(false);
             setEditing(false);
         }
@@ -57,14 +57,14 @@ export const UserCardAvatar = ({
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    userId: user._id,
-                    note: value,
-                    chatId,
-                    }),
-                });
-        const {user:usertemp} = await res.json();
+            },
+            body: JSON.stringify({
+                userId: user._id,
+                note: value,
+                chatId,
+            }),
+        });
+        const { user: usertemp } = await res.json();
 
         // const url = queryString.stringifyUrl({
         //     url: "/api/editNote",
@@ -92,61 +92,61 @@ export const UserCardAvatar = ({
 
     return (
         <Popover open={shouldShow} onOpenChange={handleOpenChange}>
-            <PopoverTrigger> 
+            <PopoverTrigger>
                 <Avatar className={cn(
                     "h-7 w-7 md:h-10 md:w-10",
                     className
-                    )}>
+                )}>
                     <AvatarImage src={user?.imageUrl} />
                 </Avatar>
             </PopoverTrigger>
             <PopoverContent side="right" hideWhenDetached={true} style={{ zIndex: 1 }}>
-            <Card className={cn("w-[380px] bg-zinc-800", classNameCard)} >
-            <CardHeader className="bg-zinc-800 p-0">
-                <div style={{ position: "relative", display: "inline-block" }}>
-                    <div className="bg-black h-[80px]" style={{ position: "absolute", top: 0, left: 0, width: "100%" }} />
-                    <div className=" flex items-center ml-9 mt-8 bg-zinc-800" style={{ position: "relative", zIndex: 0, display: "inline-block", borderRadius: "75%", overflow: "hidden", width:"96px", height:"90px" }}>
-                            <Avatar className={cn(
-                                "ml-2 mt-2 h-20 w-20 md:h-20 md:w-20",
-                                className
-                            )} style={{ position: "relative" }}>
-                                <AvatarImage src={user?.imageUrl} />
-                            </Avatar>
-                    </div>
-                </div>
-                    <CardTitle className="ml-9 py-1">
-                        {user?.displayname}
-                    </CardTitle>
-                    <CardDescription className="ml-9">
-                        @{user?.username}
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="ml-4 mr-4 mb-3 pt-4 bg-black" style={{ borderRadius: '1rem' }}>
-                    <p className="font-semibold text-sm">DISCORD MEMBER SINCE</p>
-                    <p className="text-gray-400 text-xs mt-1">{user?.createdAt && user?.createdAt.substring(0, 10)}</p>
-                    {/* <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-auto mx-auto mt-2" /> */}
+                <Card className={cn("w-[380px] bg-zinc-800", classNameCard)} >
+                    <CardHeader className="bg-zinc-800 p-0">
+                        <div style={{ position: "relative", display: "inline-block" }}>
+                            <div className=" h-[80px]" style={{ position: "absolute", top: 0, left: 0, width: "100%", backgroundColor: user?.bannerColor }} />
+                            <div className=" flex items-center ml-9 mt-8 bg-zinc-800" style={{ position: "relative", zIndex: 0, display: "inline-block", borderRadius: "75%", overflow: "hidden", width: "96px", height: "90px" }}>
+                                <Avatar className={cn(
+                                    "ml-2 mt-2 h-20 w-20 md:h-20 md:w-20",
+                                    className
+                                )} style={{ position: "relative" }}>
+                                    <AvatarImage src={user?.imageUrl} />
+                                </Avatar>
+                            </div>
+                        </div>
+                        <CardTitle className="ml-9 py-1">
+                            {user?.displayname}
+                        </CardTitle>
+                        <CardDescription className="ml-9">
+                            @{user?.username}
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="ml-4 mr-4 mb-3 pt-4 bg-black" style={{ borderRadius: '1rem' }}>
+                        <p className="font-semibold text-sm">DISCORD MEMBER SINCE</p>
+                        <p className="text-gray-400 text-xs mt-1">{user?.createdAt && user?.createdAt.substring(0, 10)}</p>
+                        {/* <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-auto mx-auto mt-2" /> */}
 
-                    <div className="flex items-center justify-between" onMouseEnter={() => setEditHovered(true)} onMouseLeave={() => setEditHovered(false)}>
-                        <p className="font-semibold mt-3 text-sm">NOTE</p>
+                        <div className="flex items-center justify-between" onMouseEnter={() => setEditHovered(true)} onMouseLeave={() => setEditHovered(false)}>
+                            <p className="font-semibold mt-3 text-sm">NOTE</p>
                             {isOwner && <Edit onClick={() => setEditing(!editing)} className={`h-4 w-4 text-zinc-500 dark:text-zinc-400 mt-3 ${editHovered ? 'flex' : 'hidden'}`} />}
                         </div>
-                    {!editing ? (
-                        <p className="text-gray-400 text-xs mt-1">{note}</p>
-                    ) : (
-                        <form>
-                        <Input className="text-gray-400 text-xs mt-1 bg-inherit" placeholder="Add a note" defaultValue={note}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              e.preventDefault();
-                              updateNote(e.currentTarget.value); 
-                            }
-                          }}
-                        />
-                        </form>
+                        {!editing ? (
+                            <p className="text-gray-400 text-xs mt-1">{note}</p>
+                        ) : (
+                            <form>
+                                <Input className="text-gray-400 text-xs mt-1 bg-inherit" placeholder="Add a note" defaultValue={note}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            e.preventDefault();
+                                            updateNote(e.currentTarget.value);
+                                        }
+                                    }}
+                                />
+                            </form>
                         )}
-                </CardContent>
+                    </CardContent>
                 </Card>
             </PopoverContent>
-        </Popover> 
+        </Popover>
     )
 }

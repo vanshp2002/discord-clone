@@ -42,7 +42,7 @@ export const UserHome = ({ id }: userHomeProps) => {
                         padding: "0",
                     }}>
                     <div className={cn(
-                        "absolute left-0 bg-primary rounded-r-full transition-all w-[4px]",
+                        "absolute left-0 bg-primary rounded-r-full transition-all w-[6px]",
                         params?.userId !== id && "group-hover:h-[20px]",
                         params?.userId === id ? "h-[36px]" : "h-[8px]"
                     )} />

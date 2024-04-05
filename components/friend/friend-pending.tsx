@@ -71,12 +71,13 @@ const FriendPending = ({
     return (
 
         <>
+        <div>
 
-            <div className="flex items-center mt-5 ml-8 p-4">
+           {totalPending!==0 && <div className="flex items-center mt-5 ml-8 p-4">
                 <p className="text font-semibold text-zinc-500 dark:text-zinc-400">Pending</p>
                 <p className="ml-3 text font-semibold text-muted-foreground dark:text-muted-foreground">{totalPending}</p>
-            </div>
-            <Separator className="h-[3px] bg-zinc-300 dark:bg-zinc-700 rounded-md ml-8" style={{ maxWidth: "93%" }} />
+            </div>}
+            {totalPending!==0 && <Separator className="h-[3px] bg-zinc-300 dark:bg-zinc-700 rounded-md ml-8" style={{ maxWidth: "93%" }} />}
             <div className="p-4 mt-3 flex flex-col gap-y-2 ml-5">
                 {recarr.map((friend: any) => (
                     <div key={friend._id} className="p-3.5 flex justify-between gap-x-2 hover:bg-zinc-800/60" style={{ maxWidth: "94%" }}
@@ -131,6 +132,10 @@ const FriendPending = ({
                         </div>
                     </div>
                 ))}
+            </div>
+            {totalPending === 0 && (
+                <div className="container"><img src="https://utfs.io/f/4c1e8889-4946-426e-8c18-6a994fa739cc-uzt6wn.png" alt="cartoon"/></div>
+            )}
             </div>
 
         </>

@@ -29,7 +29,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ "message": `Request successfully sent to @${userTwoName}` });
         }
         if (friendship.status === "ACCEPTED") {
-            return NextResponse.json({ "message": `Request to @${userTwoName} is already a friend.` });
+            return NextResponse.json({ "message": `User @${userTwoName} is already a friend.` });
         }
         return NextResponse.json({ "message": `Request to @${userTwoName} is already pending` });
 

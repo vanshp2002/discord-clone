@@ -14,6 +14,8 @@ const logos = ["https://utfs.io/f/58436a22-f736-4bbf-8fd3-f3f41004613e-ahjm7s.pn
     "https://utfs.io/f/6b76cffa-6d73-466e-8b38-af60187ee4a1-ahjmad.png",
     "https://utfs.io/f/2f7ac526-53b1-4d06-8ebd-14b67a843b42-u1o2gk.png"]
 
+const bannerColors = ["#E64379", "#2D767F", "#BD43E6", "#1A2639", "#435EE6", "#43B0E6", "#5D5D5A", "#43E651", "#FF832A", "#E64343"]
+
 export const POST = async (request: any) => {
     const { email, password, username, displayname } = await request.json();
     await connectMongoDB();
@@ -32,7 +34,8 @@ export const POST = async (request: any) => {
         password: hashedPassword,
         username,
         displayname,
-        imageUrl: logos[randomNumber]
+        imageUrl: logos[randomNumber],
+        bannerColor: bannerColors[randomNumber]
     });
 
     try {

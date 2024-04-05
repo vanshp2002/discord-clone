@@ -5,6 +5,7 @@ import { MessageCircle } from "lucide-react";
 import { RxCross1 } from "react-icons/rx";
 import { TbMessageCircle2Filled } from "react-icons/tb";
 import {FaBan} from "react-icons/fa"
+import { useRouter } from "next/navigation";
 interface FriendItemProps {
     friend?: any,
     userId?: string,
@@ -21,8 +22,10 @@ const FriendItem = ({
 
     const [isHovered, setIsHovered] = useState(false);
     const otherUser = friend.userOneId._id === userId ? friend.userTwoId : friend.userOneId;
-
-
+    const router = useRouter();
+    const onClick = () => {
+        return router.push(`/user/${userId}/friends/${otherUser._id}`);
+    }
 
     return (
         <div key={friend._id} className="p-3.5 flex justify-between gap-x-2 hover:bg-zinc-800/60" style={{ maxWidth: "94%" }}
@@ -41,7 +44,7 @@ const FriendItem = ({
                     <div className="flex gap-x-4 mr-5">
                         <ActionTooltip label="Message" side='top'>
                             <div className=" flex justify-center items-center w-10 h-10 md:h-10 md:w-10 bg-zinc-300 dark:bg-zinc-700 rounded-full cursor-pointer">
-                                <TbMessageCircle2Filled className="stroke-1 text-zinc-200 text-sm h-6 w-6 md:h-6 md:w-6" />
+                                <TbMessageCircle2Filled onClick={onClick}className="stroke-1 text-zinc-200 text-sm h-6 w-6 md:h-6 md:w-6" />
                             </div>
                         </ActionTooltip>
                         <ActionTooltip label="Block" side='top'>

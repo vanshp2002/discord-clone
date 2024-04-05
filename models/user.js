@@ -2,29 +2,33 @@ import mongoose, { Schema, models, model } from 'mongoose';
 
 const userSchema = new Schema(
     {
-        email:{
+        email: {
             type: String,
             required: true,
             unique: true
         },
-        displayname:{
+        displayname: {
             type: String,
             required: true
         },
-        username:{
+        username: {
             type: String,
             required: true,
             unique: true
         },
-        password:{
+        password: {
             type: String,
             required: true
         },
-        imageUrl:{
+        imageUrl: {
             type: String,
             default: "https://utfs.io/f/0861b5a9-d246-42b0-bdcb-ab8cbb6d2cea-g7cq2y.png"
         },
-    }, {timestamps: true}
+        bannerColor: {
+            type: String,
+            default: "#435EE6"
+        },
+    }, { timestamps: true }
 );
 
 const User = models.User || mongoose.model('User', userSchema);
