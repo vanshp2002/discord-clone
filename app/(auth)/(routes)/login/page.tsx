@@ -18,6 +18,7 @@ function App() {
     e.preventDefault();
 
     try{
+
       const res = await signIn("credentials", {
         email,
         password,
@@ -28,8 +29,20 @@ function App() {
       setError("Invalid Credentials");
       return;
     }
+
+    const user = await fetch("/api/fetchUserProfile", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email
+      }),
+    });
     
-    router.replace("channels");
+    const usertemp = await user.json();
+    
+    router.push(`/user/${usertemp._id}/friends`);
     }
     catch(error){
       console.log(error);

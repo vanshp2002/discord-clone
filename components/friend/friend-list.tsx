@@ -28,7 +28,7 @@ const FriendList = ({
             {list === "online" && <FriendOnline />}
             {list === "all" && allFriends && <FriendAll allfriends={allFriends} userId={userId} />}
             {list === "pending" && recvPending && sentPending && <FriendPending rec={recvPending} sent={sentPending} />}
-            {list === "blocked" && <FriendBlocked blockedFriends={blockedFriends} userId={userId} />}
+            {list === "blocked" && blockedFriends && <FriendBlocked blockedFriends={blockedFriends} userId={userId} />}
             {list === "addfriend" && <FriendAdd />}
         </>
     )

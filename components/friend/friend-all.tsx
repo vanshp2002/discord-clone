@@ -21,16 +21,6 @@ const FriendAll = ({
     const onRemoveFriend = async (id: string) => {
         setAllFriends(allFriends.filter((friend: any) => friend._id !== id));
         setTotalFriends(totalFriends-1);
-
-        await fetch("/api/friend/rejectfriend", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                friendId: id
-            })
-        });
     }
 
     const onBlockFriend = async (id: string) => {
@@ -49,6 +39,7 @@ const FriendAll = ({
         });
     }
 
+    
 
     return (
         <> 
