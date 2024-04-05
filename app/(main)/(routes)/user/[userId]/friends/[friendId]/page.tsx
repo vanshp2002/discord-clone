@@ -10,6 +10,8 @@ import { ChatMessages } from '@/components/chat/chat-messages';
 import { ChatInput } from '@/components/chat/chat-input';
 import { useServerState } from "@/components/providers/server-provider";
 import { useParams } from 'next/navigation';
+import UserCardSidebar from '@/components/user-card-sidebar';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface MemberIdPageProps {
 
@@ -24,6 +26,7 @@ const MemberIdPage = ({
     const [otherMember, setOtherMember] = useState(null);
     const [gconversation, setGconversation] = useState(null);
     const { serverUpdated, setServerUpdated } = useServerState();
+    const [ mutualFriends, setMutualFriends ] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,6 +62,20 @@ const MemberIdPage = ({
             }
 
             setGconversation(conversation);
+
+            const mutualFriends = await fetch(`/api/friend/mutualfriends`, {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                  userOneId: currentMember?._id,
+                  userTwoId: otherMember?._id,
+              }),
+            });
+
+            const {mutualfriends} = await mutualFriends.json();
+            setMutualFriends(mutualfriends);
           }
           catch(error){
             console.error(error);
@@ -69,7 +86,7 @@ const MemberIdPage = ({
       }, [session, router, serverUpdated]);
 
     return (
-      <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
+      <div className="bg-white dark:bg-[#313338] flex flex-col h-[100%]" style={{ overflow: 'hidden' }}>
       {otherMember && (<ChatHeader 
         imageUrl={otherMember.imageUrl}
         name={otherMember.displayname}
@@ -77,36 +94,52 @@ const MemberIdPage = ({
         email={session?.user?.email}
       />)}
 
-      { otherMember && currentMember && (<ChatMessages
-          member={currentMember}
-          otherMember={otherMember}
-          name={otherMember?.displayname}
-          chatId={gconversation?._id}
-          apiUrl="/api/direct-messages"
-          socketUrl="/api/socket/direct-messages"
-          socketQuery={{
-            conversationId: gconversation?._id,
-            userId: currentMember?._id,
-            otherUserId: otherMember?._id,
-          }}
-          paramKey="conversationId"
-          paramValue={gconversation?._id}
-          type="conversation"
-        />
-      )}
+      <div className="flex h-full">
 
-      {gconversation && (<ChatInput 
-        apiUrl="/api/socket/direct-messages"
-        query={{
-            conversationId: gconversation?._id,
-            userId: currentMember?._id,
-            otherUserId: otherMember?._id,
-          }}
-        name={otherMember?.displayname}
-        type="conversation"
-        chatId= {gconversation?._id}
-      />)}
-    </div>
+            <div className="flex flex-col h-full w-[74%]" style={{ overflow: 'hidden' , maxHeight: 'calc(100vh - 50px)' }}>
+
+                <ScrollArea className="flex-grow">
+
+                { otherMember && currentMember && (<ChatMessages
+                    member={currentMember}
+                    otherMember={otherMember}
+                    name={otherMember?.displayname}
+                    chatId={gconversation?._id}
+                    apiUrl="/api/direct-messages"
+                    socketUrl="/api/socket/direct-messages"
+                    socketQuery={{
+                        conversationId: gconversation?._id,
+                        userId: currentMember?._id,
+                        otherUserId: otherMember?._id,
+                    }}
+                    paramKey="conversationId"
+                        paramValue={gconversation?._id}
+                        type="conversation"
+                        />
+                    )}
+                
+                </ScrollArea>
+
+                {gconversation && (<ChatInput 
+                    apiUrl="/api/socket/direct-messages"
+                    query={{
+                        conversationId: gconversation?._id,
+                        userId: currentMember?._id,
+                        otherUserId: otherMember?._id,
+                    }}
+                    name={otherMember?.displayname}
+                    type="conversation"
+                    chatId= {gconversation?._id}
+                    />)}
+
+                </div>
+
+            <div className="w-[26%]">
+                {otherMember && <UserCardSidebar user={otherMember} mutualFriends={mutualFriends} />}
+            </div>
+        
+            </div>
+        </div>
     );
   }
   
