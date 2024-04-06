@@ -8,9 +8,41 @@ import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils';
 import { UsersRound } from 'lucide-react';
 
+import { FriendDirectMessageItem } from "./friend-direct-message-item";
+import { DmSection } from "./dm-section";
+import { useParams, useRouter } from 'next/navigation';
+import { useListState } from '@/components/providers/list-provider';
 
 
 const FriendSidebar = () => {
+
+    const [directMessages, setdirectMessages] = useState([]);
+    const params = useParams();
+    const { list, setList } = useListState();
+    const router = useRouter();
+
+    const onDirectMessageRemove = (id: string) => {
+        setdirectMessages(directMessages.filter((friend: any) => friend._id !== id));
+    }
+
+    useEffect(() => {
+        const fetchdata = async () => {
+          console.log(params?.userId);
+          const response = await fetch("/api/friend/allfriends", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              userId: params?.userId
+            })
+          });
+          const {friends} = await response.json();
+          const allFriends = friends?.filter((friend: any) => friend.status === 'ACCEPTED' && (friend.userOneId._id === params?.userId || friend.userTwoId._id === params?.userId));
+          setdirectMessages(allFriends);
+        }
+        fetchdata();
+      }, [list]);
 
     return (
         <div className="flex flex-col h-full tetx-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
@@ -41,6 +73,22 @@ const FriendSidebar = () => {
                         </div>
                     </div>
                 </ScrollArea>
+
+                <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
+                    <DmSection label="Direct Messages" />
+                
+                    {!!directMessages?.length && (
+                        <div className="mb-2">
+                            
+                            <div className="spca-y-[2px]">
+                                {directMessages.map((friend) => (
+                                    <FriendDirectMessageItem key={friend._id} friend={friend} userId={params?.userId} onRemove={onDirectMessageRemove} />
+                                ))}
+                            </div>
+                        </div>
+
+                    )}
+
             </div>
         </div>
     )
