@@ -87,6 +87,7 @@ const ChannelIdPage = ({params}: ChannelIdPageProps) => {
         name={gchannel?.name}
         type="channel"
         email={session?.user?.email}
+        chatId={gchannel?._id}
       />) }
 
       { gchannel && gmember && (<ChatMessages 

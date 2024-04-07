@@ -1,3 +1,4 @@
+import { PinnedMessages } from '@/components/chat/pinned-messages';
 import { Schema, models, model } from 'mongoose';
 
 const channelTypeEnum = ['TEXT', 'AUDIO', 'VIDEO'];
@@ -14,6 +15,8 @@ const channelSchema = new Schema({
   serverId: {type: Schema.Types.ObjectId, required: true, ref: 'Server' },
   
   messages: [{ type: Schema.Types.ObjectId, ref: 'Message' }],
+
+  pinnedMessages: [{ type: Schema.Types.ObjectId, ref: 'Message' }],
 
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }

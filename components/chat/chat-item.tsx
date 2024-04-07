@@ -31,6 +31,8 @@ import { EmojiReactionPicker } from "../emoji-reaction-picker";
 import { ReactionDisplayer } from "../reaction-displayer";
 import { useSharedState } from "../providers/reply-provider";
 import { UserCardAvatar } from "../user-card-avatar";
+import { Pin, PinOff } from 'lucide-react';
+import { set } from "mongoose";
 
 interface ChatItemProps {
     type: "channel" | "conversation";
@@ -84,6 +86,7 @@ export const ChatItem = ({
     const params = useParams();
     const router = useRouter();
     const { replyMessage, setReplyMessage } = useSharedState({});
+    const [isPinned, setIsPinned] = useState(message?.pinned);
 
     const { onOpen } = useModal();
 
@@ -141,6 +144,28 @@ export const ChatItem = ({
     
         await axios.post(url, body);
         router.refresh();
+    }
+
+    const onPinMessage = async () => {
+        const res = await fetch("/api/messages/pin", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ messageId: id, chatId, type }),
+        });
+        setIsPinned(true);
+    }
+
+    const onUnpinMessage = async () => {
+        const res = await fetch("/api/messages/unpin", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ messageId: id, chatId, type }),
+        });
+        setIsPinned(false);
     }
 
     useEffect(() => {
@@ -348,6 +373,18 @@ export const ChatItem = ({
                                 />
                             </ActionToolTip>
                         )}
+                        {isAdmin && (
+                            !isPinned ?
+                                <ActionToolTip label="Pin">
+                                    <Pin onClick={onPinMessage} className="cursor-pointer w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+                                </ActionToolTip>
+                                :
+                                <ActionToolTip label="Unpin">
+                                    <PinOff onClick={onUnpinMessage} className="cursor-pointer w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+                                </ActionToolTip>
+                            )
+                        }
+
                     </div>
                 </div>
                 </div>
