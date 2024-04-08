@@ -26,6 +26,8 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useSharedState } from "../providers/reply-provider";
 import { UserCardAvatar } from "../user-card-avatar";
+import { Pin, PinOff } from 'lucide-react';
+import { set } from "mongoose";
 
 interface ChatItemProps {
     type: "channel" | "conversation";
@@ -34,6 +36,7 @@ interface ChatItemProps {
     id: string;
     content: string;
     member: any;
+    pinned:bool;
     timestamp: string;
     fileUrl: string | null;
     deleted: boolean;
@@ -60,6 +63,7 @@ export const ChatItem = ({
     id,
     content,
     member,
+    pinned,
     timestamp,
     fileUrl,
     deleted,
@@ -74,6 +78,8 @@ export const ChatItem = ({
     const { replyMessage, setReplyMessage } = useSharedState("");
     const { onOpen } = useModal();
     const [isHovered, setIsHovered] = useState(false);
+    const [isPinned, setIsPinned] = useState(pinned);
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -81,6 +87,27 @@ export const ChatItem = ({
         }
     });
 
+    const onPinMessage = async () => {
+        setIsPinned(true);
+        const res = await fetch("/api/messages/pin", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ messageId: id, chatId, type }),
+        });
+    }
+
+    const onUnpinMessage = async () => {
+        setIsPinned(false);
+        const res = await fetch("/api/messages/unpin", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ messageId: id, chatId, type }),
+        });
+    }
     const onMemberClick = () => {
         if (member._id === currentMember._id) {
             return;
@@ -287,6 +314,17 @@ export const ChatItem = ({
                                     className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
                                 />
                             </ActionTooltip>)}
+                            {isAdmin && (
+                            !isPinned ?
+                                <ActionTooltip label="Pin">
+                                    <Pin onClick={onPinMessage} className="cursor-pointer w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+                                </ActionTooltip>
+                                :
+                                <ActionTooltip label="Unpin">
+                                    <PinOff onClick={onUnpinMessage} className="cursor-pointer w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+                                </ActionTooltip>
+                            )
+                        }
                         </div>
                     </div>
                 </div>

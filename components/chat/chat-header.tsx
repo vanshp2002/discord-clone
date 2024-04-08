@@ -3,6 +3,7 @@ import React from 'react'
 import {MobileToggle} from '@/components/mobile-toggle'
 import {UserAvatar} from "@/components/user-avatar"
 import { SocketIndicator } from '@/components/socket-indicator';
+import { PinnedMessages } from './pinned-messages';
 
 interface ChatHeaderProps {
     serverId?: string;
@@ -10,6 +11,7 @@ interface ChatHeaderProps {
     type: "channel" | "conversation";
     imageUrl?: string;
     email?:string;
+    chatId: string;
 }
 
 const ChatHeader = ({ 
@@ -17,7 +19,8 @@ const ChatHeader = ({
     name,
     type,
     imageUrl,
-    email
+    email,
+    chatId
 }: ChatHeaderProps) => {
     return (
         <div className="text-md font-semibold px-3 flex items-center h-12 border-natural-200 dark:border-neutral-800 border-b-2">
@@ -32,6 +35,9 @@ const ChatHeader = ({
             <p className="font-semibold text-md text-black dark:text-white">
                 {name}
             </p>
+            <div className='flex items-center ml-auto'>
+            <PinnedMessages chatId={chatId} type={type} />
+            </div>
             <div className="ml-auto flex items-center">
                 <SocketIndicator/>
             </div>

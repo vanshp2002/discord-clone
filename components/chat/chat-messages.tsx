@@ -125,6 +125,7 @@ export const ChatMessages = ({
                 currentMember={member}
                 chatId={chatId}
                 member={message.memberId}
+                pinned={message.pinned}
                 content={message.content}
                 deleted={message.deleted}
                 fileUrl={message.fileUrl}

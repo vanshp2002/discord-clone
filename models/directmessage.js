@@ -37,7 +37,11 @@ const directMessageSchema = new Schema(
         deleted: {
             type: Boolean,
             default: false
-        }
+        },
+        pinned: {
+            type: Boolean,
+            default: false
+        },
     }, { timestamps: true }
 );
 

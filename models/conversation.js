@@ -26,6 +26,7 @@ const conversationSchema = new Schema(
                 }
             ]
         ,
+        pinnedMessages: [{ type: Schema.Types.ObjectId, ref: 'DirectMessage' }],
     }, {timestamps: true}
 );
 
