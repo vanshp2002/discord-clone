@@ -20,6 +20,9 @@ import { EmojiPicker } from "@/components/emoji-picker";
 import { useSharedState } from '@/components/providers/reply-provider';
 import {Button} from "@/components/ui/button"
 import { UserAvatar } from "../user-avatar";
+import { useState } from "react";
+import CustomPoll from "./custom-poll"
+import { FaPoll } from "react-icons/fa";
 
 interface ChatInputProps {
     apiUrl: string;
@@ -43,6 +46,7 @@ export const ChatInput = ({
 
     const router = useRouter();
     const {onOpen} = useModal();
+    const [createPoll, setCreatePoll] = useState(false);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -89,6 +93,11 @@ export const ChatInput = ({
         }
       }
 
+    const onPollSubmit = async () => {
+      setCreatePoll(false);
+    }
+
+
     return (
       <div>      
         {replyMessage?.replyToContent && replyMessage?.chatId===chatId &&
@@ -111,11 +120,10 @@ export const ChatInput = ({
               &#10005; 
             </button>
         </div>
-        
-
-
             )
         }
+
+        
       <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
@@ -138,8 +146,9 @@ export const ChatInput = ({
                     placeholder={`Message ${type === "conversation" ? name : "#" + name}`}
                     {...field}
                   />
-                  <div className="absolute top-7 right-8">
-                    <EmojiPicker
+                  <div className="absolute top-7 right-8 flex my-auto">
+                  <FaPoll onClick={() => { onOpen("createPoll", {query: query}) }} className=" mx-2 h-[24px] w-[24px] text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+                   <EmojiPicker
                       onChange={(emoji: string) => field.onChange(`${field.value} ${emoji}`)}
                      />
                   </div>

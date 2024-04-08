@@ -37,6 +37,11 @@ const messageSchema = new Schema(
             type: Boolean,
             default: false
         },
+        pollId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Poll',
+            default: null
+        }
     }, {timestamps: true}
 );
 

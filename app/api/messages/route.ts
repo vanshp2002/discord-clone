@@ -5,6 +5,7 @@ import User from "@/models/user";
 import Channel from "@/models/channel";
 import Member from "@/models/member";
 import Message from "@/models/message";
+import Poll from "@/models/poll";
 
 const MESSAGES_BATCH = 15;
 
@@ -33,6 +34,8 @@ export async function POST(req: Request) {
 
         let messages = [];
 
+        const poll = await Poll.findById(null);
+
         if(cursor) {
             messages = await Message.find({ channelId: new ObjectId(channelId), _id: { $lt: new ObjectId(cursor) } }).sort({ createdAt: -1 }).limit(MESSAGES_BATCH);
             messages = await Message.populate(messages, [{
@@ -51,14 +54,10 @@ export async function POST(req: Request) {
                     model: "User"
                 }
             },
-            // {
-            //     path: "reply",
-            //     model: "Message",
-            // },
-            // {
-            //     path: "replyTo",
-            //     model: "User"
-            // }
+            {
+                path: "pollId",
+                model: "Poll"
+            }
         ]);
         } else {
             messages = await Message.find({ channelId: new ObjectId(channelId) }).sort({ createdAt: -1 }).limit(MESSAGES_BATCH);
@@ -78,14 +77,10 @@ export async function POST(req: Request) {
                     model: "User"
                 }
             },
-            // {
-            //     path: "reply",
-            //     model: "Message",
-            // },
-            // {
-            //     path: "replyTo",
-            //     model: "User"
-            // }
+            {
+                path: "pollId",
+                model: "Poll"
+            }
         ]);
         }
 

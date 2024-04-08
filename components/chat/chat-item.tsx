@@ -33,6 +33,7 @@ import { useSharedState } from "../providers/reply-provider";
 import { UserCardAvatar } from "../user-card-avatar";
 import { Pin, PinOff } from 'lucide-react';
 import { set } from "mongoose";
+// import { PollItem } from "./poll-item";
 
 interface ChatItemProps {
     type: "channel" | "conversation";
@@ -213,12 +214,66 @@ export const ChatItem = ({
     const canEditMessage = !deleted && isOwner && !fileUrl;
     const isPDF = fileType === "pdf" && fileUrl;
     const isImage = !isPDF && fileUrl;
+    const isPoll = message?.pollId;
 
     const isMessageOwner = type==="conversation" && currentMember._id === member._id;
 
     return (
         <>
-        {type==="channel" && 
+
+
+        {type==="channel" && isPoll &&
+            <div id={id} className="relative group items-center hover:bg-black/5 p-4 transition w-full">
+
+            <div className="group flex gap-x-2 items-start w-full">
+                <div className="cursor-pointer">
+                {member && <UserCardAvatar user={member?.userId} currentUserId={currentMember.userId._id} chatId={chatId} isHovered={isHovered} />}
+                </div>
+                <div className="flex flex-col w-full">
+                <div className="flex items-center gap-x-2"> 
+                    <div className="flex items-center">
+                    <p onClick={onMemberClick} className="font-semibold text-sm hover:underline cursor-pointer">
+                        {member?.userId?.displayname}
+                    </p>
+                    <ActionToolTip label={member.role}>
+                        {roleIconMap[member.role]}
+                    </ActionToolTip>
+                    </div>
+                    <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                    {timestamp}
+                    </span>
+                </div>
+
+                <div className="flex flex-col w-full mt-2">
+                    <p className="text-sm text-zinc-600 dark:text-zinc-300">
+                        {message.pollId.question}
+                    </p>
+                </div>
+
+                {message?.pollId?.options.map((option: any) => (
+                    <div key={option.option} className="flex items-center gap-x-2 mt-2">
+                        <input type="radio" name={message.pollId._id} value={option.option} />
+                    <div className="flex items-center">
+                        <p className="text-sm text-zinc-600 dark:text-zinc-300">
+                        {option.option}
+                        </p>
+                    </div>
+                    <div className="flex items-center gap-x-1">
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                        {option.voters.length}
+                        </p>
+                    </div>
+                    </div>
+                ))}
+
+                 </div>
+            </div>
+            </div>
+        }
+
+        {/* ------------------------------------------------------------------------ */}
+
+        {type==="channel" && !isPoll &&
             <div id={id} className="relative group items-center hover:bg-black/5 p-4 transition w-full">
             {reply && (
                 <div onClick={() => onReplyClick(reply.replyToId)} className="ml-4 text-xs flex items-center gap-x-2 p-2 rounded-md">
