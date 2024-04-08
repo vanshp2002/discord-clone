@@ -36,7 +36,7 @@ interface ChatItemProps {
     id: string;
     content: string;
     member: any;
-    pinned:bool;
+    pinned: bool;
     timestamp: string;
     fileUrl: string | null;
     deleted: boolean;
@@ -88,6 +88,7 @@ export const ChatItem = ({
     });
 
     const onPinMessage = async () => {
+        pinned = !pinned;
         setIsPinned(true);
         const res = await fetch("/api/messages/pin", {
             method: "POST",
@@ -100,6 +101,7 @@ export const ChatItem = ({
 
     const onUnpinMessage = async () => {
         setIsPinned(false);
+        pinned = !pinned;
         const res = await fetch("/api/messages/unpin", {
             method: "POST",
             headers: {
@@ -315,16 +317,16 @@ export const ChatItem = ({
                                 />
                             </ActionTooltip>)}
                             {isAdmin && (
-                            !isPinned ?
-                                <ActionTooltip label="Pin">
-                                    <Pin onClick={onPinMessage} className="cursor-pointer w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
-                                </ActionTooltip>
-                                :
-                                <ActionTooltip label="Unpin">
-                                    <PinOff onClick={onUnpinMessage} className="cursor-pointer w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
-                                </ActionTooltip>
+                                !isPinned ?
+                                    <ActionTooltip label="Pin">
+                                        <Pin onClick={onPinMessage} className="cursor-pointer w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+                                    </ActionTooltip>
+                                    :
+                                    <ActionTooltip label="Unpin">
+                                        <PinOff onClick={onUnpinMessage} className="cursor-pointer w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+                                    </ActionTooltip>
                             )
-                        }
+                            }
                         </div>
                     </div>
                 </div>

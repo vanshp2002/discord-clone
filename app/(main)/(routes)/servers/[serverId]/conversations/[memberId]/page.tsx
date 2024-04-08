@@ -10,6 +10,8 @@ import { ChatInput } from '@/components/chat/chat-input';
 import { useSharedState } from '@/components/providers/reply-provider';
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import UserCardSidebar from '@/components/user-card-sidebar';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface MemberIdPageProps {
   params: {
@@ -99,39 +101,13 @@ const MemberIdPage = ({
 
   }, []);
   return (
-    //   <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
-    //     {<ChatHeader imageUrl={otherMem?.userId?.imageUrl} name={otherMem?.userId?.displayname} type="conversation" serverId={params.serverId}/>}
-    //     {gconversation && <ChatMessages
-    //       member = {gmember}
-    //       otherName={otherMem?.userId?.displayname}
-    //       otherUsername={otherMem?.userId?.username}
-    //       otherImage={otherMem?.userId?.imageUrl}
-    //       name={otherMem?.userId?.displayname}
-    //       chatId={gconversation._id}
-    //       type="conversation"
-    //       apiUrl="/api/direct-messages"
-    //       paramKey="conversationId"
-    //       paramValue={gconversation._id}
-    //       socketUrl="/api/socket/direct-messages"
-    //       socketQuery={{
-    //         conversationId: gconversation._id,
-    //         userId: guser._id
-    //       }}
-    //     />}
-    //     {gconversation && <ChatInput
-    //       name={otherMem?.userId?.displayname}
-    //       type="conversation"
-    //       apiUrl="/api/socket/direct-messages"
-    //       query={{
-    //         conversationId: gconversation._id,
-    //         userId: guser._id,
-    //         memberId: gmember._id
-    //       }}
-    //     />}
-    //   </div>
-    // )
-    <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
+    <div className="bg-white dark:bg-[#313338] flex flex-col h-full" style={{overflow: "hidden"}}>
       {<ChatHeader imageUrl={otherMem?.imageUrl} name={otherMem?.displayname} type="conversation" serverId={params.serverId} />}
+      <div className="flex h-full">
+
+            <div className="flex flex-col h-full w-[74%]" style={{ overflow: 'hidden' , maxHeight: 'calc(100vh - 50px)' }}>
+
+            <ScrollArea className="flex-grow">
       {gconversation && <ChatMessages
         member={gmember}
         otherName={otherMem?.displayname}
@@ -149,6 +125,7 @@ const MemberIdPage = ({
           userId: guser._id
         }}
       />}
+      </ScrollArea>
       {gconversation && <ChatInput
         name={otherMem?.displayname}
         type="conversation"
@@ -158,7 +135,13 @@ const MemberIdPage = ({
           userId: guser._id
         }}
       />}
-    </div>
+     </div>
+
+<div className="w-[26%]">
+        {otherMem && <UserCardSidebar user={otherMem} mutualFriends={[]}/>}
+</div>
+</div>        
+</div>
   )
 }
 
