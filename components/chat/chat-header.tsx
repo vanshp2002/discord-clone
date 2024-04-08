@@ -40,14 +40,18 @@ export const ChatHeader = ({
         <p className="font-semibold text-md text-black dark:text-white">
             {name}
         </p>
+        
+            <div className='flex items-center ml-auto'>
 
-        <div className='flex items-center ml-auto'>
-            <PinnedMessages chatId={chatId} type={type} />
-         </div>
+                <div className='items-center flex mr-3'>
+                    <PinnedMessages chatId={chatId} type={type} />
+                </div>
 
-        <div className='ml-auto flex items-center'>
-            <SocketIndicator />
-        </div>
+                <div className='flex items-enter ml-auto'>
+                    <SocketIndicator />
+                </div>
+
+            </div>
         </div>
     )
 }
