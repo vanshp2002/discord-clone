@@ -77,7 +77,15 @@ export default async function handler(
         },
         {
             path: "pollId",
-            model: "Poll"
+            model: "Poll",
+            populate:{
+                path: "options.voters",
+                model: "Member",
+                populate:{
+                    path: "userId",
+                    model: "User"
+                }
+            }
         }
         ]);
 
