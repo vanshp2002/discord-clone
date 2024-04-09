@@ -203,6 +203,30 @@ export const ChatItem = ({
         }
     };
 
+    const calculateBarWidth = (options: any) => {
+        if(!options){
+            return [];
+        }
+        let maxVotes = 0;
+        options.forEach((option: any) => {
+            if(option.voters.length > maxVotes){
+                maxVotes = option.voters.length;
+            }
+        });
+
+        let barWidths: any = [];
+        options.forEach((option: any) => {
+            if(maxVotes === 0){
+                barWidths.push(0);
+            }
+            else {
+                barWidths.push((option.voters.length / maxVotes) * 100);
+            }
+        });
+
+        return barWidths;
+    }
+
     const isLoading = form.formState.isSubmitting;
 
     const fileType = fileUrl?.split(".").pop();
@@ -217,6 +241,39 @@ export const ChatItem = ({
     const isPoll = message?.pollId;
 
     const isMessageOwner = type==="conversation" && currentMember._id === member._id;
+    const [selectedOption, setSelectedOption] = useState("");
+    const [barWidth, setBarWidth] = useState(calculateBarWidth(message?.pollId?.options)); 
+
+    useEffect(() => {
+        setBarWidth(calculateBarWidth(message?.pollId?.options));
+    }, [message?.pollId?.options]);
+
+
+    const handleVote = async (oid: string, option: string) => {
+        if (selectedOption === oid) {
+            let radio = document.getElementById(oid);
+            if (radio) {
+                radio.checked = false;
+            }
+            setSelectedOption("");
+        } else {
+
+            const url = qs.stringifyUrl({
+                url: `/api/socket/polls/${id}`,
+                query: socketQuery,
+              });
+
+            const body = {
+                task: "vote",
+                option: option,
+                memberId: currentMember._id,
+            };
+
+            await axios.post(url, body);
+
+            setSelectedOption(oid);
+        }
+    }
 
     return (
         <>
@@ -244,27 +301,30 @@ export const ChatItem = ({
                     </span>
                 </div>
 
-                <div className="flex flex-col w-full mt-2">
-                    <p className="text-sm text-zinc-600 dark:text-zinc-300">
-                        {message.pollId.question}
-                    </p>
-                </div>
+                <div className="bg-gray-800 p-4 rounded-lg w-[40%]">
+                    
 
-                {message?.pollId?.options.map((option: any) => (
-                    <div key={option.option} className="flex items-center gap-x-2 mt-2">
-                        <input type="radio" name={message.pollId._id} value={option.option} />
-                    <div className="flex items-center">
-                        <p className="text-sm text-zinc-600 dark:text-zinc-300">
-                        {option.option}
-                        </p>
+                    <div className="mb-4">
+                        <p className="text-white text-sm">{message.pollId.question}</p>
                     </div>
-                    <div className="flex items-center gap-x-1">
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                        {option.voters.length}
-                        </p>
+                    <div className="mb-4">
+                        {message.pollId.options.map((option: any,index:any) => (
+                            <div key={`option${index}`} className="flex items-center mb-2">
+                            <input type="radio" name="poll" className="text-green-500 mr-2" id={`option${index}`} onClick={() => handleVote(`option${index}`, option.option)}/>
+                            <span className="text-white text-sm">{option.option}</span>
+                            <div className="flex-grow h-2 mx-4 bg-green-200 rounded-full">
+                                <div className="bg-green-500 h-2 rounded-full" style={{width: `${index<barWidth.length ? barWidth[index] : 0}%`}}></div>
+                            </div>
+                            <span className="text-white text-sm">{option.voters.length}</span>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="text-center">
+                        <button className="text-white bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 text-sm">
+                        View votes
+                        </button>
                     </div>
                     </div>
-                ))}
 
                  </div>
             </div>
