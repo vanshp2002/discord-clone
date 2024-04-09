@@ -255,9 +255,16 @@ export const ChatItem = ({
         let radiobtn = null;
         if(options) {
             options.forEach((option: any, index: any) => {
-                if(option.voters.includes(currentMember._id)){
-                    radiobtn = document.getElementById(`${messageId}option${index}`);
-                    radiobtn.checked = true;
+                if(option.voters){
+                    option.voters.forEach((voter: any) => {
+                        if(voter._id === currentMember._id){
+                            radiobtn = document.getElementById(`${messageId}option${index}`);
+                            if(radiobtn){
+                                radiobtn.checked = true;
+                                setSelectedOption(`${messageId}option${index}`);
+                            }
+                        }
+                    });
                 }
             });
         }
@@ -271,6 +278,20 @@ export const ChatItem = ({
             if (radio) {
                 radio.checked = false;
             }
+
+            const url = qs.stringifyUrl({
+                url: `/api/socket/polls/${id}`,
+                query: socketQuery,
+              });
+
+            const body = {
+                task: "unvote",
+                option: option,
+                memberId: currentMember._id,
+            };
+
+            await axios.post(url, body);
+
             setSelectedOption("");
         } else {
 
@@ -334,7 +355,8 @@ export const ChatItem = ({
                                 onMouseEnter={() => setOptionHovered(`option${index}`)} 
                                 onMouseLeave={() => setOptionHovered("")}
                             >
-                            <input id={`${messageId}option${index}`} type="radio" name={`${messageId}option${index}`} className="mr-2" onClick={() => handleVote(`option${index}`, option.option)}/>
+                            <input id={`${messageId}option${index}`} type="radio" name={`${messageId}option${index}`} className="mr-2" onClick={() => handleVote(`${messageId}option${index}`, option.option)}
+                            />
                             <div className="container p-1">
                                 <span className="text-white text-sm">{option.option}</span>
                                 <div className="flex-grow h-2 mx-4 bg-black rounded-full mt-2 ml-0 left-0 flex items-center">

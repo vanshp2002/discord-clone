@@ -67,6 +67,14 @@ export default async function handler(
 
         }
 
+        if(task==="unvote"){
+            const index = options.findIndex((opt: any) => opt.option === option);
+            options[index].voters = options[index].voters.filter((voter: any) => voter.toString() !== memberId);
+            poll.options = options;
+            poll.markModified("options");
+            await poll.save();
+        }
+
         message = await Message.populate(message, [{
             path: "memberId",
             model: "Member",
