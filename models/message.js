@@ -10,17 +10,17 @@ const messageSchema = new Schema(
             type: Boolean,
             default: false
         },
-        replyId:{
+        replyId: {
             type: Schema.Types.ObjectId,
             ref: 'Message',
         },
         replyContent: {
             type: String
         },
-        replyName:{
+        replyName: {
             type: String
         },
-        replyImg: {  
+        replyImg: {
             type: String
         },
         fileUrl: {
@@ -42,6 +42,11 @@ const messageSchema = new Schema(
             type: Boolean,
             default: false
         },
+        pollId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Poll',
+            default: null
+        }
     }, { timestamps: true }
 );
 

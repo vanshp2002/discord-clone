@@ -8,6 +8,7 @@ import User from "@/models/user";
 import Server from "@/models/server";
 import { connectMongoDB } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
+import Poll from "@/models/poll";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponseServerIo) {
     if (req.method !== "POST") {
@@ -33,6 +34,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
         if (!content) {
             return res.status(400).json({ message: "Content is required" });
         }
+
+        const poll = await Poll.findById(null);
 
         const user = await User.findOne({ _id: userId });
         let server = await Server.findOne({ _id: serverId });
@@ -95,15 +98,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
 
         await message.save();
 
-        message = await Message.populate(message, 
-            {
-                path: "memberId",
-                model: "Member",
-                populate: {
-                    path: "userId",
-                    model: "User"
-                }
-            });
+        message = await Message.populate(message, [{
+            path: "memberId",
+            populate: {
+                path: "userId",
+                model: "User"
+            }
+        },
+        {
+            path: "pollId",
+            model: "Poll"
+        }
+        ]);
+
 
 
         const channelKey = `chat:${channelId}:messages`;

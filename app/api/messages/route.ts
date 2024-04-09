@@ -5,6 +5,7 @@ import User from "@/models/user";
 import Channel from "@/models/channel";
 import Member from "@/models/member";
 import Message from "@/models/message";
+import Poll from "@/models/poll";
 
 const MESSAGES_BATCH = 15;
 
@@ -20,7 +21,6 @@ export async function POST(req: Request) {
         const { cursor, channelId, userId } = await req.json();
 
         // const userId = searchParams.get("userId");
-
         const user = await User.findOne({ _id: userId });
 
         if (!user) {
@@ -32,27 +32,54 @@ export async function POST(req: Request) {
         }
 
         let messages = [];
+        const poll = await Poll.findById(null);
 
         if (cursor) {
             messages = await Message.find({ channelId: new ObjectId(channelId), _id: { $lt: new ObjectId(cursor) } }).sort({ createdAt: -1 }).limit(MESSAGES_BATCH);
-            messages = await Message.populate(messages, {
+            messages = await Message.populate(messages, [{
                 path: "memberId",
                 model: "Member",
                 populate: {
                     path: "userId",
                     model: "User"
                 }
-            });
+            },
+            {
+                path: "reactions.memberId",
+                model: "Member",
+                populate: {
+                    path: "userId",
+                    model: "User"
+                }
+            },
+            {
+                path: "pollId",
+                model: "Poll"
+            }
+            ]);
         } else {
             messages = await Message.find({ channelId: new ObjectId(channelId) }).sort({ createdAt: -1 }).limit(MESSAGES_BATCH);
-            messages = await Message.populate(messages, {
+            messages = await Message.populate(messages, [{
                 path: "memberId",
                 model: "Member",
                 populate: {
                     path: "userId",
                     model: "User"
                 }
-            });
+            },
+            {
+                path: "reactions.memberId",
+                model: "Member",
+                populate: {
+                    path: "userId",
+                    model: "User"
+                }
+            },
+            {
+                path: "pollId",
+                model: "Poll"
+            }
+            ]);
         }
 
         let nextCursor = null;

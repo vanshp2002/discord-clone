@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState } from 'react';
 import * as z from "zod";
 import axios from "axios";
 import qs from "query-string";
@@ -8,8 +9,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Smile, Reply } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSharedState } from '@/components/providers/reply-provider';
+import CustomPoll from '@/components/chat/custom-poll'
 import { Button } from "@/components/ui/button"
 import { UserAvatar } from "../user-avatar";
+import {FaPoll} from "react-icons/fa";
+import { useModal } from "@/hooks/use-modal-store";
 
 
 import {
@@ -19,7 +23,6 @@ import {
   FormItem,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useModal } from "@/hooks/use-modal-store";
 import { EmojiPicker } from "../emoji-picker";
 //   import { EmojiPicker } from "@/components/emoji-picker";
 
@@ -45,6 +48,7 @@ export const ChatInput = ({
   const { onOpen } = useModal();
 
   const { replyMessage, setReplyMessage } = useSharedState("");
+  const [createPoll, setCreatePoll] = useState(false);
 
   const handleClose = () => {
     setReplyMessage("");
@@ -80,6 +84,10 @@ export const ChatInput = ({
 
   }
 
+  const onPollSubmit = async () => {
+    setCreatePoll(false);
+  }
+
   return (
     <div>
       {/* {replyMessage &&
@@ -92,7 +100,6 @@ export const ChatInput = ({
       } */}
       {replyMessage &&
         (
-
           <div className="flex p-4 border border-zinc-200 dark:border-zinc-700 rounded-lg">
             <div className="flex items-center">
               <Reply className="h-4 w-4 mr-1 text-zinc-500 dark:text-zinc-400" style={{ transform: 'scaleX(-1)' }} />
@@ -110,9 +117,6 @@ export const ChatInput = ({
               &#10005;
             </button>
           </div>
-
-
-
         )
       }
       <Form {...form}>
@@ -137,7 +141,8 @@ export const ChatInput = ({
                       placeholder={`Message ${type === "conversation" ? name : "#" + name}`}
                       {...field}
                     />
-                    <div className="absolute top-7 right-8">
+                    <div className="absolute top-7 right-8 flex my-auto">
+                      <FaPoll onClick={() => { onOpen("createPoll", { query: query }) }} className=" mx-2 h-[24px] w-[24px] text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
                       <EmojiPicker
                         onChange={(emoji: string) => field.onChange(`${field.value} ${emoji}`)}
                       />

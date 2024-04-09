@@ -18,28 +18,28 @@ const FriendSidebar = () => {
 
     const [directMessages, setdirectMessages] = useState(null);
     const params = useParams();
-  const { list, setList } = useListState();
+    const { list, setList } = useListState();
 
 
     useEffect(() => {
         const fetchdata = async () => {
-          console.log(params?.userId);
-          const response = await fetch("/api/friend/allfriends", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              userId: params?.userId
-            })
-          });
-          const toJson = await response.json();
-          const temp = (toJson.friends);
-          const allFriend = temp?.filter((friend: { type: any }) => friend.status === 'ACCEPTED' && (friend.userOneId._id === params?.userId || friend.userTwoId._id === params?.userId));
-          setdirectMessages(allFriend);
+            console.log(params?.userId);
+            const response = await fetch("/api/friend/allfriends", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    userId: params?.userId
+                })
+            });
+            const toJson = await response.json();
+            const temp = (toJson.friends);
+            const allFriend = temp?.filter((friend: { type: any }) => friend.status === 'ACCEPTED' && (friend.userOneId._id === params?.userId || friend.userTwoId._id === params?.userId));
+            setdirectMessages(allFriend);
         }
         fetchdata();
-      }, [list]);
+    }, [list]);
 
     return (
         <div className="flex flex-col h-full tetx-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
@@ -70,23 +70,23 @@ const FriendSidebar = () => {
                         </div>
                     </div>
                 </ScrollArea>
-                <ScrollArea className="flex-1 px-3">
-                <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
-                {!!directMessages?.length && (
-                    <div className="mb-2">
-                        <DmSection
-                            label="Direct Messages"
-                        />
-                        <div className="spca-y-[2px]">
-                            {directMessages.map((friend) => (
-                                <FriendDirectMessage key={friend._id} friend={friend} userId={params?.userId}/>
-                            ))}
+                <ScrollArea className="flex-1 px-1">
+                    <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
+                    {!!directMessages?.length && (
+                        <div className="mb-2">
+                            <DmSection
+                                label="Direct Messages"
+                            />
+                            <div className="spca-y-[2px]">
+                                {directMessages.map((friend) => (
+                                    <FriendDirectMessage key={friend._id} friend={friend} userId={params?.userId} />
+                                ))}
+                            </div>
                         </div>
-                    </div>
 
-                )}
-                
-            </ScrollArea>
+                    )}
+
+                </ScrollArea>
             </div>
         </div>
     )

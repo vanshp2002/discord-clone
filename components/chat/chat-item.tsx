@@ -36,7 +36,7 @@ interface ChatItemProps {
     id: string;
     content: string;
     member: any;
-    pinned: bool;
+    message: any;
     timestamp: string;
     fileUrl: string | null;
     deleted: boolean;
@@ -63,7 +63,7 @@ export const ChatItem = ({
     id,
     content,
     member,
-    pinned,
+    message,
     timestamp,
     fileUrl,
     deleted,
@@ -78,7 +78,8 @@ export const ChatItem = ({
     const { replyMessage, setReplyMessage } = useSharedState("");
     const { onOpen } = useModal();
     const [isHovered, setIsHovered] = useState(false);
-    const [isPinned, setIsPinned] = useState(pinned);
+    const [isPinned, setIsPinned] = useState(message?.pinned);
+    const isPoll = message?.pollId;
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -175,7 +176,57 @@ export const ChatItem = ({
 
     return (
         <>
-            {type === "channel" && <div className="relative group items-center hover:bg-black/5 p-4 transition w-full">
+            {type === "channel" && isPoll &&
+                <div id={id} className="relative group items-center hover:bg-black/5 p-4 transition w-full">
+
+                    <div className="group flex gap-x-2 items-start w-full">
+                        <div className="cursor-pointer">
+                            {member && <UserCardAvatar user={member?.userId} currentUserId={currentMember.userId._id} chatId={chatId} isHovered={isHovered} />}
+                        </div>
+                        <div className="flex flex-col w-full">
+                            <div className="flex items-center gap-x-2">
+                                <div className="flex items-center">
+                                    <p onClick={onMemberClick} className="font-semibold text-sm hover:underline cursor-pointer">
+                                        {member?.userId?.displayname}
+                                    </p>
+                                    <ActionTooltip label={member.role}>
+                                        {roleIconMap[member.role]}
+                                    </ActionTooltip>
+                                </div>
+                                <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                                    {timestamp}
+                                </span>
+                            </div>
+
+                            <div className="flex flex-col w-full mt-2">
+                                <p className="text-sm text-zinc-600 dark:text-zinc-300">
+                                    {message.pollId.question}
+                                </p>
+                            </div>
+
+                            {message?.pollId?.options.map((option: any) => (
+                                <div key={option.option} className="flex items-center gap-x-2 mt-2">
+                                    <input type="radio" name={message.pollId._id} value={option.option} />
+                                    <div className="flex items-center">
+                                        <p className="text-sm text-zinc-600 dark:text-zinc-300">
+                                            {option.option}
+                                        </p>
+                                    </div>
+                                    <div className="flex items-center gap-x-1">
+                                        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                                            {option.voters.length}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+            {/* ------------------------------------------------------------------------ */}
+            {type === "channel" && !isPoll && <div className="relative group items-center hover:bg-black/5 p-4 transition w-full">
 
                 {reply && (
                     <div className="ml-4 text-xs flex items-center gap-x-2 p-2 rounded-md">
