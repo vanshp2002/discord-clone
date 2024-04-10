@@ -48,6 +48,7 @@ export default async function handler(
         if(task==="vote"){
             if (poll.allowMultiple) {
                 const index = options.findIndex((opt: any) => opt.option === option);
+                // check if the user has already voted for this option
                 options[index].voters.push(memberId);
             }
             else {

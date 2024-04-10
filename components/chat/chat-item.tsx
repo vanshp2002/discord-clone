@@ -246,6 +246,7 @@ export const ChatItem = ({
     const [barWidth, setBarWidth] = useState(calculateBarWidth(message?.pollId?.options)); 
     const [optionHovered, setOptionHovered] = useState("");
     const [options, setOptions] = useState([]);
+    const [selectedOptions, setSelectedOptions] :any = useState([]);
 
     useEffect(() => {
         setOptions(message?.pollId?.options);
@@ -261,7 +262,8 @@ export const ChatItem = ({
                             radiobtn = document.getElementById(`${messageId}option${index}`);
                             if(radiobtn){
                                 radiobtn.checked = true;
-                                setSelectedOption(`${messageId}option${index}`);
+                                // setSelectedOption(`${messageId}option${index}`);
+                                setSelectedOptions([...selectedOptions, `${messageId}option${index}`]);
                             }
                         }
                     });
@@ -273,7 +275,7 @@ export const ChatItem = ({
 
 
     const handleVote = async (oid: string, option: string) => {
-        if (selectedOption === oid) {
+        if (selectedOptions.includes(oid)) {
             let radio = document.getElementById(oid);
             if (radio) {
                 radio.checked = false;
@@ -292,8 +294,18 @@ export const ChatItem = ({
 
             await axios.post(url, body);
 
-            setSelectedOption("");
+            // setSelectedOption("");
+            setSelectedOptions(selectedOptions.filter((item:any) => item !== oid));
         } else {
+
+            if(!message?.pollId?.allowMultiple && selectedOptions.length > 0){
+                let radio = document.getElementById(selectedOptions[0]);
+                if (radio) {
+                    radio.checked = false;
+                }
+            }
+
+            setSelectedOptions([...selectedOptions, oid]);
 
             const url = qs.stringifyUrl({
                 url: `/api/socket/polls/${id}`,
@@ -308,7 +320,6 @@ export const ChatItem = ({
 
             await axios.post(url, body);
 
-            setSelectedOption(oid);
         }
     }
 
@@ -367,10 +378,10 @@ export const ChatItem = ({
                             </div>
                         ))}
                     </div>
-                    <div className="text-center">
-                        <button onClick={() => onOpen("viewVotes", {votes: message?.pollId?.options})} className="text-white bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 text-sm">
+                    <div className="text-center container bg-zinc-800 w-full h-full p--2" onClick={() => onOpen("viewVotes", {votes: message?.pollId?.options})}>
+                        {/* <button  className="text-white bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 text-sm"> */}
                         View votes
-                        </button>
+                        {/* </button> */}
                     </div>
                     </div>
 

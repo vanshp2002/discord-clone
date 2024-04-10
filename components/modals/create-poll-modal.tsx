@@ -67,6 +67,7 @@ export const CreatePollModal = ({}) => {
             const values = {
                 question,
                 options: options.filter(opt => opt !== ''),
+                allowMultiple,
             };
 
             await axios.post(url, values);
