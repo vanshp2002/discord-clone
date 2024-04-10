@@ -50,7 +50,7 @@ const FriendAll = ({
             <Separator className="h-[3px] bg-zinc-300 dark:bg-zinc-700 rounded-md ml-8" style={{ maxWidth: "93%" }}/>
         <div className="p-4 mt-3 flex flex-col gap-y-2 ml-5">
             {allFriends.map((friend: any) => (
-                <FriendItem friend={friend} userId={userId} onRemoveFriend={onRemoveFriend} onBlockFriend={onBlockFriend}/>
+                <FriendItem key={friend._id} friend={friend} userId={userId} onRemoveFriend={onRemoveFriend} onBlockFriend={onBlockFriend}/>
             ))}
         </div>
         
