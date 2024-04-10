@@ -13,15 +13,15 @@ export async function POST(req: NextRequest) {
 
         let friendsUser1 = await Friend.find({
             $or: [
-                { userOneId: userOneId },
-                { userTwoId: userOneId }
+                { userOneId: userOneId, status: 'ACCEPTED' },
+                { userTwoId: userOneId, status: 'ACCEPTED'}
             ]
         });
 
         let friendsUser2 = await Friend.find({
             $or: [
-                { userOneId: userTwoId },
-                { userTwoId: userTwoId }
+                { userOneId: userTwoId, status: 'ACCEPTED' },
+                { userTwoId: userTwoId, status: 'ACCEPTED' }
             ]
         });
 

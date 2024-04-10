@@ -15,7 +15,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
     try {
         await connectMongoDB();
         const { channelId, serverId, userId } = req.query;
-        const { question, options } = req.body;
+        const { question, options, allowMultiple  } = req.body;
+
+        const example = await User.findById(null);
 
         if (!channelId || !serverId || !userId || !question) {
             return res.status(400).json({ message: "Invalid input data" });
@@ -30,6 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
         const newPoll = new Poll({
             question,
             options: optionsArray,
+            allowMultiple,
         });
 
         const poll = await newPoll.save();

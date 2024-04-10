@@ -15,6 +15,7 @@ import { EditChannelModal } from '../modals/edit-channel-modal';
 import { MessageFileModal } from "../modals/message-file-modal";
 import { DeleteMessageModal } from './../modals/delete-message-modal';
 import { CreatePollModal } from "../modals/create-poll-modal";
+import { ViewVotesModal } from "../modals/view-votes-modal";
 
 export const ModalProvider = () => {
 
@@ -45,6 +46,7 @@ export const ModalProvider = () => {
             <MessageFileModal />
             <DeleteMessageModal />
             <CreatePollModal />
+            <ViewVotesModal />
         </>
     )
 }

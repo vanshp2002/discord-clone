@@ -35,10 +35,9 @@ const ChatHeader = ({
             <p className="font-semibold text-md text-black dark:text-white">
                 {name}
             </p>
-            <div className='flex items-center ml-auto'>
-            <PinnedMessages chatId={chatId} type={type} />
-            </div>
-            <div className="ml-auto flex items-center">
+           
+            <div className="ml-auto gap-x-2 flex items-center">
+                <PinnedMessages chatId={chatId} type={type} />
                 <SocketIndicator/>
             </div>
         </div>

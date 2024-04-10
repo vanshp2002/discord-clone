@@ -80,6 +80,12 @@ export const ChatItem = ({
     const [isHovered, setIsHovered] = useState(false);
     const [isPinned, setIsPinned] = useState(message?.pinned);
     const isPoll = message?.pollId;
+    const [messageId, setMessageId] = useState(id);
+    const [optionHovered, setOptionHovered] = useState("");
+    const [options, setOptions] = useState([]);
+    const [selectedOptions, setSelectedOptions]: any = useState([]);
+
+
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -89,7 +95,6 @@ export const ChatItem = ({
     });
 
     const onPinMessage = async () => {
-        pinned = !pinned;
         setIsPinned(true);
         const res = await fetch("/api/messages/pin", {
             method: "POST",
@@ -102,7 +107,6 @@ export const ChatItem = ({
 
     const onUnpinMessage = async () => {
         setIsPinned(false);
-        pinned = !pinned;
         const res = await fetch("/api/messages/unpin", {
             method: "POST",
             headers: {
@@ -205,13 +209,36 @@ export const ChatItem = ({
 
 
     const handleVote = async (oid: string, option: string) => {
-        if (selectedOption === oid) {
+        if (selectedOptions.includes(oid)) {
             let radio = document.getElementById(oid);
             if (radio) {
                 radio.checked = false;
             }
-            setSelectedOption("");
+
+            const url = qs.stringifyUrl({
+                url: `/api/socket/polls/${id}`,
+                query: socketQuery,
+            });
+
+            const body = {
+                task: "unvote",
+                option: option,
+                memberId: currentMember._id,
+            };
+
+            await axios.post(url, body);
+
+            setSelectedOptions(selectedOptions.filter((item: any) => item !== oid));
         } else {
+
+            if (!message?.pollId?.allowMultiple && selectedOptions.length > 0) {
+                let radio = document.getElementById(selectedOptions[0]);
+                if (radio) {
+                    radio.checked = false;
+                }
+            }
+
+            setSelectedOptions([...selectedOptions, oid]);
 
             const url = qs.stringifyUrl({
                 url: `/api/socket/polls/${id}`,
@@ -226,9 +253,33 @@ export const ChatItem = ({
 
             await axios.post(url, body);
 
-            setSelectedOption(oid);
         }
     }
+
+    useEffect(() => {
+        setOptions(message?.pollId?.options);
+    }, [message?.pollId?.options]);
+
+    useEffect(() => {
+        let radiobtn = null;
+        if (options) {
+            options.forEach((option: any, index: any) => {
+                if (option.voters) {
+                    option.voters.forEach((voter: any) => {
+                        if (voter._id === currentMember._id) {
+                            radiobtn = document.getElementById(`${messageId}option${index}`);
+                            if (radiobtn) {
+                                radiobtn.checked = true;
+                                setSelectedOptions([...selectedOptions, `${messageId}option${index}`]);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        setBarWidth(calculateBarWidth(options));
+    }, [options]);
+
     return (
         <>
             {type === "channel" && isPoll &&
@@ -239,9 +290,9 @@ export const ChatItem = ({
                             {member && <UserCardAvatar user={member?.userId} currentUserId={currentMember.userId._id} chatId={chatId} isHovered={isHovered} />}
                         </div>
                         <div className="flex flex-col w-full">
-                            <div className="flex items-center gap-x-2">
+                            <div className="flex items-center gap-x-2 mt-2">
                                 <div className="flex items-center">
-                                    <p onClick={onMemberClick} className="font-semibold text-sm hover:underline cursor-pointer">
+                                    <p onClick={onMemberClick} className="font-semibold text-sm hover:underline cursor-pointer ">
                                         {member?.userId?.displayname}
                                     </p>
                                     <ActionTooltip label={member.role}>
@@ -253,35 +304,56 @@ export const ChatItem = ({
                                 </span>
                             </div>
 
-                            <div className="bg-gray-800 p-4 rounded-lg w-[40%]">
+                            <div className="bg-zinc-700/75 mt-5 rounded-lg w-[40%] mr-3">
+
+                                <div className="p-4">
 
 
                                 <div className="mb-4">
-                                    <p className="text-white text-sm">{message.pollId.question}</p>
+                                    <p className="text-white text-m">{message.pollId.question}</p>
+                                    <div className="mt-1">
+                                        {message.pollId.allowMultiple ?
+                                            <p className="text-white text-xs">Select one or more options</p>
+                                            : <p className="text-white text-xs">Select one option</p>}
+                                    </div>
                                 </div>
                                 <div className="mb-4">
                                     {message.pollId.options.map((option: any, index: any) => (
-                                        <div key={`option${index}`} className="flex items-center mb-2">
-                                            <input type="radio" name="poll" className="text-green-500 mr-2" id={`option${index}`} onClick={() => handleVote(`option${index}`, option.option)} />
-                                            <span className="text-white text-sm">{option.option}</span>
-                                            <div className="flex-grow h-2 mx-4 bg-green-200 rounded-full">
-                                                <div className="bg-green-500 h-2 rounded-full" style={{ width: `${index < barWidth.length ? barWidth[index] : 0}%` }}></div>
+                                        <div key={`option${index}`} className={`flex items-center mb-2 rounded px-3 py-1 ${optionHovered === `option${index}` ? 'bg-zinc-600/90' : ''}`}
+                                            onMouseEnter={() => setOptionHovered(`option${index}`)}
+                                            onMouseLeave={() => setOptionHovered("")}
+                                        >
+                                            <input id={`${messageId}option${index}`} type="radio" name={`${messageId}option${index}`} className="mr-2" onClick={() => handleVote(`${messageId}option${index}`, option.option)}
+                                            />
+                                            <div className="container p-1">
+                                                <span className="text-white text-sm">{option.option}</span>
+                                                <div className="flex-grow h-2 mx-4 bg-black rounded-full mt-2 ml-0 left-0 flex items-center">
+                                                    <div className="bg-green-500 h-[86%] rounded-full" style={{ width: `${index < barWidth.length ? barWidth[index] : 0}%`, transition: 'width 0.5s ease' }}></div>
+                                                </div>
                                             </div>
                                             <span className="text-white text-sm">{option.voters.length}</span>
                                         </div>
                                     ))}
                                 </div>
-                                <div className="text-center">
-                                    <button className="text-white bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 text-sm">
-                                        View votes
-                                    </button>
                                 </div>
+                                 <div className={`text-center container w-full h-full py-3 text-sm cursor-pointer ${optionHovered === 'viewVotes' ? 'bg-black' : ''}`} 
+                        onClick={() => onOpen("viewVotes", {votes: message?.pollId?.options})}
+                        onMouseEnter={() => setOptionHovered('viewVotes')} 
+                        onMouseLeave={() => setOptionHovered("")}
+                        style={{
+                            borderBottomLeftRadius: '8px', 
+                            borderBottomRightRadius: '8px' 
+                        }}
+                        >
+                        <p className="text-zinc-300 text-sm">View Votes</p>
+                    </div>
                             </div>
 
                         </div>
                     </div>
                 </div>
             }
+
 
             {/* ------------------------------------------------------------------------ */}
             {type === "channel" && !isPoll && <div className="relative group items-center hover:bg-black/5 p-4 transition w-full">
