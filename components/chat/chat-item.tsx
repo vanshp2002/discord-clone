@@ -349,9 +349,9 @@ export const ChatItem = ({
                     </span>
                 </div>
 
-                <div className="bg-zinc-700/75 mt-5 p-4 rounded-lg w-[40%] mr-3">
+                <div className="bg-zinc-700/75 mt-5 rounded-lg w-[40%] mr-3">
                     
-
+                <div className="p-4">
                     <div className="mb-4">
                         <p className="text-white text-m">{message.pollId.question}</p>
                         <div className="mt-1">
@@ -378,12 +378,19 @@ export const ChatItem = ({
                             </div>
                         ))}
                     </div>
-                    <div className="text-center container bg-zinc-800 w-full h-full p--2" onClick={() => onOpen("viewVotes", {votes: message?.pollId?.options})}>
-                        {/* <button  className="text-white bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 text-sm"> */}
-                        View votes
-                        {/* </button> */}
                     </div>
+                    <div className={`text-center container w-full h-full py-3 text-sm cursor-pointer ${optionHovered === `viewVotes` ? 'bg-black' : ''}`} 
+                        onClick={() => onOpen("viewVotes", {votes: message?.pollId?.options})}
+                        onMouseEnter={() => setOptionHovered(`viewVotes`)} 
+                        onMouseLeave={() => setOptionHovered("")}
+                        style={{
+                            borderBottomLeftRadius: '8px', 
+                            borderBottomRightRadius: '8px' 
+                        }}
+                        >
+                        <p className="text-zinc-300 text-sm">View Votes</p>
                     </div>
+                </div>
 
                  </div>
             </div>
