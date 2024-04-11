@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Open_Sans } from "next/font/google";
+import { Open_Sans, Roboto, Source_Sans_3, Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./Providers";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -11,7 +11,11 @@ import { SharedStateProvider } from '@/components/providers/reply-provider';
 import { ServerStateProvider } from '@/components/providers/server-provider';
 import { SharedListProvider } from './../components/providers/list-provider';
 
-const font = Open_Sans({ subsets: ["latin"] });
+// const font = Open_Sans({ weight: "600", subsets: ["latin"],  preload: true, });
+const font = Open_Sans({weight:"variable", subsets: ["latin"],  preload: true, display: 'swap'});
+// const font = Roboto({ weight:"400",  subsets: ["latin"] });
+// const font = Source_Sans_3({ weight:"400",  subsets: ["latin"] });
+// const font = Nunito_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Discord.app",

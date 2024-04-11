@@ -9,9 +9,10 @@ export async function POST(req) {
         await connectMongoDB();
         const {userId} = await req.json();
 
-        const status = await Status.findOne({userId: new ObjectId(userId)}); 
+        // const status = await Status.findOne({userId: new ObjectId(userId)}); 
+        const status = await Status.find({userId: new ObjectId(userId)}); 
 
-        return NextResponse.json({fileUrl: status.src});
+        return NextResponse.json({status});
     }
     catch (error) {
         console.error("Error getting status", error);

@@ -9,17 +9,22 @@ import { ChatHeader } from '@/components/chat/chat-header';
 import { ChatMessages } from '@/components/chat/chat-messages';
 import { ChatInput } from '@/components/chat/chat-input';
 import { useServerState } from "@/components/providers/server-provider";
+import { MediaRoom } from '@/components/media-room';
 
 interface MemberIdPageProps {
   params:{
     serverId: string;
     memberId: string; 
+  },
+  searchParams: {
+    video?: boolean;
   }
 }
 
 
 const MemberIdPage = ({
-  params
+  params,
+  searchParams
 }: MemberIdPageProps) => {
 
   const { data: session } = useSession();
@@ -92,35 +97,46 @@ const MemberIdPage = ({
         email={session?.user?.email}
       />)}
 
-      { otherMember && currentMember && (<ChatMessages
-          member={currentMember}
-          otherMember={otherMember}
-          name={otherMember?.displayname}
-          chatId={gconversation?._id}
-          apiUrl="/api/direct-messages"
-          socketUrl="/api/socket/direct-messages"
-          socketQuery={{
-            conversationId: gconversation?._id,
-            userId: currentMember?._id,
-            otherUserId: otherMember?._id,
-          }}
-          paramKey="conversationId"
-          paramValue={gconversation?._id}
-          type="conversation"
-        />
+      {searchParams.video && currentMember && (
+        <MediaRoom chatId={gconversation?._id} video={true} audio={true} user={currentMember} />
       )}
 
-      {gconversation && (<ChatInput 
-        apiUrl="/api/socket/direct-messages"
-        query={{
-            conversationId: gconversation?._id,
-            userId: currentMember?._id,
-            otherUserId: otherMember?._id,
-          }}
-        name={otherMember?.displayname}
-        type="conversation"
-        chatId= {gconversation?._id}
-      />)}
+      {!searchParams.video && 
+
+        <>
+
+          { otherMember && currentMember && (<ChatMessages
+              member={currentMember}
+              otherMember={otherMember}
+              name={otherMember?.displayname}
+              chatId={gconversation?._id}
+              apiUrl="/api/direct-messages"
+              socketUrl="/api/socket/direct-messages"
+              socketQuery={{
+                conversationId: gconversation?._id,
+                userId: currentMember?._id,
+                otherUserId: otherMember?._id,
+              }}
+              paramKey="conversationId"
+              paramValue={gconversation?._id}
+              type="conversation"
+            />
+          )}
+
+          {gconversation && (<ChatInput 
+            apiUrl="/api/socket/direct-messages"
+            query={{
+                conversationId: gconversation?._id,
+                userId: currentMember?._id,
+                otherUserId: otherMember?._id,
+              }}
+            name={otherMember?.displayname}
+            type="conversation"
+            chatId= {gconversation?._id}
+          />)}
+
+          </>
+      }
     </div>
     );
   }

@@ -2,7 +2,6 @@ import { connectMongoDB } from "@/lib/mongodb";
 import { NextResponse } from 'next/server';
 import Friend from "@/models/friend";
 import User from "@/models/user";
-import { fromUnixTime } from "date-fns";
 
 
 export async function POST(req: Request) {

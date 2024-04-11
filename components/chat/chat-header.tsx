@@ -3,6 +3,7 @@ import { MobileToggle } from '@/components/mobile-toggle';
 import { UserAvatar } from '../user-avatar';
 import { SocketIndicator } from '@/components/socket-indicator';
 import { PinnedMessages } from './pinned-messages';
+import { ChatVideoButton } from './chat-video-button';
 
 
 interface ChatHeaderProps {
@@ -47,7 +48,11 @@ export const ChatHeader = ({
                     <PinnedMessages chatId={chatId} type={type} />
                 </div>
 
-                <div className='flex items-enter ml-auto'>
+                <div className='flex items-center mx-2'>
+                    {type === "conversation" && <ChatVideoButton />}
+                </div>
+
+                <div className='flex items-center ml-auto'>
                     <SocketIndicator />
                 </div>
 

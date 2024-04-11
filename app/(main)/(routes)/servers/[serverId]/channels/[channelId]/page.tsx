@@ -8,6 +8,7 @@ import { ChatHeader } from '@/components/chat/chat-header';
 import { ChatInput } from '@/components/chat/chat-input';
 import { ChatMessages } from '@/components/chat/chat-messages';
 import { useServerState } from "@/components/providers/server-provider";
+import { MediaRoom } from '@/components/media-room';
 
 
 interface ChannelIdPageProps {
@@ -90,7 +91,7 @@ const ChannelIdPage = ({params}: ChannelIdPageProps) => {
         chatId={gchannel?._id}
       />) }
 
-      { gchannel && gmember && (<ChatMessages 
+      { gchannel && gmember && gchannel?.type==="TEXT" && (<ChatMessages 
           name={gchannel?.name}
           member={gmember}
           chatId={gchannel?._id}
@@ -108,7 +109,15 @@ const ChannelIdPage = ({params}: ChannelIdPageProps) => {
         />
       )}
 
-      {gchannel && (<ChatInput 
+      {gchannel && gchannel?.type==="AUDIO" && 
+        <MediaRoom chatId={gchannel?._id} video={false} audio={true} user={user} />
+      }
+
+      {gchannel && gchannel?.type==="VIDEO" && 
+        <MediaRoom chatId={gchannel?._id} video={true} audio={true} user={user} />
+      }
+
+      {gchannel && gchannel?.type==="TEXT" && (<ChatInput 
         apiUrl="/api/socket/messages"
         query={{
             channelId: gchannel?._id,

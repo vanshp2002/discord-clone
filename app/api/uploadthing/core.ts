@@ -24,7 +24,9 @@ export const ourFileRouter = {
     serverImage: f({image: {maxFileSize:"4MB", maxFileCount:1}})
     .onUploadComplete(() => {}),
     messageFile: f(["image", "pdf"])
-    .onUploadComplete(() => {})
+    .onUploadComplete(() => {}),
+    statusFile: f(["image", "video/mp4", "video/mpeg"])
+    .onUploadComplete(() => {}),
   
 } satisfies FileRouter;
  
