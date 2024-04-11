@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
-export type ModalType = "createServer" | "invite" | "editServer" | "members" | "editUser" | "createChannel" | "leaveServer" | "deleteServer" | "deleteChannel" | "editChannel" | "messageFile" | "deleteMessage" | "createPoll" | "viewVotes";
+export type ModalType = "createServer" | "invite" | "editServer" | "members" | "editUser" | "createChannel" | "leaveServer" | "deleteServer" | "deleteChannel" | "editChannel" | "messageFile" | "deleteMessage" | "createPoll" | "viewVotes" | "uploadStatus" | "viewStatus";
+;
 
 interface ModalData {
     server?: string;
@@ -9,7 +10,7 @@ interface ModalData {
     channel?: string;
     apiUrl?: string;
     query?: Record<string, any>;
-    votes?:any;
+    votes?: any;
 }
 
 interface ModalStore {

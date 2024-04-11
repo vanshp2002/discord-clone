@@ -17,22 +17,25 @@ export default function StoryBar() {
   };
 
   return (
-    <div className="flex space-x-4 p-4 bg-[#313338] border-b border-gray-200 overflow-x-auto">
+    <div className="flex space-x-4 p-4 bg-[#313338] overflow-x-auto">
       {stories.map((story) => (
         <div key={story.id} className="relative">
           <img
             src={story.imageUrl}
             alt={`${story.username}'s story`}
-            className="h-16 w-16 rounded-full object-cover cursor-pointer p-1"
+            className="h-16 w-16 rounded-full object-cover cursor-pointer"
             onClick={() => handleStoryClick(story.id)}
           />
           {selectedStory === story.id && (
             <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center">
-            <div className="animate-spin rounded-full border-4 border-t-4 border-gradient-purple h-full w-full"></div>
-          </div>
+              <div className="animate-spin rounded-full border-4 border-t-4 border-gradient-purple h-16 w-16"></div>
+            </div>
           )}
         </div>
       ))}
+      <style jsx>{`.border-gradient-purple {
+          border-color: conic-gradient(from 0deg at 50% 50%, #8B5CF6 0%, #EC4899 100%);
+          border-image-slice: 1;}`}</style>
     </div>
   );
 }
