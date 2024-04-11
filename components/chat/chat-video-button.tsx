@@ -10,7 +10,7 @@ export const ChatVideoButton = () => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const router = useRouter();
-    const isVideo = searchParams.get("video");
+    const isVideo = searchParams?.get("video");
 
     const onClick = () => {
         const url = qs.stringifyUrl({
