@@ -46,8 +46,19 @@ export async function POST(req) {
         
         const uniqueUserIds = userIdsWithStatus.length > 0 ? userIdsWithStatus[0].userIds : [];
 
-        const populateFriends = await User.find({
-            _id: { $in: uniqueUserIds }
+        let [populateFriends, statuses] = await Promise.all([
+            User.find({ _id: { $in: Array.from(uniqueUserIds) } }).lean(),
+            Status.find({ userId: { $in: Array.from(uniqueUserIds) } })
+        ]);
+
+        //make a nested object with friend and status
+        populateFriends = populateFriends.map(friend => {
+            return { ...friend, status: [] };
+        });
+
+        statuses.forEach(status => {
+            const friend = populateFriends.find(friend => friend?._id?.toString() === status.userId.toString());
+            friend?.status.push(status);
         });
 
         return NextResponse.json({ friendsWithStatus: populateFriends });

@@ -1,0 +1,59 @@
+.modal-container {
+    position: fixed;
+    z-index: 9999; /* Ensure modal appears above other content */
+    left: 0;
+    top: 0;
+    width: 100vw; /* Use viewport width to cover entire width */
+    height: auto; /* Use viewport height to cover entire height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.4);
+    overflow-y: auto; /* Allow scrolling if modal content exceeds viewport */
+}
+
+.modal {
+    position: relative;
+    width: 85%;
+    height: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    align-items: center;
+}
+
+.modal-content {
+    display: flex;
+    height:auto;
+    align-items: center;
+    justify-content: center;
+}
+
+.mySwiper {
+    width: 100%;
+    height: auto;
+    align-items: center;
+  }
+
+  .mySwiper2 {
+    width: 100%;
+    height:auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    align-items: center;
+  }
+  
+  .swiper-slide {
+    background-position: center;
+    background-size: cover;
+    width: 300px;
+    height: 300px;
+  }
+  
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+  }
+  
+
+

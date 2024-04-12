@@ -4,6 +4,14 @@ import { Separator } from '../ui/separator';
 import FriendItem from './friend-item';
 import { useModal } from '@/hooks/use-modal-store';
 import { useListState } from '../providers/list-provider';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import 'swiper/css';
+import 'swiper/css/effect-coverflow';
+import 'swiper/css/pagination';
+
+import { EffectCoverflow, Pagination } from 'swiper/modules';
+
 
 
 interface FriendAllProps {
@@ -23,7 +31,8 @@ const FriendAll = ({
     const [allFriends, setAllFriends] = useState(allfriends);
     const {list, setList} = useListState();
     const [friendsWithStatus, setFriendsWithStatus] = useState([]);
-    const [selectedStory, setSelectedStory] = useState("");
+    const [selectedStory, setSelectedStory] = useState(-1);
+    const [isStoriesOpen, setIsStoriesOpen] = useState(false);
 
     const onRemoveFriend = async (id: string) => {
         setAllFriends(allFriends.filter((friend: any) => friend._id !== id));
@@ -68,12 +77,13 @@ const FriendAll = ({
 
     }, [list] );
 
-    const handleStoryClick = (friendId: string) => {
-        setSelectedStory(friendId);
+    const handleStoryClick = (index: number) => {
+        setSelectedStory(index);
         // Here you would load the story data and then remove the loading state
         setTimeout(() => {
-            setSelectedStory("")
-            onOpen("viewStatus", {user: friendId})
+            setSelectedStory(-1);
+            onOpen("viewStatus", {currIndex: index, statuses: friendsWithStatus})
+            // setIsStoriesOpen(true);
         }
         , 600); // Simulate loading time
       };
@@ -97,7 +107,7 @@ const FriendAll = ({
         <div className="p-4 mt-3 flex gap-y-2 ml-5">
             
         <div className="flex space-x-4 p-4 bg-[#313338] border-b border-gray-200 overflow-x-auto">
-            {friendsWithStatus && friendsWithStatus.map((friend) => (
+            {friendsWithStatus && friendsWithStatus.map((friend,index) => (
                 <div key={friend._id} className="relative">
                 <img
                     src={friend.imageUrl}
@@ -110,7 +120,7 @@ const FriendAll = ({
                     <div className="animate-spin rounded-full border-2 border-t-transparent border-purple-600 h-full w-full"></div>
                     </div>
                 ) : (
-                    <div onClick={() => handleStoryClick(friend._id)} className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center">
+                    <div onClick={() => handleStoryClick(index)} className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center">
                     <div className="rounded-full border-2 border-t-transparent border-purple-600 h-full w-full"></div>
                     </div>
                 )
