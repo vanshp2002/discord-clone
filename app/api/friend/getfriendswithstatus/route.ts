@@ -44,7 +44,9 @@ export async function POST(req) {
             }
         ]);
         
-        const uniqueUserIds = userIdsWithStatus.length > 0 ? userIdsWithStatus[0].userIds : [];
+        let uniqueUserIds = userIdsWithStatus.length > 0 ? userIdsWithStatus[0].userIds : [];
+
+        uniqueUserIds.unshift(userId); 
 
         let [populateFriends, statuses] = await Promise.all([
             User.find({ _id: { $in: Array.from(uniqueUserIds) } }).lean(),
@@ -60,6 +62,9 @@ export async function POST(req) {
             const friend = populateFriends.find(friend => friend?._id?.toString() === status.userId.toString());
             friend?.status.push(status);
         });
+
+        //make sure the friends are in the same order as the uniqueUserIds
+        populateFriends = uniqueUserIds.map(id => populateFriends.find(friend => friend?._id?.toString() === id.toString()));
 
         return NextResponse.json({ friendsWithStatus: populateFriends });
 

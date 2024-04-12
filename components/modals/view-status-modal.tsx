@@ -69,7 +69,7 @@ export const ViewStatusModal = ({}) => {
                     effect={'coverflow'}
                     grabCursor={true}
                     centeredSlides={true}
-                    slidesPerView={3}
+                    slidesPerView={4}
                     coverflowEffect={{
                         rotate: 50,
                         stretch: 0,
@@ -130,7 +130,7 @@ export const ViewStatusModal = ({}) => {
                                     <div className="flex items-center p-4">
                                             <div key={status._id} className=" p-2 mx-auto py-3">
                                                 {status.src.includes("mp4") ?  (
-                                                    index === 0 && outerIndex===0?
+                                                    index === 0 && outerIndex===0 && currIndex===0?
                                                     <video id={`${outerIndex}-${index}`} src={status.src} controls className="w-auto mx-auto" autoPlay />
                                                     :
                                                     <video id={`${outerIndex}-${index}`}  src={status.src} controls className="w-auto mx-auto" />

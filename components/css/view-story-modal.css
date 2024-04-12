@@ -4,7 +4,7 @@
     left: 0;
     top: 0;
     width: 100vw; /* Use viewport width to cover entire width */
-    height: auto; /* Use viewport height to cover entire height */
+    height: 100vh; /* Use viewport height to cover entire height */
     display: flex;
     align-items: center;
     justify-content: center;
