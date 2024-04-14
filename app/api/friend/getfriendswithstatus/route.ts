@@ -44,11 +44,27 @@ export async function POST(req) {
             }
         ]);
 
-        const uniqueUserIds = userIdsWithStatus.length > 0 ? userIdsWithStatus[0].userIds : [];
+        let uniqueUserIds = userIdsWithStatus.length > 0 ? userIdsWithStatus[0].userIds : [];
 
-        const populateFriends = await User.find({
-            _id: { $in: uniqueUserIds }
+        uniqueUserIds.unshift(userId);
+
+        let [populateFriends, statuses] = await Promise.all([
+            User.find({ _id: { $in: Array.from(uniqueUserIds) } }).lean(),
+            Status.find({ userId: { $in: Array.from(uniqueUserIds) } })
+        ]);
+
+        //make a nested object with friend and status
+        populateFriends = populateFriends.map(friend => {
+            return { ...friend, status: [] };
         });
+
+        statuses.forEach(status => {
+            const friend = populateFriends.find(friend => friend?._id?.toString() === status.userId.toString());
+            friend?.status.push(status);
+        });
+
+        //make sure the friends are in the same order as the uniqueUserIds
+        populateFriends = uniqueUserIds.map(id => populateFriends.find(friend => friend?._id?.toString() === id.toString()));
 
         return NextResponse.json({ friendsWithStatus: populateFriends });
 

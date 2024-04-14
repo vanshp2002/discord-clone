@@ -11,6 +11,8 @@ interface ModalData {
     apiUrl?: string;
     query?: Record<string, any>;
     votes?: any;
+    currIndex?: number;
+    statuses?: any;
 }
 
 interface ModalStore {
