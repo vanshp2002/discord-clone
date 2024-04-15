@@ -19,7 +19,7 @@ function App() {
     const [error,seterror] = React.useState("");
     const router = useRouter();
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
 
         if (email === "" || displayname === "" || username === "" || password === "") {
