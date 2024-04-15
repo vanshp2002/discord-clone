@@ -4,6 +4,7 @@ import axios from "axios";
 import { use, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { FaTrash } from "react-icons/fa";
 
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
@@ -16,10 +17,11 @@ import "@/components/css/view-story-modal.css";
 import { useParams } from "next/navigation";
 import { UserAvatar } from "../user-avatar";
 import { set } from "mongoose";
+import { on } from "events";
 
 export const ViewStatusModal = ({}) => {
 
-    const {isOpen,onClose,data,type} = useModal();
+    const {onOpen, isOpen, onClose, data, type} = useModal();
     const params = useParams();
     const outerSwiperRef = useRef(null);
     const ownStatusSwiperRef = useRef(null);
@@ -52,6 +54,26 @@ export const ViewStatusModal = ({}) => {
         return () => window.removeEventListener("keydown", handleEsc);
     }, [isModalOpen]);
 
+    const onAddStory = (userId: string) => {
+        onClose();
+        onOpen("uploadStatus", {user: userId});
+    }
+
+    const deleteOwnStory = async (statusId: string) => {
+        const res = await fetch("/api/status/deletestatus", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                statusId: statusId
+            })
+        });
+        let newFriendStatuses = friendStatuses;
+        newFriendStatuses[0].status = newFriendStatuses[0].status.filter((status: any) => status._id !== statusId);
+        setFriendStatuses(newFriendStatuses);
+    }
+
     if(currIndex===-1){
         return (
             <>
@@ -61,7 +83,7 @@ export const ViewStatusModal = ({}) => {
                     <div className="modal">
                         <div onClick={handleClose} className="overlay"></div>
                         <div className="modal-content">
-                        <div className="fixed top-0  w-auto h-full bg-black bg-opacity-50 flex justify-between items-center z-50 ">
+                        <div className="fixed top-0  w-auto h-full flex justify-between items-center z-50 ">
                     <div className="bg-black p-6 rounded-lg max-w-md max-h-3/4 overflow-auto" onClick={(e) => e.stopPropagation()}>
                         <Swiper
                             ref={ownStatusSwiperRef}
@@ -79,7 +101,7 @@ export const ViewStatusModal = ({}) => {
                             onSlideChange={(swiper) => {  
                         
                                 setTimeout(() => {
-                                    const video = document.getElementById(`-1-${swiper.activeIndex}`);
+                                    const video = document.getElementById(`v-1-${swiper.activeIndex}`);
                                     if (video) {
                                         video.play();
                                     }
@@ -94,40 +116,49 @@ export const ViewStatusModal = ({}) => {
                                         <UserAvatar src={friendStatuses[0].imageUrl} className="w-8 h-8 md:w-10 md:h-10" />
                                         <p className="text-white ml-2">Your Story</p>
                                     </div>
-                                    <p className="text-sm mr-4"> {index+1}/{friendStatuses[0].status.length} </p>
+                                    <div className="flex items-center gap-x-3">
+                                        <FaTrash className="text-zinc-600 hover:text-red-600" onClick={() => deleteOwnStory(status._id)}/>
+                                        <p className="text-sm mr-4"> {index+1}/{friendStatuses[0].status.length} </p>
+                                    </div>
                                 </div>
-                                <div className="flex items-center p-4">
-                                        <div className=" p-2 mx-auto py-3">
+                                <div className="flex items-center p-4 h-full">
+                                        <div className="flex items-center justify-center mx-auto py-auto">
                                             {status.src.includes("mp4") ?  (
                                                 index === 0 ? (
-                                                    <video id={`-1-${index}`} src={status.src} controls className="w-auto mx-auto" autoPlay />
+                                                    <video id={`v-1-${index}`} src={status.src} controls className="w-auto mx-auto my-auto" autoPlay />
                                                 )
                                                 :
-                                                <video id={`-1-${index}`} src={status.src} controls className="w-auto mx-auto" />
+                                                <video id={`v-1-${index}`} src={status.src} controls className="w-auto mx-auto my-auto" />
                                             )
                                                 :
-                                                <img src={status.src} className="w-auto mx-auto"/> 
+                                                <img src={status.src} className="w-auto mx-auto my-auto"/> 
                                             }
                                         </div>
                                 </div>
                                 </SwiperSlide>
                             ))}
 
-                            <SwiperSlide className="flex bg-black p-4 h-full container my-auto ">
+                            {friendStatuses && <SwiperSlide className="flex bg-black p-4 h-full container my-auto ">
                                 <div className="flex items-center justify-between absolute top-0">
                                     <div className="flex items-center gap-x-2">
-                                        <UserAvatar src={friendStatuses[0].imageUrl} className="w-8 h-8 md:w-10 md:h-10" />
+                                        <UserAvatar src={friendStatuses[0]?.imageUrl} className="w-8 h-8 md:w-10 md:h-10" />
                                         <p className="text-white ml-2">Your Story</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-center p-4 container h-full "> 
                                     <div className="p-2 my-auto">
                                         <div className="flex items-center justify-center bg-black h-full">
-                                            <Plus className="h-10 w-10 text-green-600" />
+                                            <div className="justify-center mx-auto">
+                                                <Plus onClick={() => onAddStory(friendStatuses[0]?._id)} className="h-10 w-10 ml-9 text-green-600" />
+                                                <p className="py-2 mt-1 text-sm">
+                                                    Add to your story
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </SwiperSlide>
+                                
+                            </SwiperSlide>}
                         </Swiper>
                         </div>
                         </div>
@@ -168,7 +199,7 @@ export const ViewStatusModal = ({}) => {
                         
                         setTimeout(() => {
                             setOuterSwiperIndex(swiper.activeIndex);
-                            const video = document.getElementById(`${swiper.activeIndex}-0`);
+                            const video = document.getElementById(`v${swiper.activeIndex}-0`);
                             if (video) {
                                 video.play();
                             }
@@ -210,22 +241,16 @@ export const ViewStatusModal = ({}) => {
                                                 </div>
                                                 <p className="text-sm mr-4"> {index+1}/{friend.status.length} </p>
                                             </div>
-                                            <div className="items-center p-4 h-full my-auto">
-                                                    <div key={status._id} className=" p-2 mx-auto py-3 h-full my-auto">
+                                            <div className="flex items-center px-4 h-full my-auto">
+                                                    <div key={status._id} className="flex-col items-center justify-center px-2 mx-auto py-auto">
                                                         {status.src.includes("mp4") ?  (
                                                             index === 0 && outerIndex===0 && currIndex===0?
-                                                            <video id={`${outerIndex}-${index}`} src={status.src} controls className="w-auto mx-auto my-auto" autoPlay />
+                                                            <video id={`v${outerIndex}-${index}`} src={status.src} controls className="w-auto mx-auto my-auto" autoPlay />
                                                             :
-                                                            <video id={`${outerIndex}-${index}`}  src={status.src} controls className="w-auto mx-automy-auto" />
+                                                            <video id={`v${outerIndex}-${index}`}  src={status.src} controls className="w-auto mx-auto my-auto" />
                                                         )
                                                             :
-                                                            <img src={status.src} className="image" id={`${outerIndex}-${index}`} alt="Status" 
-                                                                style={{ 
-                                                                    width: "100%",
-                                                                    objectFit: "contain",
-                                                                    marginTop: `calc(${marginTopPercentage}% - ${document?.getElementById(`${outerIndex}-${index}`)?.height/2}px)`, 
-                                                                }} 
-                                                            />
+                                                            <img src={status.src} className="my-auto" id={`${outerIndex}-${index}`} alt="Status"  />
                                                         }
                                                     </div>
                                             </div>
@@ -237,8 +262,8 @@ export const ViewStatusModal = ({}) => {
                     ))}
                 </Swiper>
                 </div>
-            </div>
-        </div>
+                </div>
+                </div>
         }
         </>
     )

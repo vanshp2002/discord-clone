@@ -85,22 +85,18 @@ const FriendAll = ({
 
     const handleStoryClick = (index: number) => {
         setSelectedStory(index);
-        // Here you would load the story data and then remove the loading state
         setTimeout(() => {
             setSelectedStory(-2);
-            onOpen("viewStatus", {currIndex: index, statuses: friendsWithStatus})
-            // setIsStoriesOpen(true);
+            onOpen("viewStatus", {currIndex: index, statuses: friendsWithStatus});
         }
         , 600); // Simulate loading time
       };
 
     const handleOwnStoryClick = () => {
         setSelectedStory(-1);
-        // Here you would load the story data and then remove the loading state
         setTimeout(() => {
             setSelectedStory(-2);
             onOpen("viewStatus", {currIndex: -1, statuses: [guser]})
-            // setIsStoriesOpen(true);
         }
         , 600); // Simulate loading time
       }
@@ -108,7 +104,6 @@ const FriendAll = ({
 
     return (
         <> 
-        <button onClick={() => onOpen("uploadStatus", {user: userId})} className="bg-green-500 text-white rounded-md p-2 mt-5 ml-8">Add Story</button>
 
         <div className="flex items-center mt-5 ml-8 p-4">
             <p className="text font-semibold text-zinc-500 dark:text-zinc-400">Stories </p>
@@ -170,7 +165,7 @@ const FriendAll = ({
                             )
                             }
                         </div>
-                        <div className="text-xs text-center py-1 items-center justify-center w-12 ml-2" style={{ overflowWrap: 'break-word' }}>
+                        <div className="text-xs text-center py-1 items-center justify-center w-12 mx-auto" style={{ overflowWrap: 'break-word' }}>
                             {friend.displayname}
                         </div>
                         </div>
