@@ -1,10 +1,10 @@
 "use client";
 
-import './register.css';
-import React from 'react';
-import Dropdown from '../../../../components/ui/Dropdown/Dropdown.js';
+import "./register.css";
+import React from "react";
+import Dropdown from "../../../../components/ui/Dropdown/Dropdown.js";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 function App() {
 
@@ -129,7 +129,7 @@ function App() {
                           </button></div>
 
                           {error && (<div className="style-95">{error}</div>)}
-                      <div className="style-91" data-text-variant="text-xs/normal">By registering, you agree to Discord's <a className="style-92" href="//discord.com/terms" rel="noreferrer noopener" target="_blank">Terms of Service</a> and <a className="style-93" href="//discord.com/privacy" rel="noreferrer noopener" target="_blank">Privacy Policy</a>.</div>
+                      <div className="style-91" data-text-variant="text-xs/normal">By registering, you agree to Discords <a className="style-92" href="//discord.com/terms" rel="noreferrer noopener" target="_blank">Terms of Service</a> and <a className="style-93" href="//discord.com/privacy" rel="noreferrer noopener" target="_blank">Privacy Policy</a>.</div>
                       
                       <div className="style-94">
                           <div className="style-95">Already have an account?</div>
