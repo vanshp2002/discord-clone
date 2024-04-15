@@ -32,7 +32,7 @@ const CustomPoll = ({
         setOptions(newOptions);
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
         // Ensure question and at least two options are present
         if (question.trim() === '' || options.filter(opt => opt.trim() !== '').length < 2) {

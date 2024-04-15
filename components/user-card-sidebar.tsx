@@ -90,7 +90,7 @@ const UserCardSidebar = ({
 
                         <ScrollArea className="mt-2 p-1 flex-grow" style={{ maxHeight: "200px", borderRadius: '0.5rem' }}>
                             {mutualFriends.map((friend: any) => (
-                                <div className="bg-zinc-800 flex items-center gap-x-2 mt-1 p-2">
+                                <div key={friend._id} className="bg-zinc-800 flex items-center gap-x-2 mt-1 p-2">
                                     <UserAvatar src={friend.imageUrl} className="h-6 w-6 md:h-6 md:w-6" />
                                     <div>
                                         <p className="ml-3 text-gray-400 text-xs">{friend.displayname}</p>

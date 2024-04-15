@@ -1,17 +1,17 @@
 "use client";
 
-import React, { use } from 'react'
+import React, { use } from "react"
 import { useSession } from "next-auth/react";
 import { useRouter, redirect } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getOrCreateFriendConversation } from '@/lib/friendConversation';
-import { ChatHeader } from '@/components/chat/chat-header';
-import { ChatMessages } from '@/components/chat/chat-messages';
-import { ChatInput } from '@/components/chat/chat-input';
+import { getOrCreateFriendConversation } from "@/lib/friendConversation";
+import { ChatHeader } from "@/components/chat/chat-header";
+import { ChatMessages } from "@/components/chat/chat-messages";
+import { ChatInput } from "@/components/chat/chat-input";
 import { useServerState } from "@/components/providers/server-provider";
-import { useParams } from 'next/navigation';
-import UserCardSidebar from '@/components/user-card-sidebar';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { useParams } from "next/navigation";
+import UserCardSidebar from "@/components/user-card-sidebar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface MemberIdPageProps {
 
@@ -86,7 +86,7 @@ const MemberIdPage = ({
       }, [session, router, serverUpdated]);
 
     return (
-      <div className="bg-white dark:bg-[#313338] flex flex-col h-[100%]" style={{ overflow: 'hidden' }}>
+      <div className="bg-white dark:bg-[#313338] flex flex-col h-[100%]" style={{ overflow: "hidden" }}>
       {otherMember && (<ChatHeader 
         imageUrl={otherMember.imageUrl}
         name={otherMember.displayname}
@@ -96,11 +96,10 @@ const MemberIdPage = ({
 
       <div className="flex h-full">
 
-            <div className="flex flex-col h-full w-[74%]" style={{ overflow: 'hidden' , maxHeight: 'calc(100vh - 50px)' }}>
+            <div className="flex flex-col h-full w-[74%]" style={{ overflow: "hidden" , maxHeight: "calc(100vh - 50px)" }}>
 
-                <ScrollArea className="flex-grow">
 
-                { otherMember && currentMember && (<ChatMessages
+                { otherMember && currentMember && gconversation && (<ChatMessages
                     member={currentMember}
                     otherMember={otherMember}
                     name={otherMember?.displayname}
@@ -118,7 +117,6 @@ const MemberIdPage = ({
                         />
                     )}
                 
-                </ScrollArea>
 
                 {gconversation && (<ChatInput 
                     apiUrl="/api/socket/direct-messages"
@@ -135,7 +133,7 @@ const MemberIdPage = ({
                 </div>
 
             <div className="w-[26%]">
-                {otherMember && <UserCardSidebar user={otherMember} mutualFriends={mutualFriends} />}
+                {otherMember && mutualFriends && <UserCardSidebar user={otherMember} mutualFriends={mutualFriends} />}
             </div>
         
             </div>

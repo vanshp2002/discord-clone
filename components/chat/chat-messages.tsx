@@ -28,25 +28,6 @@ interface ChatMessagesProps {
     type: "channel" | "conversation";
 }
 
-function fetchData(useChatQuery: any, queryKey: any, apiUrl: any, paramKey: any, paramValue: any, socketQuery: any, chatId: any, member: any, looping: boolean) {
-    const addKey = `chat:${chatId}:messages`;
-    const updateKey = `chat:${chatId}:messages:update`;
-    
-    const { data , fetchNextPage, hasNextPage, isFetchingNextPage, status } = useChatQuery({
-        queryKey,
-        apiUrl,
-        paramKey,
-        paramValue,
-        socketQuery,
-        channelId: chatId,
-    });
-
-    useChatSocket({ queryKey, addKey, updateKey });
-
-    return { data , fetchNextPage, hasNextPage, isFetchingNextPage, status };
-
-}
-
 export const ChatMessages = ({
     name,
     member,
@@ -68,13 +49,6 @@ export const ChatMessages = ({
 
     const [loop, setLoop] = useState(false);
     const router = useRouter();
-    // const [data, setData] = useState(null);
-    // const [fetchNextPage, setFetchNextPage] = useState();
-    // const [hasNextPage, setHasNextPage] = useState(null);
-    // const [isFetchingNextPage, setIsFetchingNextPage] = useState(null);
-    // const [status, setStatus] = useState(null);
-    
-    // const { data: fetchedData, fetchNextPage: nextPage, hasNextPage: nextPageStatus, isFetchingNextPage: fetchingStatus, status: fetchStatus } = useChatQuery({
     const { data , fetchNextPage, hasNextPage, isFetchingNextPage, status } = useChatQuery({
       queryKey,
       apiUrl,
@@ -84,13 +58,6 @@ export const ChatMessages = ({
       channelId: chatId,
       looping: loop,
   });
-    // useEffect(() => {
-    //     setData(fetchedData);
-    //     setFetchNextPage(() => nextPage);
-    //     setHasNextPage(nextPageStatus);
-    //     setIsFetchingNextPage(fetchingStatus);
-    //     setStatus(fetchStatus);
-    // }, [fetchStatus]);
 
     useChatSocket({ queryKey, addKey, updateKey });
 
@@ -107,19 +74,6 @@ export const ChatMessages = ({
     const handleReplyClick = async (messageId: string) => {
       await fetchNextPage();
         let messageElement = document.getElementById(messageId);
-        // while(!messageElement && hasNextPage) {
-        //     console.log("Fetching next page");
-        //     messageElement = document.getElementById(messageId);
-        // }
-          // messageElement = document.getElementById(messageId);
-          // const {data: newData, fetchNextPage: newFetchNextPage, hasNextPage: newHasNextPage, isFetchingNextPage: newIsFetchingNextPage, status: newStatus} = fetchData(useChatQuery, queryKey, apiUrl, paramKey, paramValue, socketQuery, chatId, member, true);
-          // setData(newData);
-          // setFetchNextPage(() => newFetchNextPage);
-          // setHasNextPage(newHasNextPage);
-          // setIsFetchingNextPage(newIsFetchingNextPage);
-          // setStatus(newStatus);
-        // }
-        // setLoop(false);
 
         if (messageElement) {
           messageElement.scrollIntoView({ behavior: "smooth", block: "center"});

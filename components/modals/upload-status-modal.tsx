@@ -31,7 +31,7 @@ export const UploadStatusModal = ({}) => {
     const [fileUrl, setFileUrl] = useState('');
 
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
 
         console.log(user, fileUrl);

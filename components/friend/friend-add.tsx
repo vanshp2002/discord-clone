@@ -24,7 +24,7 @@ const FriendAdd = ({
         }, 5000);
     }
 
-    const onSubmit = async (e) => {
+    const onSubmit = async (e: any) => {
         e.preventDefault();
         console.log(params?.userId);
         const response = await fetch("/api/friend/addfriend",{

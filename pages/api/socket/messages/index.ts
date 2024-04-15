@@ -59,6 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
         }
 
         const message = await Message.create(newMessageData);
+        const poll = await Poll.findOne({_id: null});
 
         const populatedMessage = await Message.populate(message, [{
             path: "memberId",
