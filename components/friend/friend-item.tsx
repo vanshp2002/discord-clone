@@ -41,7 +41,7 @@ const FriendItem = ({
                             </div>
                         </div>
                     </div>
-                    <div className="flex gap-x-4 mr-5">
+                    {isHovered && <div className="flex gap-x-4 mr-5">
                         <ActionTooltip label="Message" side='top'>
                             <div className=" flex justify-center items-center w-10 h-10 md:h-10 md:w-10 bg-zinc-300 dark:bg-zinc-700 rounded-full cursor-pointer">
                                 <TbMessageCircle2Filled onClick={onClick}className="stroke-1 text-zinc-200 text-sm h-6 w-6 md:h-6 md:w-6" />
@@ -57,7 +57,7 @@ const FriendItem = ({
                                 <RxCross1 onClick={() => onRemoveFriend(friend._id)} className="text-zinc-200 text-sm h-4 w-4 md:h-5 md:w-5 hover:text-red-500" />
                             </div>
                         </ActionTooltip>
-                    </div>
+                    </div>}
         </div>
     )
 }

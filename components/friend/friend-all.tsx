@@ -22,7 +22,7 @@ const FriendAll = ({
     const [allFriends, setAllFriends] = useState(allfriends);
     const { list, setList } = useListState();
     const [friendsWithStatus, setFriendsWithStatus] = useState([]);
-    const [selectedStory, setSelectedStory] = useState(-1);
+    const [selectedStory, setSelectedStory] = useState(-2);
     const [isStoriesOpen, setIsStoriesOpen] = useState(false);
     const [guser, setGuser] = useState(null);
 
@@ -88,18 +88,18 @@ const FriendAll = ({
         setSelectedStory(index);
         // Here you would load the story data and then remove the loading state
         setTimeout(() => {
-            setSelectedStory(-1);
+            setSelectedStory(-2);
             onOpen("viewStatus", { currIndex: index, statuses: friendsWithStatus })
             // setIsStoriesOpen(true);
         }
             , 600); // Simulate loading time
     };
     const handleOwnStoryClick = () => {
-        setSelectedStory(0);
+        setSelectedStory(-1);
         // Here you would load the story data and then remove the loading state
         setTimeout(() => {
-            setSelectedStory(-1);
-            // onOpen("viewStatus", {currIndex: 0, statuses: [guser]})
+            setSelectedStory(-2);
+            onOpen("viewStatus", { currIndex: -1, statuses: [guser] })
             // setIsStoriesOpen(true);
         }
             , 600); // Simulate loading time
@@ -142,7 +142,7 @@ const FriendAll = ({
             </div>
             <Separator className="h-[3px] bg-zinc-300 dark:bg-zinc-700 rounded-md ml-8" style={{ maxWidth: "93%" }} />
             <div className="p-4 mt-3 flex gap-y-2 my-auto">
-                <div className="bg-[#313338] py-4 overflow-x-auto ml-10">
+                <div className="bg-[#313338] py-4 overflow-x-hidden ml-10">
 
                     <div className="items-center justify-center">
                         <div className="relative">
@@ -152,20 +152,20 @@ const FriendAll = ({
                                 className="h-16 w-16 rounded-full object-cover cursor-pointer p-1"
                                 onClick={() => handleOwnStoryClick()}
                             />
-                            {selectedStory === 0 ? (
+                            {selectedStory === -1 ? (
                                 <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center">
                                     <div className="animate-spin rounded-full border-2 border-t-transparent border-purple-600 h-full w-full"></div>
                                 </div>
                             ) : (
-                                // <div onClick={() => handleStoryClick(index)} className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center">
-                                <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center">
+                                <div onClick={() => handleOwnStoryClick()} className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center">
+                                    {/* <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center"> */}
                                     <div className="rounded-full border-2 border-t-2 border-purple-600 h-full w-full"></div>
                                 </div>
                             )
                             }
 
                             <div>
-                                <Plus onClick={() => onOpen("uploadStatus", {user: userId})} className="h-5 w-5 absolute top-0 right-0 bg-green-500 text-white rounded-full cursor-pointer p-0.5" />
+                                <Plus onClick={() => onOpen("uploadStatus", { user: userId })} className="h-5 w-5 absolute top-0 right-0 bg-green-500 text-white rounded-full cursor-pointer p-0.5" />
                             </div>
                         </div>
                         <div className="text-xs text-center py-1 items-center justify-center">
@@ -196,7 +196,7 @@ const FriendAll = ({
                                 )
                                 }
                             </div>
-                            <div className="text-xs text-center py-1 items-center justify-center">
+                            <div className="text-xs text-center py-1 items-center justify-center w-13 mx-auto" style={{ overflowWrap: 'break-word' }}>
                                 {friend.displayname}
                             </div>
                         </div>

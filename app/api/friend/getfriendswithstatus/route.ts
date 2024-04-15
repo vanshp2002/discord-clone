@@ -5,10 +5,10 @@ import User from "@/models/user";
 import Status from "@/models/status";
 
 export async function POST(req) {
-    try {
+    try{
 
         await connectMongoDB();
-        const { userId } = await req.json();
+        const {userId} = await req.json();
 
         let friends = await Friend.find({
             $or: [
@@ -18,7 +18,7 @@ export async function POST(req) {
         });
 
         let otherfriends = friends.map(friend => {
-            if (friend.userOneId.toString() === userId.toString()) {
+            if(friend.userOneId.toString() === userId.toString()){
                 return friend.userTwoId;
             }
             return friend.userOneId;
@@ -43,10 +43,10 @@ export async function POST(req) {
                 }
             }
         ]);
-
+        
         let uniqueUserIds = userIdsWithStatus.length > 0 ? userIdsWithStatus[0].userIds : [];
 
-        uniqueUserIds.unshift(userId);
+        uniqueUserIds.unshift(userId); 
 
         let [populateFriends, statuses] = await Promise.all([
             User.find({ _id: { $in: Array.from(uniqueUserIds) } }).lean(),

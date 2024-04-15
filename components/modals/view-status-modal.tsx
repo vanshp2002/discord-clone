@@ -2,12 +2,14 @@ import { useModal } from "@/hooks/use-modal-store";
 import { Button } from "../ui/button";
 import axios from "axios";
 import { use, useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { FaTrash } from "react-icons/fa";
 
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
+import 'swiper/css/effect-cube';
 
 import { Autoplay, EffectCoverflow, Pagination, Navigation, Keyboard, EffectCube } from 'swiper/modules';
 
@@ -18,9 +20,10 @@ import { set } from "mongoose";
 
 export const ViewStatusModal = ({ }) => {
 
-    const { isOpen, onClose, data, type } = useModal();
+    const { onOpen, isOpen, onClose, data, type } = useModal();
     const params = useParams();
     const outerSwiperRef = useRef(null);
+    const ownStatusSwiperRef = useRef(null);
 
     const isModalOpen = isOpen && type === "viewStatus";
 
@@ -56,6 +59,121 @@ export const ViewStatusModal = ({ }) => {
     const toggleModal = () => {
         onClose();
     };
+    const onAddStory = (userId: string) => {
+        onClose();
+        onOpen("uploadStatus", { user: userId });
+    }
+
+    const deleteOwnStory = async (statusId: string) => {
+        const res = await fetch("/api/status/deletestatus", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                statusId: statusId
+            })
+        });
+        let newFriendStatuses = friendStatuses;
+        newFriendStatuses[0].status = newFriendStatuses[0].status.filter((status: any) => status._id !== statusId);
+        setFriendStatuses(newFriendStatuses);
+    }
+
+    if (currIndex === -1) {
+        return (
+            <>
+
+                {isModalOpen &&
+                    <div className="modal-container">
+                        <div className="modal">
+                            <div onClick={handleClose} className="overlay"></div>
+                            <div className="modal-content">
+                                <div className="fixed top-0  w-auto h-full flex justify-between items-center z-50 ">
+                                    <div className="bg-black p-6 rounded-lg max-w-md max-h-3/4 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+                                        <Swiper
+                                            ref={ownStatusSwiperRef}
+                                            effect={'cube'}
+                                            grabCursor={true}
+                                            cubeEffect={{
+                                                shadow: true,
+                                                slideShadows: true,
+                                                shadowOffset: 20,
+                                                shadowScale: 0.94,
+                                            }}
+                                            pagination={true}
+                                            modules={[EffectCube, Pagination]}
+                                            className="mySwiper"
+                                            onSlideChange={(swiper) => {
+
+                                                setTimeout(() => {
+                                                    const video = document.getElementById(`v-1-${swiper.activeIndex}`);
+                                                    if (video) {
+                                                        video.play();
+                                                    }
+                                                }, 100); // Adjust the delay time as needed
+
+                                            }}
+                                        >
+                                            {friendStatuses && friendStatuses[0].status.map((status: any, index: any) => (
+                                                <SwiperSlide key={status._id} className="bg-black p-4">
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex items-center gap-x-2">
+                                                            <UserAvatar src={friendStatuses[0].imageUrl} className="w-8 h-8 md:w-10 md:h-10" />
+                                                            <p className="text-white ml-2">Your Story</p>
+                                                        </div>
+                                                        <div className="flex gap-x-3 items-center">
+                                                            <FaTrash onClick={() => deleteOwnStory(status._id)} className="text-zinc-600 dark:hover:text-red-500" />
+                                                            <p className="text-sm mr-4"> {index + 1}/{friendStatuses[0].status.length} </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="h-full flex items-center p-4">
+                                                        <div className="flex-col items-center justify-center px-2 mx-auto py-auto">
+                                                            {status.src.includes("mp4") ? (
+                                                                index === 0 ? (
+                                                                    <video id={`v-1-${index}`} src={status.src} controls className="w-auto mx-auto" autoPlay />
+                                                                )
+                                                                    :
+                                                                    <video id={`v-1-${index}`} src={status.src} controls className="w-auto mx-auto" />
+                                                            )
+                                                                :
+                                                                <img src={status.src} className="w-auto mx-auto" />
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </SwiperSlide>
+                                            ))}
+
+                                            {friendStatuses && <SwiperSlide className="flex bg-black p-4 h-full container my-auto ">
+                                                <div className="flex items-center justify-center absolute top-0">
+                                                    <div className="flex items-center gap-x-2">
+                                                        <UserAvatar src={friendStatuses[0].imageUrl} className="w-8 h-8 md:w-10 md:h-10" />
+                                                        <p className="text-white ml-2">Your Story</p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center justify-center p-4 container h-full ">
+                                                    <div className="p-2 my-auto">
+                                                        <div className="flex items-center justify-center bg-black h-full">
+                                                        <div className="justify-center mx-auto">
+                                                <Plus onClick={() => onAddStory(friendStatuses[0]?._id)} className="h-10 w-10 ml-9 text-green-600" />
+                                                <p className="py-2 mt-1 text-sm">
+                                                    Add to your story
+                                                </p>
+                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </SwiperSlide>}
+                                        </Swiper>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </>
+        )
+    }
 
     return (
         <>
@@ -69,7 +187,7 @@ export const ViewStatusModal = ({ }) => {
                                 effect={'coverflow'}
                                 grabCursor={true}
                                 centeredSlides={true}
-                                slidesPerView={4}
+                                slidesPerView={3}
                                 coverflowEffect={{
                                     rotate: 50,
                                     stretch: 0,
@@ -85,7 +203,7 @@ export const ViewStatusModal = ({ }) => {
 
                                     setTimeout(() => {
                                         setOuterSwiperIndex(swiper.activeIndex);
-                                        const video = document.getElementById(`${swiper.activeIndex}-0`);
+                                        const video = document.getElementById(`v${swiper.activeIndex}-0`);
                                         if (video) {
                                             video.play();
                                         }
@@ -94,9 +212,9 @@ export const ViewStatusModal = ({ }) => {
                                 }}
                             >
                                 {friendStatuses && friendStatuses.map((friend: any, outerIndex: any) => (
-                                    <SwiperSlide key={friend._id} className="bg-black p-4">
+                                    <SwiperSlide key={friend._id} className="bg-black p-4 h-full">
 
-                                        <div >
+                                        <div className="h-full">
                                             <Swiper
                                                 slidesPerView={1}
                                                 spaceBetween={20}
@@ -127,16 +245,16 @@ export const ViewStatusModal = ({ }) => {
                                                             </div>
                                                             <p className="text-sm mr-4"> {index + 1}/{friend.status.length} </p>
                                                         </div>
-                                                        <div className="flex items-center p-4">
-                                                            <div key={status._id} className=" p-2 mx-auto py-3">
+                                                        <div className="h-full flex items-center px-4 my-auto">
+                                                            <div key={status._id} className=" flex-col items-center justify-center px-2 mx-auto py-auto">
                                                                 {status.src.includes("mp4") ? (
                                                                     index === 0 && outerIndex === 0 && currIndex === 0 ?
-                                                                        <video id={`${outerIndex}-${index}`} src={status.src} controls className="w-auto mx-auto" autoPlay />
+                                                                        <video id={`v${outerIndex}-${index}`} src={status.src} controls className="w-auto mx-auto" autoPlay />
                                                                         :
-                                                                        <video id={`${outerIndex}-${index}`} src={status.src} controls className="w-auto mx-auto" />
+                                                                        <video id={`v${outerIndex}-${index}`} src={status.src} controls className="w-auto mx-auto" />
                                                                 )
                                                                     :
-                                                                    <img src={status.src} className="w-auto mx-auto" />
+                                                                    <img src={status.src} className="w-auto mx-auto my-auto" />
                                                                 }
                                                             </div>
                                                         </div>

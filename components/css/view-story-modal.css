@@ -6,7 +6,7 @@
   top: 0;
   width: 100vw;
   /* Use viewport width to cover entire width */
-  height: 100%;
+  height: 100vh;
   /* Use viewport height to cover entire height */
   display: flex;
   align-items: center;
@@ -36,7 +36,7 @@
 
 .mySwiper {
   width: 100%;
-  height: 100%;
+  height: 90vh;
   align-items: center;
 }
 
