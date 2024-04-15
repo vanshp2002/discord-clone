@@ -4,7 +4,7 @@ import Friend from "@/models/friend";
 import User from "@/models/user";
 
 
-export async function POST(req: Request) {
+export async function POST(req) {
 
     try {
         await connectMongoDB();

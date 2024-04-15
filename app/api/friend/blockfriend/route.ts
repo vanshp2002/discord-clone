@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import Friend from "@/models/friend";
 
-export async function POST(req: NextResponse) {
+export async function POST(req) {
     try{
         await connectMongoDB();
         const { friendId, userId } = await req.json();

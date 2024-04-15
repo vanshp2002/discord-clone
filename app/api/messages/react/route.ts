@@ -6,7 +6,7 @@ import Channel from "@/models/channel";
 import Member from "@/models/member";
 import Message from "@/models/message";
 
-export async function POST(req: Request) {
+export async function POST(req) {
     try{
 
         await connectMongoDB();
