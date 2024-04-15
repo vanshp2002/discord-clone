@@ -1,13 +1,13 @@
 "use client";
-import React from 'react'
-import { useParams } from 'next/navigation';
+import React from "react"
+import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import FriendList from '@/components/friend/friend-list';
-import FriendHeader from '@/components/friend/friend-header';
-import { useListState } from '@/components/providers/list-provider';
-import { Separator } from '@/components/ui/separator';
+import FriendList from "@/components/friend/friend-list";
+import FriendHeader from "@/components/friend/friend-header";
+import { useListState } from "@/components/providers/list-provider";
+import { Separator } from "@/components/ui/separator";
 
 
 interface FriendPageProps {
@@ -53,10 +53,10 @@ const FriendPage = ({
     <div className="h-full p-5" style={{width: "35%"}}>
     <div className="font-bold dark:text-white text-xl mb-4 p-5">Active Now</div>
           <div className="text-base font-bold dark:text-white text-center">
-              It's quiet for now...
+              Its quiet for now...
           </div>
           <div className="dark:text-zinc-400 text-center py-2 px-6" style={{fontSize: "14px"}}>
-              When a friend starts an activity—like playing a game or hanging out on voice—we’ll show it here!
+              When a friend starts an activity—like playing a game or hanging out on voice—we will show it here!
           </div>
     </div>
     </div>
