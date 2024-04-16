@@ -81,9 +81,9 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
                     router.push("/");
                 }
                 const toJson = await servers.json();
-                const channels = toJson.server.channels;
-                const allMembers = toJson.server.members;
-                setSer(toJson.server);
+                const channels = toJson?.server?.channels;
+                const allMembers = toJson?.server?.members;
+                setSer(toJson?.server);
 
                 const textChannels1 = channels?.filter((channel: { type: any; }) => channel.type === 'TEXT')
                 setTextChannels(textChannels1);
@@ -91,10 +91,10 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
                 setAudioChannels(audioChannels1);
                 const videoChannels1 = channels?.filter((channel: { type: any; }) => channel.type === 'VIDEO')
                 setVideoChannels(videoChannels1);
-                const members1 = allMembers?.filter((member: { userId: any; }) => member.userId._id !== user._id.toString());
+                const members1 = allMembers?.filter((member: { userId: any; }) => member.userId._id !== user?._id.toString());
                 setMembers(members1);
 
-                const role = allMembers?.find((member: { userId: any; }) => member.userId._id === user._id.toString())?.role;
+                const role = allMembers?.find((member: { userId: any; }) => member.userId._id === user?._id.toString())?.role;
 
                 setRole(role);
 
@@ -149,9 +149,9 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
                                 label: "MEMBERS",
                                 type: "member",
                                 data: members?.map((member) => ({
-                                    id: member._id,
-                                    name: member.userId.displayname,
-                                    icon: roleIconMap[member.role]
+                                    id: member?._id,
+                                    name: member?.userId?.displayname,
+                                    icon: roleIconMap[member?.role]
                                 }))
                             }
                         ]}
@@ -169,7 +169,7 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
                         <div className="space-y-[2px]">
                             {textChannels.map((channel) => (
                                 <ServerChannel
-                                    key={channel._id}
+                                    key={channel?._id}
                                     channel={channel}
                                     server={ser}
                                     role={role}
@@ -189,7 +189,7 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
                         />
                         <div className="space-y-[2px]">
                         {audioChannels.map((channel) => (
-                            <ServerChannel key={channel._id} channel={channel} role={role} server={ser}/>
+                            <ServerChannel key={channel?._id} channel={channel} role={role} server={ser}/>
                         ))}
                         </div>
                     </div>
@@ -206,7 +206,7 @@ const ServerSidebar = ({serverId}: ServerSidebarProps) => {
                         />
                         <div className="space-y-[2px]">
                         {videoChannels.map((channel) => (
-                            <ServerChannel key={channel._id} channel={channel} role={role} server={ser}/>
+                            <ServerChannel key={channel?._id} channel={channel} role={role} server={ser}/>
                         ))}
                         </div>
                     </div>

@@ -82,8 +82,8 @@ export const ReactionDisplayer = ({
                     <div className="mb-2 items-center">
                         {emoji} {memberId.length}
                     </div>
-                    {memberId.map((member: any) => (
-                        <div key={member.userId._id}>
+                    {memberId.map((member: any, index: any) => (
+                        <div key={index}>
                         <div className="flex px-1 py-1 rounded bg-zinc-700/55 hover:bg-zinc-700/85" key={member._id}>
                             {type==="channel" && <UserAvatar src={member.userId.imageUrl} className="h-8 w-8 md:h-8 md:w-8" />}
                             {type==="conversation" && <UserAvatar src={member.imageUrl} className="h-8 w-8 md:h-8 md:w-8" />}

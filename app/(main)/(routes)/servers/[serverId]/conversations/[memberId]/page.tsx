@@ -54,8 +54,8 @@ const MemberIdPage = ({
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                serverId: params.serverId,
-                userId: user._id,
+                serverId: params?.serverId,
+                userId: user?._id,
               }),
             });
 
@@ -66,10 +66,10 @@ const MemberIdPage = ({
               redirect("/");
             }
 
-            const conversation = await getOrCreateConversation(currentMember._id, params.memberId);
+            const conversation = await getOrCreateConversation(currentMember?._id, params?.memberId);
 
             if(!conversation){
-              redirect(`/servers/${params.serverId}`);
+              redirect(`/servers/${params?.serverId}`);
             }
 
             setGconversation(conversation);

@@ -25,7 +25,7 @@ const FriendItem = ({
     const router = useRouter();
 
     const onMessageFriend = () => {
-        router.push(`/user/${userId}/friends/${otherUser._id}`)
+        router.push(`/user/${userId}/friends/${otherUser?._id}`)
     }
 
 

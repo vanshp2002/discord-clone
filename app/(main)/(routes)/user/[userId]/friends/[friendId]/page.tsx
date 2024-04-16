@@ -98,9 +98,8 @@ const MemberIdPage = ({
 
             <div className="flex flex-col h-full w-[74%]" style={{ overflow: "hidden" , maxHeight: "calc(100vh - 50px)" }}>
 
-                <ScrollArea className="flex-grow">
 
-                { otherMember && currentMember && (<ChatMessages
+                { otherMember && currentMember && gconversation && (<ChatMessages
                     member={currentMember}
                     otherMember={otherMember}
                     name={otherMember?.displayname}
@@ -118,7 +117,6 @@ const MemberIdPage = ({
                         />
                     )}
                 
-                </ScrollArea>
 
                 {gconversation && (<ChatInput 
                     apiUrl="/api/socket/direct-messages"
@@ -135,7 +133,7 @@ const MemberIdPage = ({
                 </div>
 
             <div className="w-[26%]">
-                {otherMember && <UserCardSidebar user={otherMember} mutualFriends={mutualFriends} />}
+                {otherMember && mutualFriends && <UserCardSidebar user={otherMember} mutualFriends={mutualFriends} />}
             </div>
         
             </div>

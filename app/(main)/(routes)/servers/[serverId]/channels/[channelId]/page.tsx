@@ -48,7 +48,7 @@ const ChannelIdPage = ({params}: ChannelIdPageProps) => {
             headers: {
               "Content-Type": "application/json",
               },
-              body: JSON.stringify({ channelId: params.channelId }),
+              body: JSON.stringify({ channelId: params?.channelId }),
             });
 
             const channel = await channelfind.json();
@@ -58,7 +58,7 @@ const ChannelIdPage = ({params}: ChannelIdPageProps) => {
               headers: {
                 "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ serverId: params.serverId, userId: user._id }),
+                body: JSON.stringify({ serverId: params?.serverId, userId: user?._id }),
               });
 
               const member = await memberfind.json();
